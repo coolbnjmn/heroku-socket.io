@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-
+From the socket.io Github : https://github.com/LearnBoost/socket.io/tree/master/examples/chat
 # Socket.IO Chat
 
 A simple chat demo for socket.io
@@ -26,4 +25,3 @@ heroku-socket.io
 ================
 
 A heroku socket.io app using express 4.0
->>>>>>> c1b4c0d0e1b8f4cb932097f70ccb05288439fc45
