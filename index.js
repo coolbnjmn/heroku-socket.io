@@ -9,11 +9,13 @@ var path = require('path');
 //server.listen(port, function () {
  // console.log('Server listening at port %d', port);
 //});
+console.log("Listening on port" + port);
 server.listen(port);
 
 // Routing
 app.use(express.static(__dirname + '/public'));
 
+require('./routes/index')(app);
 // Chatroom
 
 // usernames which are currently connected to the chat
@@ -82,7 +84,4 @@ io.on('connection', function (socket) {
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.get('/chat', function(req, res) {
-  res.render('chat', {user: req.user});
-});
 
