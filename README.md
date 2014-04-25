@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # Socket.IO Chat
 
@@ -20,3 +21,9 @@ on website load.
 - Users can type chat messages to the chat room
 - A notification is sent to all users when a user joins or leaves
 the chatroom
+=======
+heroku-socket.io
+================
+
+A heroku socket.io app using express 4.0
+>>>>>>> c1b4c0d0e1b8f4cb932097f70ccb05288439fc45
