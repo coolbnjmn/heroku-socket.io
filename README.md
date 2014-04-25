@@ -1,5 +1,6 @@
 From the socket.io Github : https://github.com/LearnBoost/socket.io/tree/master/examples/chat
 # Modified to work with Express 4.0
+# see in action at http://salty-escarpment-7398.herokuapp.com/
 # Socket.IO Chat
 
 A simple chat demo for socket.io
