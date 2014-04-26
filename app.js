@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8080;
 var path = require('path');
 var mongo = require('mongodb');
 
@@ -19,9 +19,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var flash = require('connect-flash');
-var passport = require('passport') ,
-FacebookStrategy = require('passport-facebook').Strategy;
-var LocalStrategy = require('passport-local').Strategy;
+var passport = require('passport');
 app.use(cookieParser('secretString'));
 app.use(session({cookie: { maxAge : 1000*60*60*24 }}));
 app.use(passport.initialize());
@@ -149,58 +147,6 @@ mongo.connect(uristring, function(err, db) {
 
 
 
-passport.use('local-signup', new LocalStrategy({
-                                               usernameField : 'email',
-                                               passwordField : 'password',
-                                               passReqToCallback : true
-                                               }, function(req, email, password, done) {
-                                               process.nextTick(function() {
-                                                                User.findOne({ 'local.email' : email }, function(err, user) {
-                                                                             if(err) return done(err);
-                                                                             if(user) {
-                                                                             return done(null, false, req.flash('signupMessage', 'That email has already been taken.'));
-                                                                             } else {
-                                                                             var newUser = new User();
-                                                                             newUser.local.email = email;
-                                                                             newUser.local.password = newUser.generateHash(password);
-                                                                             newUser.save(function(err) {
-                                                                                          if(err)
-                                                                                          throw err;
-                                                                                          return done(null, newUser);
-                                                                                          });
-                                                                             }
-                                                                             });
-                                                                });
-                                               }));
-
-passport.use('local-login', new LocalStrategy({
-                                              usernameField : 'email',
-                                              passwordField : 'password',
-                                              passReqToCallback : true
-                                              }, function(req, email, password, done) {
-                                              console.log('in local-login');
-                                              User.findOne({'local.email' : email}, function(err, user) {
-                                                           if(err)
-                                                           return done(err);
-                                                           console.log('finded');
-                                                           if(!user)
-                                                           return done(null, false, req.flash('loginMessage', 'No user found.'));
-                                                           if(!user.validPassword(password))
-                                                           return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
-                                                           
-                                                           return done(null, user);
-                                                           });
-                                              }));
-
-passport.serializeUser(function(user, done) {
-                       done(null, user.id);
-                       });
-
-passport.deserializeUser(function(id, done) {
-                         User.findById(id, function(err, user) {
-                                       done(err, user);
-                                       });
-                         });
 
 // production error handler
 // no stacktraces leaked to user
@@ -216,6 +162,14 @@ app.use(function(req, res, next) {
         req.db = db;
         next();
         });
+// will print stacktrace
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    });
 
 var routes = require('./routes/index');
 app.use('/', routes);

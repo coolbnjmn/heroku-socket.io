@@ -4,6 +4,9 @@
   "description": "A simple chat client using socket.io",
   "main": "app.js",
   "author": "Grant Timmerman",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
   "private": true,
   "license": "BSD",
   "dependencies": {
