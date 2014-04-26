@@ -34,21 +34,18 @@ $(function() {
     }
     log(message);
   }
+  setUsername();
 
   // Sets the client's username
   function setUsername () {
-    username = cleanInput($usernameInput.val().trim());
 
-    // If the username is valid
-    if (username) {
       $loginPage.fadeOut();
       $chatPage.show();
-      $loginPage.off('click');
       $currentInput = $inputMessage.focus();
+      username = 'ben';
 
       // Tell the server your username
-      socket.emit('add user', username);
-    }
+      socket.emit('add user', 'ben');
   }
 
   // Sends a chat message
@@ -200,8 +197,6 @@ $(function() {
         sendMessage();
         socket.emit('stop typing');
         typing = false;
-      } else {
-        setUsername();
       }
     }
   });
