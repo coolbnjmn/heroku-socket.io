@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/header-style.css')
+    <meta name="description" content="GymBudUcla is a meetup site for gymgoers: from experienced to novice! The novice person can get cheap training from the pros, while the pros get paid to work out!">
+    <meta name="robots" content="index, follow">
+    
+  body
+      #user
+      if user
+        div#navigation 
+             a(href='/chat') Chat
+             a(href='/profile') Home
+             a(href='/userlist') Meet Users
+             a(href='/logout') Logout
+      else
+        div#navigation
+           a(href='/helloworld') Home
+           a(href='/login') Login
+       .block
+         br
+         br 
+         br
+    block content
