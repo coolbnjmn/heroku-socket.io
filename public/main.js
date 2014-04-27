@@ -49,6 +49,16 @@ $(function() {
       socket.emit('add user', username);
   }
 
+  function addMessages(data) {
+    if(!data.previousChats)
+      return;
+    for(var i=0; i < data.previousChats.length; i++) {
+      addChatMessage({
+        username: data.previousChats[i].from,
+	message : data.previousChats[i].message
+      });
+    }
+  }
   // Sends a chat message
   function sendMessage () {
     var message = $inputMessage.val();
@@ -64,9 +74,9 @@ $(function() {
       console.log('sending message, and to is: ' + to);
       // tell server to execute 'new message' and send along one parameter
       if(to !== undefined) {
-       socket.emit('pm', to, message); 
+       socket.emit('pm', username, to, message); 
       } else{
-      socket.emit('new message', message);
+      socket.emit('new message', username, message);
       }
     }
   }
@@ -229,11 +239,14 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Socket.IO Chat &mdash; ";
+    var message = "Welcome to Chat  &mdash; ";
     log(message, {
       prepend: true
     });
+    console.log(data);
+    console.log(data.numUsers);
     addParticipantsMessage(data);
+    addMessages(data);
   });
 
   // Whenever the server emits 'new message', update the chat body

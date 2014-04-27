@@ -66,6 +66,13 @@ userSchema.methods.validPassword = function(password) {
 
 var User = mongoose.model('user', userSchema);
 
+var chatSchema = new mongoose.Schema({
+	from: String,
+	to: String, 
+	message: String
+});
+
+var Chat = mongoose.model('chat', chatSchema);
 
 // usernames which are currently connected to the chat
 var usernames = {};
@@ -76,19 +83,27 @@ io.on('connection', function (socket) {
       var addedUser = false;
       
       // when the client emits 'new message', this listens and executes
-      socket.on('new message', function (data) {
+      socket.on('new message', function (from, data) {
                 // we tell the client to execute 'new message'
-                socket.broadcast.emit('new message', {
+		var newMsg = new Chat({from: from, message: data});
+		newMsg.save(function(err) {
+                  socket.broadcast.emit('new message', {
                                       username: socket.username,
                                       message: data
                                       });
-                });
-      socket.on('pm', function(to, message) {
-    	var id = onlineUsers[to];
-	io.sockets.socket(id).emit('new message', {
+                  });
+		});
+      socket.on('pm', function(from, to, message) {
+        var newMsg = new Chat({from: from, to: to, message: message});
+	newMsg.save(function(err) {
+	  console.log('new message saved in database');
+    	  var id = onlineUsers[to];
+	  io.sockets.socket(id).emit('new message', {
 		username: socket.username,
 		message: message
+	  });
 	});
+
 
        });
       // when the client emits 'add user', this listens and executes
@@ -100,9 +115,15 @@ io.on('connection', function (socket) {
                 ++numUsers;
                 addedUser = true;
 		onlineUsers[username] = socket.id;
-                socket.emit('login', {
-                            numUsers: numUsers
+
+		Chat.find({'to' : 'undefined'}, function(err, docs) {
+		  console.log(docs);
+                  socket.emit('login', {
+                            numUsers: numUsers,
+			    previousChats : docs
                             });
+
+		});
                 // echo globally (all clients) that a person has connected
                 socket.broadcast.emit('user joined', {
                                       username: socket.username,
@@ -129,6 +150,7 @@ io.on('connection', function (socket) {
                 // remove the username from global usernames list
                 if (addedUser) {
                 delete usernames[socket.username];
+		delete onlineUsers[socket.username];
                 --numUsers;
                 
                 // echo globally that this client has left
