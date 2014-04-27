@@ -69,6 +69,7 @@ var User = mongoose.model('user', userSchema);
 
 // usernames which are currently connected to the chat
 var usernames = {};
+var onlineUsers = {};
 var numUsers = 0;
 
 io.on('connection', function (socket) {
@@ -82,7 +83,14 @@ io.on('connection', function (socket) {
                                       message: data
                                       });
                 });
-      
+      socket.on('pm', function(to, message) {
+    	var id = onlineUsers[to];
+	io.sockets.socket(id).emit('new message', {
+		username: socket.username,
+		message: message
+	});
+
+       });
       // when the client emits 'add user', this listens and executes
       socket.on('add user', function (username) {
                 // we store the username in the socket session for this client
@@ -91,6 +99,7 @@ io.on('connection', function (socket) {
                 usernames[username] = username;
                 ++numUsers;
                 addedUser = true;
+		onlineUsers[username] = socket.id;
                 socket.emit('login', {
                             numUsers: numUsers
                             });
@@ -149,7 +158,29 @@ mongo.connect(uristring, function(err, db) {
               
               });
 
-
+passport.use('local-signup', new LocalStrategy({
+                                               usernameField : 'email',
+                                               passwordField : 'password',
+                                               passReqToCallback : true
+                                               }, function(req, email, password, done) {
+                                               process.nextTick(function() {
+                                                                User.findOne({ 'local.email' : email }, function(err, user) {
+                                                                             if(err) return done(err);
+                                                                             if(user) {
+                                                                             return done(null, false, req.flash('signupMessage', 'That email has already been taken.')); 
+                                                                             } else {
+                                                                             var newUser = new User();
+                                                                             newUser.local.email = email;
+                                                                             newUser.local.password = newUser.generateHash(password);
+                                                                             newUser.save(function(err) {
+                                                                                          if(err) 
+                                                                                          throw err;
+                                                                                          return done(null, newUser);
+                                                                                          });
+                                                                             }
+                                                                             });
+                                                                });
+                                               }));
 passport.use('local-login', new LocalStrategy({
                                               usernameField : 'email',
                                               passwordField : 'password',

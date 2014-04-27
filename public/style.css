@@ -42,46 +42,6 @@ ul {
   width: 100%;
 }
 
-/* Login Page */
-
-.login.page {
-  background-color: #000;
-}
-
-.login.page .form {
-  height: 100px;
-  margin-top: -100px;
-  position: absolute;
-
-  text-align: center;
-  top: 50%;
-  width: 100%;
-}
-
-.login.page .form .usernameInput {
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid #fff;
-  outline: none;
-  padding-bottom: 15px;
-  text-align: center;
-  width: 400px;
-}
-
-.login.page .title {
-  font-size: 200%;
-}
-
-.login.page .usernameInput {
-  font-size: 200%;
-  letter-spacing: 3px;
-}
-
-.login.page .title, .login.page .usernameInput {
-  color: #fff;
-  font-weight: 100;
-}
-
 /* Chat page */
 
 .chat.page {
@@ -91,16 +51,16 @@ ul {
 /* Font */
 
 .messages {
-  font-size: 150%;
+  font-size: 80%;
 }
 
 .inputMessage {
-  font-size: 100%;
+  font-size: 80%;
 }
 
 .log {
   color: gray;
-  font-size: 70%;
+  font-size: 50%;
   margin: 5px;
   text-align: center;
 }

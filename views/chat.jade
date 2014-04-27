@@ -3,14 +3,37 @@ extends layout
 block content
  head
   <link rel='stylesheet' href='/style.css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
  body
-  ul.pages
-   li.chat.page
-    .chatArea
+  .row.pages
+   .col-sm-6
+     #user
+       .well
+         h3
+           span.fa.fa-user
+           |    Local
+           br
+           strong email
+           |  : #{user.local.email}
+           br
+           strong password
+           |  : #{user.local.password }
+           br
+   .col-sm-6.chat.page
+    .well.chatArea
       ul.messages
-    input.inputMessage(placeholder='Type here...')
+      input(type='hidden', id='toField', value='#{to}')
+      input(type='hidden', id='username', value='#{user.local.email}')
+      input.inputMessage(placeholder='Type here...')
+  .row
+   .col-sm-6
+     each youser, i in userlist
+      .well
+       a(href='/chat/'+youser.local.email)= youser.local.email
   script(src='https://code.jquery.com/jquery-1.10.2.min.js')
   script(src='/socket.io/socket.io.js')
   script(src='/main.js')
+    
  
 

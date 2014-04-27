@@ -9,19 +9,20 @@ $(function() {
 
   // Initialize varibles
   var $window = $(window);
-  var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
+  var $usernameInput = $('#username');
+  var $toField = $('#toField');
 
+  var username = $usernameInput.val();
+  var to = $toField.val();
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
 
   // Prompt for setting a username
-  var username;
   var connected = false;
   var typing = false;
   var lastTypingTime;
-  var $currentInput = $usernameInput.focus();
 
   var socket = io.connect();
 
@@ -42,10 +43,10 @@ $(function() {
       $loginPage.fadeOut();
       $chatPage.show();
       $currentInput = $inputMessage.focus();
-      username = 'ben';
 
+     console.log(username);
       // Tell the server your username
-      socket.emit('add user', 'ben');
+      socket.emit('add user', username);
   }
 
   // Sends a chat message
@@ -61,7 +62,11 @@ $(function() {
         message: message
       });
       // tell server to execute 'new message' and send along one parameter
+      if(to !== undefined) {
+       socket.emit('pm', to, message); 
+      } else{
       socket.emit('new message', message);
+      }
     }
   }
 

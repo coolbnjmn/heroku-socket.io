@@ -1,8 +1,27 @@
 var passport = require('passport');
-
-
+var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
+
+var userSchema = new mongoose.Schema({
+  image: {
+    data: Buffer,
+    contentType: String
+  },
+  local: {
+    email : String, 
+    password: String,
+    socket: Object
+  }, 
+  facebook : {
+    id : String, 
+    token : String, 
+    name : String, 
+    email : String
+  }
+});
+
+var User = mongoose.model('User', userSchema);
 
 router.get('/', function(req, res) {
            res.render('index', { title: 'GymBudUcla' });
@@ -10,8 +29,17 @@ router.get('/', function(req, res) {
 
 
 router.get('/chat', isLoggedIn, function(req, res, next) {
-        res.render('chat', {user: req.user});
+      User.find({}, function(e, docs) {
+        res.render('chat', {user: req.user, userlist: docs});
         });
+});
+
+router.get('/chat/:username', function(req, res) {
+	var username = req.params.email;
+      User.find({}, function(e, docs) {
+        res.render('chat', {user: req.user, to:username, userlist: docs});
+        });
+});
 
 router.get('/logout', function(req, res) {
         req.logout();
