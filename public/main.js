@@ -61,6 +61,7 @@ $(function() {
         username: username,
         message: message
       });
+      console.log('sending message, and to is: ' + to);
       // tell server to execute 'new message' and send along one parameter
       if(to !== undefined) {
        socket.emit('pm', to, message); 

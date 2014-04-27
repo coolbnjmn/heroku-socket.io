@@ -35,7 +35,8 @@ router.get('/chat', isLoggedIn, function(req, res, next) {
 });
 
 router.get('/chat/:username', function(req, res) {
-	var username = req.params.email;
+	var username = req.params.username;
+	console.log(username);
       User.find({}, function(e, docs) {
         res.render('chat', {user: req.user, to:username, userlist: docs});
         });
