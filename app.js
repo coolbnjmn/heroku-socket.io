@@ -116,7 +116,7 @@ io.on('connection', function (socket) {
                 addedUser = true;
 		onlineUsers[username] = socket.id;
 
-		Chat.find({'to' : 'undefined'}, function(err, docs) {
+		Chat.find({$or :[{'to':username}, {'to' : 'undefined'}]}, function(err, docs) {
 		  console.log(docs);
                   socket.emit('login', {
                             numUsers: numUsers,
