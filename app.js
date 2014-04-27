@@ -12,7 +12,7 @@ var mongo = require('mongodb');
 app.use(express.static(__dirname + '/public'));
 
 
-var uristring = "mongodb://heroku_app24187196:mv1mqgrfmmdi4jhfll5t6j5d01@ds047197.mongolab.com:47197/heroku_app24187196";
+var uristring ="mongodb://heroku_app24509551:legvh3pgnof81ms8niu1hut2ej@ds037508.mongolab.com:37508/heroku_app24509551"; 
 var mongoose = require('mongoose');
 mongoose.connect(uristring);
 
