@@ -6,53 +6,57 @@ block content
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
  body
-  .row.pages
-   .col-sm-6
-     #user
-       .well
-         h3
-           span.fa.fa-user
-           |    Local
-           br
-           strong email
-           |  : #{user.local.email}
-           br
-           strong password
-           |  : #{user.local.password }
-           br
-   .col-sm-6.chat.page
-    .well.chatArea
-      ul.messages
-      input(type='hidden', id='toField', value='#{to}')
-      input(type='hidden', id='username', value='#{user.local.email}')
-      input.inputMessage(placeholder='Type here...')
-  .row
-   .col-sm-6
-     each youser, i in userlist
-      .well
-       a(href='/chat/'+youser.local.email)= youser.local.email
-   .col-sm-6
+  .container
+   .row.pages
+    .col-sm-6
       #user
-       if user.image.contentType
-         .well 
-           h3
-            span.fa.fa-picture-o
-             |     Profile Picture
-           img(id='image' src='')
-           script.
-              console.log('here');
-              document.getElementById('image').src = 'data:#{user.image.contentType};base64,#{user.image.data}';
-       else
-         .well
-           h3
+        .well
+          h3
+            span.fa.fa-user
+            |    Local
+            br
+            strong email
+            |  : #{user.local.email}
+            br
+            strong password
+            |  : #{user.local.password }
+            br
+    .col-sm-6
+       #user
+        if user.image.contentType
+          .well 
+            h3
              span.fa.fa-picture-o
-              |    Add a Profile Picture
-             form#formUpload(method='post', action='/uploadImage', enctype='multipart/form-data')
-               input#image(type="file", name='image')
-               button#btnSubmit(type='submit') Submit
-  script(src='https://code.jquery.com/jquery-1.10.2.min.js')
-  script(src='/socket.io/socket.io.js')
-  script(src='/main.js')
-    
- 
-
+              |     Profile Picture
+            img(id='image' src='')
+            script.
+               console.log('here');
+               document.getElementById('image').src = 'data:#{user.image.contentType};base64,#{user.image.data}';
+        else
+          .well
+            h3
+              span.fa.fa-picture-o
+               |    Add a Profile Picture
+              form#formUpload(method='post', action='/uploadImage', enctype='multipart/form-data')
+                input#image(type="file", name='image')
+                button#btnSubmit(type='submit') Submit
+   .row.pages
+    .col-sm-6
+      h3
+        span.fa.fa-bell-o
+          |  Chat with someone!
+      each youser, i in userlist
+       .well
+        a(href='/chat/'+youser.local.email)= youser.local.email
+    .col-sm-6.chat.page
+     .well.chatArea
+       ul.messages
+       input(type='hidden', id='toField', value='#{to}')
+       input(type='hidden', id='username', value='#{user.local.email}')
+       input.inputMessage(placeholder='Type here...')
+   script(src='https://code.jquery.com/jquery-1.10.2.min.js')
+   script(src='/socket.io/socket.io.js')
+   script(src='/main.js')
+     
+  
+   

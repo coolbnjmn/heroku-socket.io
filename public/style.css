@@ -27,17 +27,18 @@ ul {
   list-style: none;
 }
 
+
 /* Pages */
 
 .pages {
-  height: 90%;
+  height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
 }
 
 .page {
-  height: 90%;
+  height: 100%;
   position: absolute;
   width: 100%;
 }
@@ -94,9 +95,9 @@ ul {
 /* Input */
 
 .inputMessage {
-  border: 10px solid #000;
+  border: 5px solid #000;
   bottom: 0;
-  height: 60px;
+  height: 30px;
   left: 0;
   outline: none;
   padding-left: 10px;
