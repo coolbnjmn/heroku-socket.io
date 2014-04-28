@@ -135,6 +135,10 @@ router.post('/signup2', function(req, res) {
   });
 });
 
+router.get('/contact', isLoggedIn, function(req, res) {
+  res.render('contact', {user: req.user});
+});
+
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         console.log('isLoggedIn');
