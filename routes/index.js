@@ -36,7 +36,7 @@ var userSchema = new mongoose.Schema({
 var User = mongoose.model('User', userSchema);
 
 router.get('/', function(req, res) {
-           res.render('index', { title: 'GymBudUcla' });
+           res.render('index', { title: 'Gym Bud' });
            });
 
 
