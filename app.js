@@ -21,6 +21,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var flash = require('connect-flash');
 var passport = require('passport');
+var multipart = require('connect-multiparty');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -29,6 +30,7 @@ app.use(session({cookie: { maxAge : 1000*60*60*24 }}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(multipart());
 
 //server.listen(port, function () {
 // console.log('Server listening at port %d', port);

@@ -31,6 +31,25 @@ block content
      each youser, i in userlist
       .well
        a(href='/chat/'+youser.local.email)= youser.local.email
+   .col-sm-6
+      #user
+       if user.image.contentType
+         .well 
+           h3
+            span.fa.fa-picture-o
+             |     Profile Picture
+           img(id='image' src='')
+           script.
+              console.log('here');
+              document.getElementById('image').src = 'data:#{user.image.contentType};base64,#{user.image.data}';
+       else
+         .well
+           h3
+             span.fa.fa-picture-o
+              |    Add a Profile Picture
+             form#formUpload(method='post', action='/uploadImage', enctype='multipart/form-data')
+               input#image(type="file", name='image')
+               button#btnSubmit(type='submit') Submit
   script(src='https://code.jquery.com/jquery-1.10.2.min.js')
   script(src='/socket.io/socket.io.js')
   script(src='/main.js')

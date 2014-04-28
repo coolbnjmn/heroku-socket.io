@@ -3,6 +3,10 @@ var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 
+var im = require('imagemagick');
+var btoa = require('btoa');
+var fs = require('fs');
+
 var userSchema = new mongoose.Schema({
   image: {
     data: Buffer,
@@ -40,6 +44,36 @@ router.get('/chat/:username', function(req, res) {
       User.find({}, function(e, docs) {
         res.render('chat', {user: req.user, to:username, userlist: docs});
         });
+});
+
+
+router.post('/uploadImage', function(req, res) {
+  console.log('uploading');
+  var fstream;
+  console.log(req.files); 
+  User.findOne({ "local.email": req.user.local.email}, function(err, docs) {
+    if(req.files.image.type.match('image.*')) {
+      var imgData;
+      im.convert([req.files.image.path, '-resize', '64x64', req.files.image.path], function(err) {
+        if(err) throw err;
+
+	docs.image.data = fs.readFileSync(req.files.image.path);
+	docs.image.contentType = req.files.image.type;
+
+	imgData = btoa(docs.image.data);
+	docs.image.data = imgData;
+	docs.save(function(err) {
+	  if(err) throw err;
+	});
+
+        User.find({}, function(e, userlist) {
+	  res.render('chat', {user: docs, userlist: userlist});
+	});
+      });
+    } else {
+         res.redirect('/chat');
+    }
+  });
 });
 
 router.get('/logout', function(req, res) {
