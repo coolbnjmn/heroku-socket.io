@@ -18,11 +18,24 @@ block content
             strong email
             |  : #{user.local.email}
             br
-            strong password
-            |  : #{user.local.password }
+            strong interests
+            |  : #{user.local.interest1 }
             br
+            | #{user.local.interest2}
+            br
+            | #{user.local.interest3}
+            br
+            if user.local.phonenum
+              strong phone number: 
+              | : #{user.local.phonenum}
+              br 
+            strong background 
+            | : #{user.local.background}
+            br
+            strong organizations
+            | : #{user.local.orgs}
     .col-sm-6
-       #user
+      #user
         if user.image.contentType
           .well 
             h3

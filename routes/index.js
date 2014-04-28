@@ -14,8 +14,16 @@ var userSchema = new mongoose.Schema({
   },
   local: {
     email : String, 
+    name: String,
     password: String,
-    socket: Object
+    socket: Object, 
+    interest1: String,
+    interest2: String,
+    interest3: String,
+    phonenum: String,
+    background: String,
+    orgs: String,
+    trainer_filter: Boolean
   }, 
   facebook : {
     id : String, 
@@ -33,6 +41,7 @@ router.get('/', function(req, res) {
 
 
 router.get('/chat', isLoggedIn, function(req, res, next) {
+      console.log(req.user);
       User.find({}, function(e, docs) {
         res.render('chat', {user: req.user, userlist: docs});
         });
@@ -97,10 +106,34 @@ router.get('/signup', function(req, res) {
            });
 
 router.post('/signup', passport.authenticate('local-signup', {
-                                             successRedirect : '/chat',
+                                             successRedirect : '/signup2',
                                              failureRedirect : '/signup',
                                              failureFlash: true
                                              }));
+
+router.get('/signup2', isLoggedIn, function(req, res) {
+           res.render('signup2', {user : req.user, message: req.flash('signupMessage') });
+           });
+
+router.post('/signup2', function(req, res) {
+  User.findOne({"local.email": req.user.local.email}, function(err, docs) {
+  console.log('just found the new user');
+    docs.local.interest1 = req.body.interest1;
+    docs.local.interest2 = req.body.interest2;
+    docs.local.interest3 = req.body.interest3;
+    if(req.body.phonenum) {
+      docs.local.phonenum = req.body.phonenum
+    }
+    docs.local.background = req.body.background;
+    docs.local.orgs = req.body.orgs;
+    docs.local.trainer_filter = req.body.trainer_filter;
+
+    docs.save(function(err) {
+      if(err) throw err;
+      res.redirect('/chat');
+    });
+  });
+});
 
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
