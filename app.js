@@ -48,7 +48,15 @@ var userSchema = new mongoose.Schema({
                                      local: {
                                      email : String,
                                      password: String,
-                                     socket: Object
+                                     socket: Object,
+      			             interest1: String,
+   				 interest2: String,
+   				 interest3: String,
+   				 phonenum: String,
+  				  background: String,
+ 				   orgs: String,
+ 				   trainer_filter: Boolean,
+				   name: String
                                      },
                                      facebook : {
                                      id : String,

@@ -15,25 +15,35 @@ block content
             span.fa.fa-user
             |    Local
             br
+            strong Name
+            | : #{user.local.name}
+            br
             strong email
             |  : #{user.local.email}
             br
-            strong interests
-            |  : #{user.local.interest1 }
+            strong Interests:
+            br
+            | #{user.local.interest1 }
             br
             | #{user.local.interest2}
             br
             | #{user.local.interest3}
             br
             if user.local.phonenum
-              strong phone number: 
+              strong Phone number: 
               | : #{user.local.phonenum}
               br 
-            strong background 
+            strong Background 
             | : #{user.local.background}
             br
-            strong organizations
+            strong Organizations
             | : #{user.local.orgs}
+            br
+            strong User Status:
+             if user.local.trainer_filter
+              | Trainer
+             else
+              | Gym Goer
     .col-sm-6
       #user
         if user.image.contentType
@@ -59,8 +69,10 @@ block content
         span.fa.fa-bell-o
           |  Chat with someone!
       each youser, i in userlist
-       .well
-        a(href='/chat/'+youser.local.email)= youser.local.email
+       if youser.local.trainer_filter
+        .well
+         a(href='/chat/'+youser.local.email)= youser.local.name
+       
     .col-sm-6.chat.page
      .well.chatArea
        ul.messages
