@@ -38,7 +38,7 @@ router.get('/chat', isLoggedIn, function(req, res, next) {
         });
 });
 
-router.get('/chat/:username', function(req, res) {
+router.get('/chat/:username', isLoggedIn, function(req, res) {
 	var username = req.params.username;
 	console.log(username);
       User.find({}, function(e, docs) {
@@ -97,7 +97,7 @@ router.get('/signup', function(req, res) {
            });
 
 router.post('/signup', passport.authenticate('local-signup', {
-                                             successRedirect : '/',
+                                             successRedirect : '/chat',
                                              failureRedirect : '/signup',
                                              failureFlash: true
                                              }));
