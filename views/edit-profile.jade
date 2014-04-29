@@ -1,0 +1,66 @@
+
+block content
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+ <link href="/background.css" rel="stylesheet">
+ style
+  body { padding-top:80px; }
+ .container
+  .col-sm-6.col-sm-offset-3
+   h1
+    span.fa.fa-sign-in
+    |   Edit Profile
+   form(action='/edit-profile', method='post')
+    #user
+     .form-group
+       label Full Name
+       input.form-control(type='text', name='name', value='#{user.local.name}')
+     .form-group
+      label Interests 1
+       .controls
+        select#selectbasic.input-xlarge(name='interest1')
+          option Weightlifting
+          option Aerobics
+          option Swimming
+          option Crossfit
+          option Yoga
+          option Cycling
+          option Interval Training
+      label Interests 2
+       .controls
+        select#selectbasic.input-xlarge(name='interest2')
+          option Weightlifting
+          option Aerobics
+          option Swimming
+          option Crossfit
+          option Yoga
+          option Cycling
+          option Interval Training
+      label Interests 3
+       .controls
+        select#selectbasic.input-xlarge(name='interest3')
+          option Weightlifting
+          option Aerobics
+          option Swimming
+          option Crossfit
+          option Yoga
+          option Cycling
+          option Interval Training
+     .form-group
+      label Phone Number (Optional)
+      input.form-control(type='text', name='phonenum', value='#{user.local.phonenum}')
+     .form-group
+      label Background
+      textarea.form-control(type='text', name='background') #{user.local.background}
+     .form-group
+      label Organizations
+      textarea.form-control(type='text', name='orgs') #{user.local.orgs}
+     .form-group
+      label Please Select One : 
+      br
+      input(type='radio', name='trainer_filter', value='1', checked=trainer=='trainer')
+      |   Trainer
+      input(type='radio', name='trainer_filter', value='0', checked=trainer=='gym goer')
+      |   Gym Goer
+      
+     button.btn.btn-warning.btn-lg(type='submit') Submit Changes

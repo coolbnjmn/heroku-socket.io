@@ -45,6 +45,10 @@ block content
               | Trainer
              else
               | Gym Goer
+             br
+             <form action='/edit-profile'>
+             <input type='submit' value='Edit Profile'>
+             </form>
     .col-sm-6
       #user
         if user.image.contentType
@@ -56,6 +60,11 @@ block content
             script.
                console.log('here');
                document.getElementById('image').src = 'data:#{user.image.contentType};base64,#{user.image.data}';
+            br
+            |     Change your picture:
+            form#formUpload(method='post', action='uploadImage', enctype='multipart/form-data')
+              input#image(type="file", name='image') 
+              button#btnSubmit(type='submit') Submit
         else
           .well
             h3

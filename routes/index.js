@@ -151,6 +151,31 @@ router.get('/profile/:email', isLoggedIn, function(req, res) {
     });
 });
 
+router.get('/edit-profile', isLoggedIn, function(req, res) {
+   res.render('edit-profile', {user: req.user});
+});
+
+router.post('/edit-profile', isLoggedIn, function(req, res) {
+  User.findOne({"local.email": req.user.local.email}, function(err, docs) {
+    docs.local.interest1 = req.body.interest1;
+    docs.local.interest2 = req.body.interest2;
+    docs.local.interest3 = req.body.interest3;
+    if(req.body.phonenum) {
+      docs.local.phonenum = req.body.phonenum;
+    } else {
+      docs.local.phonenum = '';
+    }
+    docs.local.background = req.body.background;
+    docs.local.orgs = req.body.orgs;
+    docs.local.trainer_filter = req.body.trainer_filter;
+    docs.local.name = req.body.name;
+
+    docs.save(function(err) {
+      if(err) throw err;
+      res.redirect('/chat');
+    });
+  });
+});
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
