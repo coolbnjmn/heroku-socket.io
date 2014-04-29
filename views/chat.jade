@@ -61,7 +61,9 @@ block content
                console.log('here');
                document.getElementById('image').src = 'data:#{user.image.contentType};base64,#{user.image.data}';
             br
-            |     Change your picture:
+            h3
+             span.fa.fa-edit
+             |     Change your picture:
             form#formUpload(method='post', action='uploadImage', enctype='multipart/form-data')
               input#image(type="file", name='image') 
               button#btnSubmit(type='submit') Submit
