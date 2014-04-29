@@ -132,7 +132,7 @@ router.post('/signup2', function(req, res) {
   });
 });
 
-router.get('/contact', isLoggedIn, function(req, res) {
+router.get('/contact', function(req, res) {
   res.render('contact', {user: req.user});
 });
 
