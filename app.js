@@ -204,7 +204,7 @@ passport.use('local-signup', new LocalStrategy({
                                                                              return done(null, false, req.flash('signupMessage', 'That email has already been taken.')); 
                                                                              } else {
 									       // check that hte email is a .edu email
-									       var eduPattern = new RegExp(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|edu)\b/);
+									       var eduPattern = new RegExp(/^([a-zA-Z0-9_][a-zA-Z0-9._]*)+@ucla+\.edu/);
 									       var eduMatches = email.match(eduPattern);
 									       console.log(eduMatches);
 									       if(eduMatches) {
@@ -217,7 +217,7 @@ passport.use('local-signup', new LocalStrategy({
                                                                                           return done(null, newUser);
                                                                                           });
 											  } else {
-											  return done(null, false, req.flash('signupMessage', 'You must use a .edu email address'));
+											  return done(null, false, req.flash('signupMessage', 'Sorry, you must use a ucla.edu email address'));
 											  }
                                                                              }
                                                                              });
