@@ -147,7 +147,7 @@ router.get('/profile/:email', isLoggedIn, function(req, res) {
     var email = req.params.email;
 
     User.findOne({'local.email': email}, function(err, docs) {
-       res.render('profile-public', {user : req.user, userProfile: docs, to: req.user.local.email});
+       res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email});
     });
 });
 
