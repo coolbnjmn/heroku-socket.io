@@ -44,7 +44,6 @@ $(function() {
       $chatPage.show();
       $currentInput = $inputMessage.focus();
 
-     console.log(username);
       // Tell the server your username
       socket.emit('add user', username);
   }
@@ -85,7 +84,6 @@ $(function() {
         username: username,
         message: message
       });
-      console.log('sending message, and to is: ' + to);
       // tell server to execute 'new message' and send along one parameter
       if(to !== undefined) {
        socket.emit('pm', username, to, message); 
@@ -115,7 +113,6 @@ $(function() {
     var usernameDiv = '<span class="username"' + colorStyle + '>' +
       data.username + '</span>';
     var msg;
-    console.log(data);
     if(data.to !== 'undefined' && data.to!==undefined) {
 	msg = 'to:'+data.to+'::'+data.message
       } else {
@@ -264,8 +261,6 @@ $(function() {
     log(message, {
       prepend: true
     });
-    console.log(data);
-    console.log(data.numUsers);
     addParticipantsMessage(data);
     addMessages(data);
   });
