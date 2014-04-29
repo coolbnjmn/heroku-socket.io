@@ -53,7 +53,7 @@ block content
          img(id="image" src="")
          script.
           console.log('here');
-          document.getElementById("image").src = 'data:#{contentType};base64,#{image}';
+          document.getElementById("image").src = 'data:#{userProfile.image.contentType};base64,#{userProfile.image.data}';
        else
          .well
            h3
