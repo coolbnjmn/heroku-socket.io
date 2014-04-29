@@ -53,10 +53,24 @@ $(function() {
     if(!data.previousChats)
       return;
     for(var i=0; i < data.previousChats.length; i++) {
-      addChatMessage({
+    /*
+      if(data.previousChats[i].to != 'undefined') {
+       addChatMessage({
+        username: data.previousChats[i].from,
+	message : 'to:'+data.previousChats[i].to+'::'+data.previousChats[i].message
+       });
+      } else {
+       addChatMessage({
         username: data.previousChats[i].from,
 	message : data.previousChats[i].message
-      });
+       });
+      }
+      */
+      addChatMessage({
+        username: data.previousChats[i].from,
+	message: data.previousChats[i].message,
+	to: data.previousChats[i].to
+	});
     }
   }
   // Sends a chat message
@@ -100,8 +114,15 @@ $(function() {
     var colorStyle = 'style="color:' + getUsernameColor(data.username) + '"';
     var usernameDiv = '<span class="username"' + colorStyle + '>' +
       data.username + '</span>';
+    var msg;
+    console.log(data);
+    if(data.to != 'undefined') {
+	msg = 'to:'+data.to+'::'+data.message
+      } else {
+	msg= data.message
+      }
     var messageBodyDiv = '<span class="messageBody">' +
-      data.message + '</span>';
+      msg + '</span>';
 
     var typingClass = data.typing ? 'typing' : '';
     var messageDiv = '<li class="message ' + typingClass + '">' +

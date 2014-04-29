@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+  h1.
+    List of Users, check out their profiles!
+  each user, i in userlist
+     if user.local.name
+      .row
+       .col-sm-6
+        .well
+          a(href="/profile/"+user.local.email)= user.local.name

@@ -99,7 +99,8 @@ io.on('connection', function (socket) {
 		newMsg.save(function(err) {
                   socket.broadcast.emit('new message', {
                                       username: socket.username,
-                                      message: data
+                                      message: data,
+				      to: 'undefined'
                                       });
                   });
 		});
@@ -110,7 +111,8 @@ io.on('connection', function (socket) {
     	  var id = onlineUsers[to];
 	  io.sockets.socket(id).emit('new message', {
 		username: socket.username,
-		message: message
+		message: message,
+		to: to
 	  });
 	});
 

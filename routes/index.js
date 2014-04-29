@@ -136,6 +136,21 @@ router.get('/contact', isLoggedIn, function(req, res) {
   res.render('contact', {user: req.user});
 });
 
+router.get('/userlist', isLoggedIn, function(req, res) {
+  
+      User.find({}, function(e, docs) {
+         res.render('userlist', {user: req.user, userlist: docs});
+        });
+});
+
+router.get('/profile/:email', isLoggedIn, function(req, res) {
+    var email = req.params.email;
+
+    User.findOne({'local.email': email}, function(err, docs) {
+       res.render('profile-public', {user : req.user, userProfile: docs, to: req.user.local.email});
+    });
+});
+
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
