@@ -116,7 +116,7 @@ $(function() {
       data.username + '</span>';
     var msg;
     console.log(data);
-    if(data.to !== 'undefined') {
+    if(data.to !== 'undefined' && data.to!==undefined) {
 	msg = 'to:'+data.to+'::'+data.message
       } else {
 	msg= data.message
