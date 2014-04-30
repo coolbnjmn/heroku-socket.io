@@ -49,7 +49,7 @@ var reviewSchema = new mongoose.Schema({
 var Review = mongoose.model('Review', reviewSchema);
 
 router.get('/', function(req, res) {
-           res.render('index', { title: 'Gym Bud' });
+           res.render('index', { title: 'GymBud' });
            });
 
 
