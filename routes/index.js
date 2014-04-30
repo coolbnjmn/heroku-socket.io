@@ -164,7 +164,16 @@ router.get('/profile/:email', isLoggedIn, function(req, res) {
 
     User.findOne({'local.email': email}, function(err, docs) {
       Review.find({reviewee: req.params.email}, function(err, reviews) {
-        res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews});
+        var reviewSum = 0;
+	var avgReview = 0;
+	if(reviews) {
+	  for(var i = 0; i < reviews.length; i++) {
+	    reviewSum += reviews[i].rating; 
+	  }
+	  avgReview = reviewSum / reviews.length;
+	}
+
+        res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
       });
     });
 });
