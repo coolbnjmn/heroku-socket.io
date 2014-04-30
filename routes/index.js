@@ -128,6 +128,11 @@ router.get('/signup2', isLoggedIn, function(req, res) {
            });
 
 router.post('/signup2', function(req, res) {
+  if(!req.body.toc_agree) {
+    req.flash('signupMessage', 'You must agree to the terms and conditions');
+    res.render('signup2', {user: req.user, message: req.flash('signupMessage') });
+    return;
+  }
   User.findOne({"local.email": req.user.local.email}, function(err, docs) {
     docs.local.interest1 = req.body.interest1;
     docs.local.interest2 = req.body.interest2;
