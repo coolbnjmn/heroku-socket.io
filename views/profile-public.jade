@@ -71,6 +71,20 @@ block content
          input(type='hidden', id='toField', value='#{to}')
          input(type='hidden', id='username', value='#{user.local.email}')
          input.inputMessage(placeholder='Type here...')
+     .col-sm-6
+      #reviews
+       if userProfile.local.trainer_filter
+        .well 
+         if reviews
+          each review, i in reviews
+           span.fa.fa-comment-o
+             | Rating : #{review.rating}
+             br
+             | Comments: #{review.comments}
+             br
+         <form action='/add-review/#{userProfile.local.email}'>
+         <input type='submit' value='Add Review'>
+         </form>
    script(src='https://code.jquery.com/jquery-1.10.2.min.js')
    script(src='/socket.io/socket.io.js')
    script(src='/main.js')

@@ -1,0 +1,35 @@
+extends layout
+
+block content
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+ <link href="/background.css" rel="stylesheet">
+ style
+  body { padding-top:80px; }
+ .container
+  .col-sm-6.col-sm-offset-3
+   h1
+    span.fa.fa-comment-o
+    |   Review User
+   form(action='/add-review/#{forUser}', method='post')
+    #user
+     label Full Name
+     label :   #{user.local.name}
+     .form-group
+      label Overall Rating (10 is best, 1 is worst)
+       .controls
+        select#selectbasic.input-xlarge(name='rating')
+          option 10
+          option 9
+          option 8
+          option 7
+          option 6
+          option 5
+          option 4
+          option 3
+          option 2
+          option 1
+     .form-group
+      label Comments
+      textarea.form-control(type='text', name='comments')
+     button.btn.btn-warning.btn-lg(type='submit') Add Review

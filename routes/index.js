@@ -24,7 +24,10 @@ var userSchema = new mongoose.Schema({
     background: String,
     orgs: String,
     goals: String,
-    trainer_filter: Boolean
+    trainer_filter: Boolean,
+    reviews: [{ reviewer: String, 
+              rating: Number, 
+	      comments: String}]
   }, 
   facebook : {
     id : String, 
@@ -36,14 +39,21 @@ var userSchema = new mongoose.Schema({
 
 var User = mongoose.model('User', userSchema);
 
+var reviewSchema = new mongoose.Schema({
+	reviewer: String, 
+	rating: Number, 
+	comments: String,
+	reviewee: String
+});
+
+var Review = mongoose.model('Review', reviewSchema);
+
 router.get('/', function(req, res) {
            res.render('index', { title: 'Gym Bud' });
            });
 
 
 router.get('/chat', isLoggedIn, function(req, res, next) {
-      console.log('Here');
-      console.log(req.user);
       User.find({}, function(e, docs) {
         res.render('chat', {user: req.user, userlist: docs});
         });
@@ -149,7 +159,9 @@ router.get('/profile/:email', isLoggedIn, function(req, res) {
     var email = req.params.email;
 
     User.findOne({'local.email': email}, function(err, docs) {
-       res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email});
+      Review.find({reviewee: req.params.email}, function(err, reviews) {
+        res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews});
+      });
     });
 });
 
@@ -179,6 +191,27 @@ router.post('/edit-profile', isLoggedIn, function(req, res) {
     });
   });
 });
+
+router.get('/add-review/:email', isLoggedIn, function(req, res) {
+   // first check if this user has already added a review
+   res.render('add-review', {forUser: req.params.email, user: req.user});
+});
+
+router.post('/add-review/:email', isLoggedIn, function(req, res) {
+    User.findOne({"local.email": req.params.email} , function(err, docs) {
+       Review.create({reviewer: req.user.local.name, rating: req.body.rating, comments: req.body.comments, reviewee: req.params.email}, function(err, review) {
+       console.log(req.user.local.name);
+      console.log('HERE HERE HERE HERE HERE HERE');
+        console.log(review);
+         if(err) throw err;
+         res.redirect('/profile/'+req.params.email);
+       });
+
+    });
+});
+
+
+
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();

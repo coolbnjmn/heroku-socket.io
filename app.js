@@ -57,6 +57,7 @@ var userSchema = new mongoose.Schema({
   				  background: String,
  				   orgs: String,
  				   trainer_filter: Boolean,
+				   // email and comments in reviews
 				   name: String
                                      },
                                      facebook : {
@@ -77,6 +78,14 @@ userSchema.methods.validPassword = function(password) {
 
 var User = mongoose.model('user', userSchema);
 
+var reviewSchema = new mongoose.Schema({
+	reviewer: String, 
+	rating: Number, 
+	comments: String,
+	reviewee: String
+});
+
+var Review = mongoose.model('review', reviewSchema);
 var chatSchema = new mongoose.Schema({
 	from: String,
 	to: String, 
