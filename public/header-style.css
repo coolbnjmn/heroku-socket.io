@@ -7,7 +7,7 @@ a {
   position: fixed;
   top: 0;
   width: 100%;
-  color: #ffffff;
+  color: #536895;
   height: 35px;
   text-align: center;
   padding-top: 15px;
@@ -16,18 +16,18 @@ a {
   -moz-box-shadow: 0px 0px 8px 0px #000000;
   box-shadow: 0px 0px 8px 0px #000000;
 
-  background-color: rgba(1,1,1,0.8);
-  color: rgba(1,1,1,0.8);
+  background-color: #536895;
+  color: #536895;
 }
 
 #navigation a {
    font-size: 14px;
    padding-left: 15px;
    padding-right: 15px;
-   color: white;
+   color: #FFF3DA;
    text-decoration: none;
 }
 
 #navigation a:hover {
-   color: grey;
+   color: #ABA392;
 }
