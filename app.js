@@ -218,7 +218,7 @@ passport.use('local-signup', new LocalStrategy({
                                                                              return done(null, false, req.flash('signupMessage', 'That email has already been taken.')); 
                                                                              } else {
 									       // check that hte email is a .edu email
-									       var eduPattern = new RegExp(/^([a-zA-Z0-9_][a-zA-Z0-9._]*)+@ucla+\.edu/);
+									       var eduPattern = new RegExp(/^([a-zA-Z0-9_][a-zA-Z0-9._]*)+@(g.){0,1}ucla+\.edu/);
 									       var eduMatches = email.match(eduPattern);
 									       console.log(eduMatches);
 									       if(eduMatches) {
