@@ -56,6 +56,10 @@ router.get('/about', function(req, res) {
            res.render('about', {user: req.user} );
 });
 
+router.get('/team', function(req, res) {
+           res.render('team', {user: req.user} );
+});
+
 
 router.get('/chat', isLoggedIn, function(req, res, next) {
       User.find({}, function(e, docs) {
