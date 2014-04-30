@@ -39,8 +39,12 @@ block content
                br
                | #{userProfile.local.orgs} 
                br
+               strong GymBud Goals:
+               br
+               | #{userProfile.local.goals}
+               br
                strong User Status:
-                 if userProfile.local.trianer_filter
+                 if userProfile.local.trainer_filter
                   | Trainer
                  else 
                   | Gym Goer

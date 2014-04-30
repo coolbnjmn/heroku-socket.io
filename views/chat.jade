@@ -40,6 +40,9 @@ block content
             strong Organizations
             | : #{user.local.orgs}
             br
+            strong GymBud Goals
+            | : #{user.local.goals}
+            br
             strong User Status:
              if user.local.trainer_filter
               | Trainer

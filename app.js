@@ -49,6 +49,7 @@ var userSchema = new mongoose.Schema({
                                      email : String,
                                      password: String,
                                      socket: Object,
+				     goals: String,
       			             interest1: String,
    				 interest2: String,
    				 interest3: String,

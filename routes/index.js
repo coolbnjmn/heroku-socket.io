@@ -23,6 +23,7 @@ var userSchema = new mongoose.Schema({
     phonenum: String,
     background: String,
     orgs: String,
+    goals: String,
     trainer_filter: Boolean
   }, 
   facebook : {
@@ -124,6 +125,7 @@ router.post('/signup2', function(req, res) {
     docs.local.orgs = req.body.orgs;
     docs.local.trainer_filter = req.body.trainer_filter;
     docs.local.name = req.body.name;
+    docs.local.goals = req.body.goals;
 
     docs.save(function(err) {
       if(err) throw err;
@@ -169,6 +171,7 @@ router.post('/edit-profile', isLoggedIn, function(req, res) {
     docs.local.orgs = req.body.orgs;
     docs.local.trainer_filter = req.body.trainer_filter;
     docs.local.name = req.body.name;
+    docs.local.goals = req.body.goals;
 
     docs.save(function(err) {
       if(err) throw err;
