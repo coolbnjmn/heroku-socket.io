@@ -7,14 +7,13 @@ a {
   position: fixed;
   top: 0;
   width: 100%;
-  color: #536895;
   height: 35px;
   text-align: center;
   padding-top: 15px;
 
-  -webkit-box-shadow:0px 0px 8px 0px #000000;
-  -moz-box-shadow: 0px 0px 8px 0px #000000;
-  box-shadow: 0px 0px 8px 0px #000000;
+  -webkit-box-shadow:0 0 8px 0 #000000;
+  -moz-box-shadow: 0 0 8px 0 #000000;
+  box-shadow: 0 0 8px 0 #000000;
 
   background-color: #536895;
   color: #536895;
@@ -22,12 +21,13 @@ a {
 
 #navigation a {
    font-size: 14px;
+   font-family: sans-serif;
    padding-left: 15px;
    padding-right: 15px;
-   color: #FFF3DA;
+   color: #FFFBF3;
    text-decoration: none;
 }
 
 #navigation a:hover {
-   color: #ABA392;
+   color: #9C9995;
 }
