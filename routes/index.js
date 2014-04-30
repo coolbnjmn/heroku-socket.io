@@ -52,6 +52,10 @@ router.get('/', function(req, res) {
            res.render('index', { title: 'GymBud' });
            });
 
+router.get('/about', function(req, res) {
+           res.render('about', {user: req.user} );
+});
+
 
 router.get('/chat', isLoggedIn, function(req, res, next) {
       User.find({}, function(e, docs) {
