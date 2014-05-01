@@ -1,0 +1,58 @@
+
+block content
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+ <link href="/background.css" rel="stylesheet">
+ style
+  body { padding-top:80px; }
+ .container
+  .col-sm-6.col-sm-offset-3
+   h1
+    span.fa.fa-lock
+    |   Enter Banking Information
+    #message
+      if message.length > 0
+        <div class="alert alert-danger"> #{message} </div>
+    //div.alert.alert-danger #{ message }
+    //<% if (message) { %>
+    //<div class="alert alert-danger"><%= message %></div>
+    //<% } %>
+   h3
+     span.fa.fa-warning
+     |     Please follow the designated form entry patterns
+   form(action='/add-trainer', method='post')
+    .form-group
+      label First Name
+      input.form-control(type='text', name='firstName', placeholder='John')
+    .form-group
+      label Last Name
+      input.form-control(type='text', name='lastName', placeholder='Doe')
+    .form-group
+      label Date Of Birth (Required)
+      input.form-control(type='text', name='dob', placeholder='1981-11-19')
+    .form-group
+      label SSN (Required)
+      input.form-control(type='text', name='ssn', placeholder='456-45-4567')
+    label Home Address
+    .form-group
+      label Street Address
+      input.form-control(type='text', name='streetAddress', placeholder='111 Main St')
+    .form-group
+      label City
+      input.form-control(type='text', name='locality', placeholder='Los Angeles')
+    .form-group
+      label State
+      input.form-control(type='text', name='region', placeholder='CA')
+    .form-group
+      label Zip Code
+      input.form-control(type='text', name='postalCode', placeholder='90024')
+    .form-group
+      label Phone Number (Required)
+      input.form-control(type='text', name='mobilePhone', placeholder='5555555555')
+    .form-group
+      label Account Number (Required)
+      input.form-control(type='text', name='accountNumber', placeholder='1123581321')
+    .form-group
+      label Routing Number (Required)
+      input.form-control(type='text', name='routingNumber', placeholder='071101307')
+    button.btn.btn-warning.btn-lg(type='submit') Finish Signup

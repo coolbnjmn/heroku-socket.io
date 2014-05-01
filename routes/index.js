@@ -29,12 +29,19 @@ var userSchema = new mongoose.Schema({
               rating: Number, 
 	      comments: String}]
   }, 
-  facebook : {
-    id : String, 
-    token : String, 
-    name : String, 
-    email : String
-  }
+  banking: {
+             firstName: String,
+	     lastName: String,
+	     dob: String,
+	     ssn: String,
+	     streetAddress: String,
+	     locality: String,
+	     region: String,
+	     postalCode: String, 
+	     mobilePhone: String,
+	     accountNumber: String,
+	     routingNumber: String
+    }
 });
 
 var User = mongoose.model('User', userSchema);
@@ -47,6 +54,14 @@ var reviewSchema = new mongoose.Schema({
 });
 
 var Review = mongoose.model('Review', reviewSchema);
+
+var braintree = require('braintree');
+var gateway = braintree.connect({ 
+        environment:  braintree.Environment.Sandbox,
+        merchantId:   '5y5262mc4z8c627q',
+        publicKey:    'nmfn7877khr53tgg',
+	privateKey:   '02250b63a3f4e5287be0c6dde217a78f'
+});
 
 router.get('/', function(req, res) {
            res.render('index', { title: 'GymBud' });
@@ -232,7 +247,79 @@ router.post('/add-review/:email', isLoggedIn, function(req, res) {
     });
 });
 
+router.post('/add-trainer', isLoggedIn, function(req, res) {
+  User.findOne({"local.email": req.user.local.email}, function(err, docs) {
+       if(req.body.firstName) {
+         docs.banking.firstName = req.body.firstName;
+       } else {
+         docs.banking.firstName = docs.local.name;
+       }
 
+       if(req.body.lastName) {
+         docs.banking.lastName = req.body.lastName;
+       } else {
+         docs.banking.lastName = docs.local.name;
+       }
+
+       docs.banking.dob = req.body.dob;
+       docs.banking.ssn = req.body.ssn;
+       docs.banking.streetAddress = req.body.streetAddress;
+       docs.banking.locality = req.body.locality;
+       docs.banking.region = req.body.region;
+       docs.banking.postalCode = req.body.postalCode;
+       docs.banking.mobilePhone = req.body.mobilePhone;
+       docs.banking.accountNumber = req.body.accountNumber;
+       docs.banking.routingNumber = req.body.routingNumber;
+
+       docs.save(function(err) {
+          // success or failure?
+       });
+
+       var merchantAccountParams = {
+         individual: {
+	   firstName : docs.banking.firstName,
+	   lastName: docs.banking.lastName,
+	   email: docs.local.email, 
+	   phone: docs.local.phonenum,
+	   dateOfBirth : docs.banking.dob,
+	   ssn: docs.banking.ssn,
+	   address: {
+	     streetAddress: docs.banking.streetAddress,
+	     locality: docs.banking.locality, 
+	     region: docs.banking.region,
+	     postalCode: docs.banking.postalCode
+	     }
+	   }, 
+	   funding: {
+	     destination: MerchantAccount.FundingDestination.Bank, 
+	     email: docs.local.email,
+	     mobilePhone: docs.banking.mobilePhone,
+	     accountNumber: docs.banking.accountNumber,
+	     routingNumber: docs.banking.routingNumber
+	   },
+	   tosAccepted: true,
+	   masterMerchantAccountId: "GymBud",
+	   id: docs.local.email
+       };
+
+       gateway.merchantAccount.create(merchantAccountParams, function(err, result) {
+         if(result.success) {
+	   console.log('successfully added banking information');
+	 } else {
+	   console.log('unsuccessfully added bank info');
+	 }
+       });
+  });
+});
+
+router.get('/add-trainer', isLoggedIn, function(req, res) {
+  req.flash('addTrainerMessage', 'All Fields are Required');
+  res.render('add-trainer', {user: req.user, message: req.flash('addTrainerMessage')});
+});
+
+router.get('/webhooks', function(req, res) { 
+  res.send(gateway.webhookNotification.verify(req.query.bt_challenge));
+});
 
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {

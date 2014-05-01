@@ -60,12 +60,19 @@ var userSchema = new mongoose.Schema({
 				   // email and comments in reviews
 				   name: String
                                      },
-                                     facebook : {
-                                     id : String,
-                                     token : String,
-                                     name : String,
-                                     email : String
-                                     }
+				     banking: {
+                                      firstName: String,
+	        			lastName: String,
+				     dob: String,
+				     ssn: String,
+				     streetAddress: String,
+				     locality: String,
+				     region: String,
+				     postalCode: String, 
+				     mobilePhone: String,
+				     accountNumber: String,
+				     routingNumber: String
+				     }
                                      });
 
 userSchema.methods.generateHash = function(password) {
