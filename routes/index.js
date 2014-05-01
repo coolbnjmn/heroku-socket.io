@@ -321,6 +321,20 @@ router.get('/webhooks', function(req, res) {
   res.send(gateway.webhookNotification.verify(req.query.bt_challenge));
 });
 
+router.post('/webhooks', function(req, res) {
+  gateway.webhookNotifaction.parse(
+    req.body.bt_signature, 
+    req.body.bt_payload,
+    function(err, webhookNotification) {
+	if(webhookNotification.kind === WebhookNotification.Kind.SubMerchantAccountApproved) {
+	  console.log('adding trainer was approved');
+	} else {
+	  console.log('adding trainer was not approved');
+	}
+    });
+    console.log('webhook received');
+});
+
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
