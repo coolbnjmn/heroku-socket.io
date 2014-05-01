@@ -298,7 +298,7 @@ router.post('/add-trainer', isLoggedIn, function(req, res) {
 	     routingNumber: docs.banking.routingNumber
 	   },
 	   tosAccepted: true,
-	   masterMerchantAccountId: "GymBud",
+	   masterMerchantAccountId: "ttvwp5d8nhm5wpcr",
 	   id: docs.local.email
        };
 
