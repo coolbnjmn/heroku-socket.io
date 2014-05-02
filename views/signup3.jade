@@ -1,0 +1,21 @@
+extends layout
+
+block content
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="/style.css">
+ <link href="/background.css" rel="stylesheet">
+ style
+  body { padding-top:80px; }
+ .container
+  .col-sm-6.col-sm-offset-3
+   h1
+    span.fa.fa-mail-reply
+    |   Finish Signup
+   h3
+    |   Please check your ucla email for a verification link. Thanks!
+   br
+   h3
+    |    Having problems? Send us a quick email with the subject [Email Not Received].
+    br
+    a(href="mailto:gymbuducla@gmail.com?Subject=[Email%20Not%20Received]") <strong> email us.  </strong>

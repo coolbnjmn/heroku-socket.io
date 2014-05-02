@@ -48,6 +48,8 @@ var userSchema = new mongoose.Schema({
                                      local: {
                                      email : String,
                                      password: String,
+				     isVerified: Boolean,
+				     verifyToken: String,
                                      socket: Object,
 				     goals: String,
       			             interest1: String,
