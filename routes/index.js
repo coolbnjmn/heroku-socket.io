@@ -206,7 +206,7 @@ router.post('/signup2', function(req, res) {
       from: "GymBud UCLA <gymbuducla@gmail.com>",
       to: docs.local.email,
       subject: "Please verify your new GymBud account!",
-      text: "Verification is simple! Just follow this link, and you're good to go! http://www.gymbuducla.com/confirm/"+docs.local.verifyToken
+      text: "Verification is simple! Just follow this link, and you're good to go! You'll be redirected to our home page and you can simply log in.  http://www.gymbuducla.com/confirm/"+docs.local.verifyToken
     };
 
     smtpTransport.sendMail(mailOptions, function(error, response) {
