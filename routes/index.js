@@ -24,13 +24,16 @@ var userSchema = new mongoose.Schema({
     interest3: String,
     phonenum: String,
     background: String,
-    orgs: String,
+    achievements: String,
     goals: String,
     trainer_filter: Boolean,
     reviews: [{ reviewer: String, 
               rating: Number, 
 	      comments: String}]
   }, 
+  facebook: {
+    accessToken: String
+  },
   banking: {
              firstName: String,
 	     lastName: String,
@@ -74,6 +77,15 @@ var smtpTransport = nodemailer.createTransport("SMTP", {
      pass: "gymbuducla123"
   }
 });
+
+/*
+require('faceplate').middleware({
+  app_id :"1413575708905968",
+  secret: "cedb405616b258b3710dabd99024646d",
+  scope: 'user_photos, email, user_friends'
+});
+*/
+
 router.get('/', function(req, res) {
    /*
    Code to auto verify all users in the database. 
@@ -92,6 +104,37 @@ router.get('/', function(req, res) {
    */
   res.render('index', { title: 'GymBud' });
            });
+
+// Redirect the user to Facebook for authentication.  When complete,
+// Facebook will redirect the user back to the application at
+//     /auth/facebook/callback
+router.get('/auth/facebook', function(req, res, next) {
+           passport.authenticate('facebook', {scope : 'email'})(req, res, next);
+           return;
+           });
+
+// Facebook will redirect the user to this URL after approval.  Finish the
+// authentication process by attempting to obtain an access token.  If
+// access was granted, the user will be logged in.  Otherwise,
+// authentication has failed.
+router.get('/auth/facebook/callback', function(req, res, next) {
+           passport.authenticate('facebook', { scope: 'emails',
+                                 successRedirect: '/chat',
+                                 failureRedirect: '/' })(req, res, next);
+           });
+
+var facebook = require('./facebook');
+router.get('/friends', isLoggedIn, function(req, res) {
+  facebook.get(req.user.facebook.accessToken, '/me/friends', function(data) {
+    console.log(data);
+  });
+
+/*
+  req.facebook.get('/me/friends', {limit: 100}, function(err, friends) {
+    res.send('friends: '+require('util').inspect(friends));
+  });
+  */
+});
 
 router.get('/about', function(req, res) {
            res.render('about', {user: req.user} );
@@ -190,7 +233,7 @@ router.post('/signup2', function(req, res) {
       docs.local.phonenum = req.body.phonenum
     }
     docs.local.background = req.body.background;
-    docs.local.orgs = req.body.orgs;
+    docs.local.achievements = req.body.achievements;
     docs.local.trainer_filter = req.body.trainer_filter;
     docs.local.name = req.body.name;
     docs.local.goals = req.body.goals;
@@ -277,7 +320,7 @@ router.post('/edit-profile', isLoggedIn, isVerified, function(req, res) {
       docs.local.phonenum = '';
     }
     docs.local.background = req.body.background;
-    docs.local.orgs = req.body.orgs;
+    docs.local.achievements = req.body.achievements;
     docs.local.trainer_filter = req.body.trainer_filter;
     docs.local.name = req.body.name;
     docs.local.goals = req.body.goals;
