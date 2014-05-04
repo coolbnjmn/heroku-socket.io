@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Welcome to GymBud</h1>
+            <p>
+				<a class="btn btn-primary btn-lg" role="button" href="/login">Login &raquo;</a>
+            </p>
+        </div>
+    </div>
+ 
+    <div class="container">
+        <% include content %>
+        <hr>
+	 
+	<div>
+	  <h2 style="text-align:center;"><a href="/signup"><strong>SIGN UP NOW</strong></a></h2>
+	</div>
+	<div class="col-sm-20">
+	  <div>
+		<h6 style="text-align:center;">or <a href="/login">login here.</a></h6>
+	  </div>
+	</div>
+
+        <% include footer %>
+    </div>
+    <!-- /container -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#home').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+    <div class="container">
+        <div class="page-header">
+			<h1>
+				<span class="fa fa-sign-in"></span>| Continue Signup
+			</h1>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+				<div id="message">
+					<script>
+						if (message.length > 0)
+						<div class="alert alert-danger"> #{message} </div>
+					</script>
+				</div>				
+				
+				<form action="/signup2" method="post">
+				  <div class="form-group">
+					<label>Full Name</label>
+					<input type="text" name="name" class="form-control"/>
+				  </div>
+					<label>Interests 1
+					  <div class="controls">
+						<select id="selectbasic" name="interest1" class="input-xlarge">
+						  <option>Weightlifting</option>
+						  <option>Aerobics</option>
+						  <option>Swimming</option>
+						  <option>Crossfit</option>
+						  <option>Yoga</option>
+						  <option>Cycling</option>
+						  <option>Interval Training</option>
+						</select>
+					  </div>
+					</label>
+					<label>Interests 2
+					  <div class="controls">
+						<select id="selectbasic" name="interest2" class="input-xlarge">
+						  <option>Weightlifting</option>
+						  <option>Aerobics</option>
+						  <option>Swimming</option>
+						  <option>Crossfit</option>
+						  <option>Yoga</option>
+						  <option>Cycling</option>
+						  <option>Interval Training</option>
+						</select>
+					  </div>
+					</label>
+					<label>Interests 3
+					  <div class="controls">
+						<select id="selectbasic" name="interest3" class="input-xlarge">
+						  <option>Weightlifting</option>
+						  <option>Aerobics</option>
+						  <option>Swimming</option>
+						  <option>Crossfit</option>
+						  <option>Yoga</option>
+						  <option>Cycling</option>
+						  <option>Interval Training</option>
+						</select>
+					  </div>
+					</label>
+					<div class="form-group">
+					  <label>Phone Number (Optional)</label>
+					  <input type="text" name="phonenum" class="form-control"/>
+					</div>
+					<div class="form-group">
+					  <label>Background</label>
+					  <textarea type="text" name="background" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+					  <label>Organizations</label>
+					  <textarea type="text" name="orgs" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+					  <label>Your GymBud Goals</label>
+					  <textarea type="text" name="goals" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+					  <label>Please Select One : </label><br/>
+					  <input type="radio" name="trainer_filter" value="1"/>  Trainer
+					  <input type="radio" name="trainer_filter" value="0"/>  Gym Goer
+					</div>
+					<div class="form-group">
+					  <label>Terms and Conditions</label>
+					  <p>The participating individual understands the potential for health risks and injury associated with fitness and exercise. Gymbud will not be held liable for any injuries or damaged property that occur during any paired training sessions transacted through the website/mobile app. GymBud users are personally liable for any injuries incurred during training. Users reserve the right to refuse any advice recommended by their mentor during a given session if they deem it unreasonable or might cause them harm.</p>
+					  <p>Payment transactions must be completed no later than 1 hour before the scheduled workout time. No-shows will be punished with a week-long ban of the service.</p>
+					  <p>Both parties agree to arrive on time to any scheduled training sessions and stay for the predetermined duration of the session.</p>
+					  <p>Any form of harassment by either party will not be tolerated. Such behavior will result in a ban from GymBud services and the notification of the presiding academic institution (if applicable).</p>
+					</div>
+					<input type="radio" name="toc_agree" value="0"/>					
+					I agree to these Terms and Conditions<br/>
+					<button type="submit" class="btn btn-warning btn-lg">Finish Signup</button>
+				</form>
+				<hr/>
+				</div>
+        </div>
+ 
+        <hr>
+ 
+        <% include footer %>
+    </div>
+    <!-- /container -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#about').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

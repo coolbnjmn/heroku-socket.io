@@ -71,6 +71,10 @@ router.get('/about', function(req, res) {
            res.render('about', {user: req.user} );
 });
 
+router.get('/team_page', function(req, res) {
+           res.render('team_page', {user: req.user} );
+});
+
 router.get('/team', function(req, res) {
            res.render('team', {user: req.user} );
 });
