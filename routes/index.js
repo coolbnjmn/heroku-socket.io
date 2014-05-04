@@ -60,6 +60,16 @@ var reviewSchema = new mongoose.Schema({
 
 var Review = mongoose.model('Review', reviewSchema);
 
+var eventSchema = new mongoose.Schema({
+	date: String,
+	place: String, 
+	person1: String,
+	person2: String,
+	description: String
+});
+
+var Event = mongoose.model('Event', eventSchema);
+
 var braintree = require('braintree');
 var gateway = braintree.connect({ 
         environment:  braintree.Environment.Sandbox,
@@ -147,7 +157,9 @@ router.get('/team', function(req, res) {
 
 router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
       User.find({}, function(e, docs) {
-        res.render('chat', {user: req.user, userlist: docs});
+       Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
+        res.render('chat', {user: req.user, userlist: docs, events: events});
+	});
         });
 });
 
@@ -436,6 +448,20 @@ router.post('/webhooks', function(req, res) {
 	}
     });
     console.log('webhook received');
+});
+
+router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
+	var newEvent = new Event({date: req.body.date, place: req.body.place, person1: req.user.local.email, person2: req.body.person, description: req.body.description});    
+	newEvent.save(function(err) {
+	   if(err) throw err;
+	   // save succeeeded
+	   res.redirect('/chat');
+	});
+});
+router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
+      User.find({}, function(e, docs) {
+         res.render('add-event', {user: req.user, userlist: docs, message: req.flash('eventMessage')});
+        });
 });
 
 

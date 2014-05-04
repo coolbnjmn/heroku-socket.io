@@ -90,6 +90,14 @@ block content
                |    Login with Facebook!
              br
              <a href='/auth/facebook' class='btn btn-primary'> Verify With Facebook </a>
+
+        .well
+          <a href='/add-event' class='btn btn-primary'> Create a New Event </a>
+          each event, i in events
+            h3 #{event.description}
+            h4 With: #{event.person1} and #{event.person2}
+            h4 On: #{event.date}
+            h4 At: #{event.place}
    .row.pages
     .col-sm-6
       h3

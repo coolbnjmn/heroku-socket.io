@@ -1,0 +1,35 @@
+extends layout
+
+block content
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+ <link href="/background.css" rel="stylesheet">
+ style
+  body { padding-top:80px; }
+ .container
+  .col-sm-6.col-sm-offset-3
+   h1
+    span.fa.fa-calendar
+    |   New Event
+    #message
+      if message.length > 0
+        <div class="alert alert-danger"> #{message} </div>
+   form(action='/add-event', method='post')
+    .form-group
+      label Date (MM/DD/YYYY)
+      input.form-control(type='text', name='date')
+    .form-group
+      label Where?
+      input.form-control(type='text', name='place', placeholder='Wooden Center')
+    .form-group
+     label With... 
+      .controls
+       select#selectbasic.input-xlarge(name='person')
+         each youser, i in userlist
+          if youser.local.name
+            <option value=#{youser.local.email}> #{youser.local.name} </option>
+    .form-group
+     label Description
+     textarea.form-control(type='text', name='description', placeholder='We lifted heavy legs.') 
+    br
+    button.btn.btn-warning.btn-lg(type='submit') Create Event
