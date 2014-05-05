@@ -2,23 +2,6 @@
 var express = require('express');
 var app = express();
 
-// Added for About page in online tutorial
-// Command Node server to render a page view
-// Must be before createServer
-var about = require('./routes/about');
-app.get('/about', about.about);
-
-var contact = require('./routes/contact');
-app.get('/contact', contact.contact);
-
-var login = require('./routes/login');
-app.get('/login', login.login);
-
-var signup = require('./routes/signup');
-app.get('/signup', signup.signup);
-
-var team_page = require('./routes/team_page');
-app.get('/team_page', team_page.team_page);
 
 var server = require('http').createServer(app);
 var LocalStrategy = require('passport-local').Strategy;

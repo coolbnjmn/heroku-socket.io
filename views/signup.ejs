@@ -14,10 +14,9 @@
             <div class="panel-heading"></div>
             <div class="panel-body">
 				<div id="message">
-					<script>
-						if (message.length > 0)
-						<div class="alert alert-danger"> #{message} </div>
-					</script>
+						<% if (message.length) { %>
+						<div class="alert alert-danger"> <%= message%> </div>
+						<% } %>
 				</div>				
 				
 				<form action="/signup" method="post">

@@ -68,11 +68,11 @@ router.get('/', function(req, res) {
            });
 
 router.get('/about', function(req, res) {
-           res.render('about', {user: req.user} );
+           res.render('about', {title: "GymBud", user: req.user} );
 });
 
 router.get('/team_page', function(req, res) {
-           res.render('team_page', {user: req.user} );
+           res.render('team_page', {title: "GymBud", user: req.user} );
 });
 
 router.get('/team', function(req, res) {
@@ -127,7 +127,7 @@ router.get('/logout', function(req, res) {
         });
 
 router.get('/login', function(req, res) {
-           res.render('login', {user: req.user, message: req.flash('loginMessage') });
+           res.render('login', {title: "GymBud", user: req.user, message: req.flash('loginMessage') });
            });
 
 router.post('/login', passport.authenticate('local-login', {
@@ -137,7 +137,7 @@ router.post('/login', passport.authenticate('local-login', {
 }));
 
 router.get('/signup', function(req, res) {
-           res.render('signup', {user : req.user, message: req.flash('signupMessage') });
+           res.render('signup', {title: "GymBud", user : req.user, message: req.flash('signupMessage') });
            });
 
 router.post('/signup', passport.authenticate('local-signup', {
@@ -147,13 +147,13 @@ router.post('/signup', passport.authenticate('local-signup', {
                                              }));
 
 router.get('/signup2', isLoggedIn, function(req, res) {
-           res.render('signup2', {user : req.user, message: req.flash('signupMessage') });
+           res.render('signup2', {title: "GymBud", user : req.user, message: req.flash('signupMessage') });
            });
 
 router.post('/signup2', function(req, res) {
   if(!req.body.toc_agree) {
     req.flash('signupMessage', 'You must agree to the terms and conditions');
-    res.render('signup2', {user: req.user, message: req.flash('signupMessage') });
+    res.render('signup2', {title: "GymBud", user: req.user, message: req.flash('signupMessage') });
     return;
   }
   User.findOne({"local.email": req.user.local.email}, function(err, docs) {
@@ -177,7 +177,7 @@ router.post('/signup2', function(req, res) {
 });
 
 router.get('/contact', function(req, res) {
-  res.render('contact', {user: req.user});
+  res.render('contact', {title: "GymBud", user: req.user});
 });
 
 router.get('/userlist', isLoggedIn, function(req, res) {
