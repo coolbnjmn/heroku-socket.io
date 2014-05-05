@@ -5,6 +5,7 @@ var app = express();
 
 var server = require('http').createServer(app);
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var io = require('socket.io').listen(server);
 var port = process.env.PORT || 8080;
 var path = require('path');
@@ -50,6 +51,8 @@ var userSchema = new mongoose.Schema({
                                      local: {
                                      email : String,
                                      password: String,
+				     isVerified: Boolean,
+				     verifyToken: String,
                                      socket: Object,
 				     goals: String,
       			             interest1: String,
@@ -57,11 +60,14 @@ var userSchema = new mongoose.Schema({
    				 interest3: String,
    				 phonenum: String,
   				  background: String,
- 				   orgs: String,
+ 				   achievements: String,
  				   trainer_filter: Boolean,
 				   // email and comments in reviews
 				   name: String
                                      },
+				     facebook: {
+				       accessToken: String
+				     },
 				     banking: {
                                       firstName: String,
 	        			lastName: String,
@@ -265,6 +271,28 @@ passport.use('local-login', new LocalStrategy({
                                                            return done(null, user);
                                                            });
                                               }));
+passport.use(new FacebookStrategy({
+                                  clientID: '1413575708905968',
+                                  clientSecret: 'cedb405616b258b3710dabd99024646d',
+                                  callbackURL: "http://www.gymbuducla.com/auth/facebook/callback",
+                                  passReqToCallback : true,
+                                  profileUrl: 'https://graph.facebook.com/me?fields=location,first_name,last_name,middle_name,name,link,username,work,education,gender,timezone,locale,verified,picture,about,address,age_range,bio,birthday,cover,currency,devices,emails,favorite_athletes,id,hometown,favorite_teams,inspirational_people,install_type,installed,interested_in,languages,meeting_for,name_format,political,quotes,relationship_status,religion,significant_other,sports,updated_time,website'
+                                  },
+                                  function(req, accessToken, refreshToken, profile, done) {
+                                  console.log('here');
+                                  console.log(profile.id);
+                                  console.log(profile.displayName);
+                                  console.log('IM HERE');
+                                  
+                                  var user = req.user;
+                                  user.facebook.accessToken = accessToken;
+                                  
+                                  user.save(function(err) {
+                                            if(err) throw err;
+                                            return done(null, user);
+                                            });
+}));
+
 
 passport.serializeUser(function(user, done) {
                        done(null, user.id);

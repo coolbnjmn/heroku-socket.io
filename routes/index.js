@@ -16,19 +16,24 @@ var userSchema = new mongoose.Schema({
     email : String, 
     name: String,
     password: String,
+    isVerified: Boolean,
+    verifyToken: String,
     socket: Object, 
     interest1: String,
     interest2: String,
     interest3: String,
     phonenum: String,
     background: String,
-    orgs: String,
+    achievements: String,
     goals: String,
     trainer_filter: Boolean,
     reviews: [{ reviewer: String, 
               rating: Number, 
 	      comments: String}]
   }, 
+  facebook: {
+    accessToken: String
+  },
   banking: {
              firstName: String,
 	     lastName: String,
@@ -55,6 +60,16 @@ var reviewSchema = new mongoose.Schema({
 
 var Review = mongoose.model('Review', reviewSchema);
 
+var eventSchema = new mongoose.Schema({
+	date: String,
+	place: String, 
+	person1: String,
+	person2: String,
+	description: String
+});
+
+var Event = mongoose.model('Event', eventSchema);
+
 var braintree = require('braintree');
 var gateway = braintree.connect({ 
         environment:  braintree.Environment.Sandbox,
@@ -63,9 +78,73 @@ var gateway = braintree.connect({
 	privateKey:   '02250b63a3f4e5287be0c6dde217a78f'
 });
 
+var nodemailer = require('nodemailer');
+
+var smtpTransport = nodemailer.createTransport("SMTP", {
+  service: "Gmail", 
+  auth:  {
+     user: "gymbuducla@gmail.com", 
+     pass: "gymbuducla123"
+  }
+});
+
+/*
+require('faceplate').middleware({
+  app_id :"1413575708905968",
+  secret: "cedb405616b258b3710dabd99024646d",
+  scope: 'user_photos, email, user_friends'
+});
+*/
+
 router.get('/', function(req, res) {
-           res.render('index', { title: 'GymBud' });
+   /*
+   Code to auto verify all users in the database. 
+   User.find({}, function(err, docs) {
+      for(var i = 0; i < docs.length; i++) {
+         if(docs[i].local.isVerified === undefined)
+	 {
+	 	docs[i].local.isVerified = true;
+		docs[i].local.verifyToken = makeid();
+	        docs[i].save(function(error) {
+	     		if(error) throw error;
+		});
+	 }
+      }
+   });
+   */
+  res.render('index', { title: 'GymBud' });
            });
+
+// Redirect the user to Facebook for authentication.  When complete,
+// Facebook will redirect the user back to the application at
+//     /auth/facebook/callback
+router.get('/auth/facebook', function(req, res, next) {
+           passport.authenticate('facebook', {scope : 'email'})(req, res, next);
+           return;
+           });
+
+// Facebook will redirect the user to this URL after approval.  Finish the
+// authentication process by attempting to obtain an access token.  If
+// access was granted, the user will be logged in.  Otherwise,
+// authentication has failed.
+router.get('/auth/facebook/callback', function(req, res, next) {
+           passport.authenticate('facebook', { scope: 'emails',
+                                 successRedirect: '/chat',
+                                 failureRedirect: '/' })(req, res, next);
+           });
+
+var facebook = require('./facebook');
+router.get('/friends', isLoggedIn, function(req, res) {
+  facebook.get(req.user.facebook.accessToken, '/me/friends', function(data) {
+    console.log(data);
+  });
+
+/*
+  req.facebook.get('/me/friends', {limit: 100}, function(err, friends) {
+    res.send('friends: '+require('util').inspect(friends));
+  });
+  */
+});
 
 router.get('/about', function(req, res) {
            res.render('about', {title: "GymBud", user: req.user} );
@@ -80,13 +159,15 @@ router.get('/team', function(req, res) {
 });
 
 
-router.get('/chat', isLoggedIn, function(req, res, next) {
+router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
       User.find({}, function(e, docs) {
-        res.render('chat', {user: req.user, userlist: docs});
+       Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
+        res.render('chat', {user: req.user, userlist: docs, events: events});
+	});
         });
 });
 
-router.get('/chat/:username', isLoggedIn, function(req, res) {
+router.get('/chat/:username', isLoggedIn, isVerified, function(req, res) {
 	var username = req.params.username;
       User.find({}, function(e, docs) {
         res.render('chat', {user: req.user, to:username, userlist: docs});
@@ -146,6 +227,10 @@ router.post('/signup', passport.authenticate('local-signup', {
                                              failureFlash: true
                                              }));
 
+router.get('/signup3', isLoggedIn, function(req, res) {
+  res.render('signup3', {user: req.user});
+});
+
 router.get('/signup2', isLoggedIn, function(req, res) {
            res.render('signup2', {title: "GymBud", user : req.user, message: req.flash('signupMessage') });
            });
@@ -164,30 +249,60 @@ router.post('/signup2', function(req, res) {
       docs.local.phonenum = req.body.phonenum
     }
     docs.local.background = req.body.background;
-    docs.local.orgs = req.body.orgs;
+    docs.local.achievements = req.body.achievements;
     docs.local.trainer_filter = req.body.trainer_filter;
     docs.local.name = req.body.name;
     docs.local.goals = req.body.goals;
 
+    docs.local.isVerified = false;
+    docs.local.verifyToken = makeid();
     docs.save(function(err) {
       if(err) throw err;
       res.redirect('/chat');
     });
+
+    var mailOptions = { 
+      from: "GymBud UCLA <gymbuducla@gmail.com>",
+      to: docs.local.email,
+      subject: "Please verify your new GymBud account!",
+      text: "Verification is simple! Just follow this link, and you're good to go! You'll be redirected to our home page and you can simply log in.  http://www.gymbuducla.com/confirm/"+docs.local.verifyToken
+    };
+
+    smtpTransport.sendMail(mailOptions, function(error, response) {
+      if(error) {
+        console.log('MAILING ERROR');
+        console.log(error);
+      } else {
+        console.log('Message sent: ' + response.message);
+      }
+    });
   });
 });
 
+router.get('/confirm/:verifyToken', function(req, res) {
+   var verifyToken = req.params.verifyToken;
+
+   User.findOne({'local.verifyToken': verifyToken}, function(err, docs) {
+     docs.local.isVerified = true;
+     docs.save(function(err) {
+      if(err) throw err;
+      res.redirect('/');
+     });
+   });
+
+});
 router.get('/contact', function(req, res) {
   res.render('contact', {title: "GymBud", user: req.user});
 });
 
-router.get('/userlist', isLoggedIn, function(req, res) {
+router.get('/userlist', isLoggedIn, isVerified, function(req, res) {
   
       User.find({}, function(e, docs) {
          res.render('userlist', {user: req.user, userlist: docs});
         });
 });
 
-router.get('/profile/:email', isLoggedIn, function(req, res) {
+router.get('/profile/:email', isLoggedIn, isVerified, function(req, res) {
     var email = req.params.email;
 
     User.findOne({'local.email': email}, function(err, docs) {
@@ -206,11 +321,11 @@ router.get('/profile/:email', isLoggedIn, function(req, res) {
     });
 });
 
-router.get('/edit-profile', isLoggedIn, function(req, res) {
+router.get('/edit-profile', isLoggedIn, isVerified, function(req, res) {
    res.render('edit-profile', {user: req.user});
 });
 
-router.post('/edit-profile', isLoggedIn, function(req, res) {
+router.post('/edit-profile', isLoggedIn, isVerified, function(req, res) {
   User.findOne({"local.email": req.user.local.email}, function(err, docs) {
     docs.local.interest1 = req.body.interest1;
     docs.local.interest2 = req.body.interest2;
@@ -221,7 +336,7 @@ router.post('/edit-profile', isLoggedIn, function(req, res) {
       docs.local.phonenum = '';
     }
     docs.local.background = req.body.background;
-    docs.local.orgs = req.body.orgs;
+    docs.local.achievements = req.body.achievements;
     docs.local.trainer_filter = req.body.trainer_filter;
     docs.local.name = req.body.name;
     docs.local.goals = req.body.goals;
@@ -233,12 +348,12 @@ router.post('/edit-profile', isLoggedIn, function(req, res) {
   });
 });
 
-router.get('/add-review/:email', isLoggedIn, function(req, res) {
+router.get('/add-review/:email', isLoggedIn, isVerified, function(req, res) {
    // first check if this user has already added a review
    res.render('add-review', {forUser: req.params.email, user: req.user});
 });
 
-router.post('/add-review/:email', isLoggedIn, function(req, res) {
+router.post('/add-review/:email', isLoggedIn, isVerified, function(req, res) {
     User.findOne({"local.email": req.params.email} , function(err, docs) {
        Review.create({reviewer: req.user.local.name, rating: req.body.rating, comments: req.body.comments, reviewee: req.params.email}, function(err, review) {
        console.log(req.user.local.name);
@@ -251,7 +366,7 @@ router.post('/add-review/:email', isLoggedIn, function(req, res) {
     });
 });
 
-router.post('/add-trainer', isLoggedIn, function(req, res) {
+router.post('/add-trainer', isLoggedIn, isVerified, function(req, res) {
   User.findOne({"local.email": req.user.local.email}, function(err, docs) {
        if(req.body.firstName) {
          docs.banking.firstName = req.body.firstName;
@@ -302,7 +417,7 @@ router.post('/add-trainer', isLoggedIn, function(req, res) {
 	     routingNumber: docs.banking.routingNumber
 	   },
 	   tosAccepted: true,
-	   masterMerchantAccountId: "GymBud",
+	   masterMerchantAccountId: "ttvwp5d8nhm5wpcr",
 	   id: docs.local.email
        };
 
@@ -316,7 +431,7 @@ router.post('/add-trainer', isLoggedIn, function(req, res) {
   });
 });
 
-router.get('/add-trainer', isLoggedIn, function(req, res) {
+router.get('/add-trainer', isLoggedIn, isVerified, function(req, res) {
   req.flash('addTrainerMessage', 'All Fields are Required');
   res.render('add-trainer', {user: req.user, message: req.flash('addTrainerMessage')});
 });
@@ -339,6 +454,38 @@ router.post('/webhooks', function(req, res) {
     console.log('webhook received');
 });
 
+router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
+	var newEvent = new Event({date: req.body.date, place: req.body.place, person1: req.user.local.email, person2: req.body.person, description: req.body.description});    
+	newEvent.save(function(err) {
+	   if(err) throw err;
+	   // save succeeeded
+	   res.redirect('/chat');
+	});
+});
+router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
+      User.find({}, function(e, docs) {
+         res.render('add-event', {user: req.user, userlist: docs, message: req.flash('eventMessage')});
+        });
+});
+
+
+
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for( var i=0; i < 20; i++ )
+           text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+       return text;
+}
+
+function isVerified(req, res, next) {
+    if(req.user.local.isVerified) {
+       return next();
+    }
+    res.redirect('/signup3');
+}
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();

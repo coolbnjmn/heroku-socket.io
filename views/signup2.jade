@@ -1,0 +1,87 @@
+
+block content
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+ <link href="/background.css" rel="stylesheet">
+ style
+  body { padding-top:80px; }
+ .container
+  .col-sm-6.col-sm-offset-3
+   h1
+    span.fa.fa-sign-in
+    |   Continue Signup
+    #message
+      if message.length > 0
+        <div class="alert alert-danger"> #{message} </div>
+    //div.alert.alert-danger #{ message }
+    //<% if (message) { %>
+    //<div class="alert alert-danger"><%= message %></div>
+    //<% } %>
+   form(action='/signup2', method='post')
+    .form-group
+      label Full Name
+      input.form-control(type='text', name='name')
+    .form-group
+     label Interests 1
+      .controls
+       select#selectbasic.input-xlarge(name='interest1')
+         option Weightlifting
+         option Aerobics
+         option Swimming
+         option Crossfit
+         option Yoga
+         option Cycling
+         option Interval Training
+     label Interests 2
+      .controls
+       select#selectbasic.input-xlarge(name='interest2')
+         option Weightlifting
+         option Aerobics
+         option Swimming
+         option Crossfit
+         option Yoga
+         option Cycling
+         option Interval Training
+     label Interests 3
+      .controls
+       select#selectbasic.input-xlarge(name='interest3')
+         option Weightlifting
+         option Aerobics
+         option Swimming
+         option Crossfit
+         option Yoga
+         option Cycling
+         option Interval Training
+    .form-group
+     label Phone Number (Optional)
+     input.form-control(type='text', name='phonenum')
+    .form-group
+     label Background
+     textarea.form-control(type='text', name='background')
+    .form-group
+     label Achievements
+     textarea.form-control(type='text', name='achievements')
+    .form-group
+     label Your GymBud Goals
+     textarea.form-control(type='text', name='goals')
+    .form-group
+     label Please Select One : 
+     br
+     input(type='radio', name='trainer_filter', value='1', checked=trainer=='trainer')
+     |   Trainer
+     input(type='radio', name='trainer_filter', value='0', checked=trainer=='gym goer')
+     |   Gym Goer
+    .form-group
+     label Terms and Conditions
+     p.
+       The participating individual understands the potential for health risks and injury associated with fitness and exercise. Gymbud will not be held liable for any injuries or damaged property that occur during any paired training sessions transacted through the website/mobile app. GymBud users are personally liable for any injuries incurred during training. Users reserve the right to refuse any advice recommended by their mentor during a given session if they deem it unreasonable or might cause them harm.
+     p.
+       Payment transactions must be completed no later than 1 hour before the scheduled workout time. No-shows will be punished with a week-long ban of the service.
+     p.
+       Both parties agree to arrive on time to any scheduled training sessions and stay for the predetermined duration of the session.
+     p.
+       Any form of harassment by either party will not be tolerated. Such behavior will result in a ban from GymBud services and the notification of the presiding academic institution (if applicable).
+    input(type='radio', name='toc_agree', value='0')
+    |    I agree to these Terms and Conditions
+    br
+    button.btn.btn-warning.btn-lg(type='submit') Finish Signup

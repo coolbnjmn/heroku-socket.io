@@ -37,8 +37,8 @@ block content
             strong Background 
             | : #{user.local.background}
             br
-            strong Organizations
-            | : #{user.local.orgs}
+            strong Achievements
+            | : #{user.local.achievements}
             br
             strong GymBud Goals
             | : #{user.local.goals}
@@ -78,6 +78,26 @@ block content
               form#formUpload(method='post', action='/uploadImage', enctype='multipart/form-data')
                 input#image(type="file", name='image')
                 button#btnSubmit(type='submit') Submit
+        if user.facebook.accessToken
+          .well
+            h3
+             span.fa.fa-facebook
+              |    Facebook Verified!
+        else 
+          .well
+            h3
+             span.fa.fa-facebook
+               |    Login with Facebook!
+             br
+             <a href='/auth/facebook' class='btn btn-primary'> Verify With Facebook </a>
+
+        .well
+          <a href='/add-event' class='btn btn-primary'> Create a New Event </a>
+          each event, i in events
+            h3 #{event.description}
+            h4 With: #{event.person1} and #{event.person2}
+            h4 On: #{event.date}
+            h4 At: #{event.place}
    .row.pages
     .col-sm-6
       h3
