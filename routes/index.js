@@ -191,7 +191,10 @@ router.post('/uploadImage', function(req, res) {
 	});
 
         User.find({}, function(e, userlist) {
-	  res.render('chat', {user: docs, userlist: userlist});
+          Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
+           res.render('chat', {events: events, user: docs, to:undefined, userlist: userlist});
+          });
+	 // res.render('chat', {user: docs, userlist: userlist});
 	});
       });
     } else {
