@@ -166,8 +166,10 @@ router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
 router.get('/chat/:username', isLoggedIn, isVerified, function(req, res) {
 	var username = req.params.username;
       User.find({}, function(e, docs) {
-        res.render('chat', {user: req.user, to:username, userlist: docs});
+       Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
+        res.render('chat', {events: events, user: req.user, to:username, userlist: docs});
         });
+	});
 });
 
 
@@ -406,7 +408,7 @@ router.post('/add-trainer', isLoggedIn, isVerified, function(req, res) {
 	     }
 	   }, 
 	   funding: {
-	     destination: MerchantAccount.FundingDestination.Bank, 
+	     destination: braintree.MerchantAccount.FundingDestination.Bank, 
 	     email: docs.local.email,
 	     mobilePhone: docs.banking.mobilePhone,
 	     accountNumber: docs.banking.accountNumber,
