@@ -162,7 +162,7 @@ router.get('/team', function(req, res) {
 router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
       User.find({}, function(e, docs) {
        Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
-        res.render('chat', {title: "GymBud", user: req.user, userlist: docs, events: events});
+        res.render('chat', {title: "GymBud", user: req.user, to:undefined, userlist: docs, events: events});
 	});
         });
 });

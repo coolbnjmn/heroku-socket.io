@@ -72,7 +72,7 @@
 							<% if (user.image.contentType) { %>
 								<div class="well">
 									<h3>
-									<span class="fa.fa-picture-o">Profile Picture</span>
+									<span class="fa fa-picture-o">Profile Picture</span>
 									</h3>
 									<img id="image" src="">
 									<script>
@@ -81,7 +81,7 @@
 									</script>
 									</br>
 									<h3>
-									<span class="fa.fa-edit">Change your picture:</span>
+									<span class="fa fa-edit">Change your picture:</span>
 									</h3>
 									<form id="formUpload" method="post" action="uploadImage" enctype="multipart/form-data">
 									  <input id="image" type="file" name="image"/>
@@ -91,7 +91,7 @@
 							<% } else { %>
 								<div class="well">
 									<h3>
-									<span class="fa.fa-picture-o">Add a Profile Picture</span>
+									<span class="fa fa-picture-o">Add a Profile Picture</span>
 									</h3>							
 									<form id="formUpload" method="post" action="/uploadImage" enctype="multipart/form-data">
 									  <input id="image" type="file" name="image"/>
@@ -111,6 +111,40 @@
 									</ul>
 								</div>
 							</div>
+                            
+                            <div class="col-sm-6">
+                            <% if (user.facebook.accessToken) { %>
+                              <div class="well">
+                                <h3>
+                                <span class="fa fa-facebook"> Facebook Verified! </span>
+                                </h3>
+                            <% } else { %>
+                                <h3>
+                                <span class="fa fa-facebook"> Login with Facebook! </span>
+                                <br>
+                                <a href='/auth/facebook/ class='btn btn-primary'> Verify With Facebook </a>
+                            <% } %>
+                            </div>
+                            
+                            <div class="well">
+                              <a href="/add-event" class="btn btn-primary"> Create a new Event </a>
+                              
+                              <% for (var i = 0; i < events.length; i++) { %>
+                                <h3>
+                                  <%= events[i].description %>
+                                </h3>
+                                <h4>
+                                  With: <%= events[i].person1 %> and <%= events[i].person2 %>
+                                </h4>
+                                <h4>
+                                  On: <%= events[i].date %>
+                                </h4>
+                                <h4>
+                                  At: <%= events[i].place %>
+                                </h4>
+                            <% } %>
+                            </div>
+
 							<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 							<script src="/socket.io/socket.io.js"></script>
 							<script src="/main.js"></script>
