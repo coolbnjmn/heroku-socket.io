@@ -82,14 +82,14 @@ router.get('/team', function(req, res) {
 
 router.get('/chat', isLoggedIn, function(req, res, next) {
       User.find({}, function(e, docs) {
-        res.render('chat', {user: req.user, userlist: docs});
+        res.render('chat', {title: "GymBud", user: req.user, userlist: docs, to:undefined});
         });
 });
 
 router.get('/chat/:username', isLoggedIn, function(req, res) {
 	var username = req.params.username;
       User.find({}, function(e, docs) {
-        res.render('chat', {user: req.user, to:username, userlist: docs});
+        res.render('chat', {title: "GymBud", user: req.user, to:username, userlist: docs});
         });
 });
 
@@ -112,7 +112,7 @@ router.post('/uploadImage', function(req, res) {
 	});
 
         User.find({}, function(e, userlist) {
-	  res.render('chat', {user: docs, userlist: userlist});
+	  res.render('chat', {title: "GymBud", user: docs, userlist: userlist});
 	});
       });
     } else {
@@ -183,7 +183,7 @@ router.get('/contact', function(req, res) {
 router.get('/userlist', isLoggedIn, function(req, res) {
   
       User.find({}, function(e, docs) {
-         res.render('userlist', {user: req.user, userlist: docs});
+         res.render('userlist', {title: "GymBud", user: req.user, userlist: docs});
         });
 });
 
@@ -207,7 +207,7 @@ router.get('/profile/:email', isLoggedIn, function(req, res) {
 });
 
 router.get('/edit-profile', isLoggedIn, function(req, res) {
-   res.render('edit-profile', {user: req.user});
+   res.render('edit-profile', {title: "GymBud", user: req.user});
 });
 
 router.post('/edit-profile', isLoggedIn, function(req, res) {
