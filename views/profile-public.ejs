@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                Header
+            </h1>
+        </div>
+        <div class="panel panel-default">
+		
+			<div class="row pages">
+				<div class="col-sm-6">
+					<div id="userProfile">
+					<% if (userProfile.local.email) { %>
+						<div class="well">
+							<h3>
+							<span class="fa fa-user"></span>
+							Profile
+							</h3>
+							<p>
+								<strong>Name</strong>: <%= userProfile.local.name %>
+								<br/>
+								<strong>email</strong>: <%= userProfile.local.email %>
+								<br/>
+								<strong>Interests: </strong>
+								<br/>
+								<%= userProfile.local.interest1 %>
+								<br/>
+								<%= userProfile.local.interest2 %>
+								<br/>
+								<%= userProfile.local.interest3 %>
+								<br/>
+								<strong>Background: </strong>
+								<br/>
+								<%= userProfile.local.background %>
+								<br/>
+								<strong>Organizations: </strong>
+								<br/>
+								<%= userProfile.local.orgs %>
+								<br/>
+								<strong>GymBud Goals:</strong>
+								<br/>
+								<%= userProfile.local.goals %>
+								<br/>
+								<strong>User Status:</strong>
+								<% if (userProfile.local.trainer_filter) { %>
+									Trainer
+								<% } else { %>
+									Gym Goer
+								<% } %>
+							</p>
+						</div>
+					<% } %>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div id="userProfile">
+					<% if (userProfile.image.contentType) { %>
+						<div class="well">
+							<h3>
+							<span class="fa fa-picture-o">Profile Picture</span>
+							</h3>
+							<img id="image" src="">
+							<script>
+								console.log('here');
+								document.getElementById("image").src = 'data:#{userProfile.image.contentType};base64,#{userProfile.image.data}';
+							</script>
+						</div>
+					<% } else {%>
+						<div class="well">
+							<h3>
+							<span class="fa.fa-picture-o">No Picture here!</span>
+							</h3>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<!-- row pages -->
+			
+			<div class="row pages">
+				<div class="col-sm-6 chat page">
+					<div class="well chatArea">
+						<ul class="messages">
+							<input type="hidden" id="toField" value="<%= to %>" />
+							<input type="hidden" id="username" value"<%= user.local.email %>" />
+							<input class="inputMessage" placeholder="Type here..." />
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div id="reviews">
+						<% if (userProfile.local.trainer_filter) { %>
+							<div class="well">
+								<h3>
+								<span class="fa.fa-comment">User Reviews</span>
+								</h3>
+								<br/>
+								Average Rating: <%= avg %>
+								<% if (reviews) { %>
+									<!-- each review, i in reviews -->
+									<span class="fa fa-comment-o"></span>
+									Rating: <%= review.rating %>
+									<br/>
+									Comments: <%= review.comments %>
+									<br/>
+								<% } %>
+								<form action='/add-review/<%= userProfile.local.email %>'>
+									<input type='submit' value='Add Review'>
+								</form>
+						<% } %>
+							</div>
+					</div>
+				</div>
+			</div>
+			<!-- div row pages -->
+			
+			<script src="https://code.jquery.com/jquery-1.10.2.min.js">
+			  script(src='/socket.io/socket.io.js')
+			  script(src='/main.js')
+			</script>
+			
+        </div>
+		<!-- div "panel panel-default" -->
+
+        <% include footer %>
+    </div>
+    <!-- /container -->
+	
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#about').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

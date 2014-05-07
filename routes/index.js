@@ -162,7 +162,7 @@ router.get('/team', function(req, res) {
 router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
       User.find({}, function(e, docs) {
        Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
-        res.render('chat', {user: req.user, userlist: docs, events: events});
+        res.render('chat', {title: "GymBud", user: req.user, userlist: docs, events: events});
 	});
         });
 });
@@ -170,7 +170,7 @@ router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
 router.get('/chat/:username', isLoggedIn, isVerified, function(req, res) {
 	var username = req.params.username;
       User.find({}, function(e, docs) {
-        res.render('chat', {user: req.user, to:username, userlist: docs});
+        res.render('chat', {title: "GymBud", user: req.user, to:username, userlist: docs});
         });
 });
 
@@ -193,7 +193,7 @@ router.post('/uploadImage', function(req, res) {
 	});
 
         User.find({}, function(e, userlist) {
-	  res.render('chat', {user: docs, userlist: userlist});
+	  res.render('chat', {title: "GymBud", user: docs, userlist: userlist});
 	});
       });
     } else {
@@ -298,7 +298,7 @@ router.get('/contact', function(req, res) {
 router.get('/userlist', isLoggedIn, isVerified, function(req, res) {
   
       User.find({}, function(e, docs) {
-         res.render('userlist', {user: req.user, userlist: docs});
+         res.render('userlist', {title: "GymBud", user: req.user, userlist: docs});
         });
 });
 
@@ -322,7 +322,7 @@ router.get('/profile/:email', isLoggedIn, isVerified, function(req, res) {
 });
 
 router.get('/edit-profile', isLoggedIn, isVerified, function(req, res) {
-   res.render('edit-profile', {user: req.user});
+   res.render('edit-profile', {title: "GymBud", user: req.user});
 });
 
 router.post('/edit-profile', isLoggedIn, isVerified, function(req, res) {
