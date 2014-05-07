@@ -12,15 +12,17 @@
         </div>
         <div class="panel panel-default">
 			<!-- each user, i in userlist -->
-				<% if (user.local.name) { %>
+            <% for (var i = 0; i < userlist.length; i++) { %>
+				<% if (userlist[i].local.name) { %>
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="well">
-								<a href="/profile/<%=user.local.email%>"><%= user.local.name %></a>
+								<a href="/profile/<%=userlist[i].local.email%>"><%= userlist[i].local.name %></a>
 							</div>
 						</div>
 					</div>
 				<% } %>
+                <% } %>
         </div>
 
         <% include footer %>
