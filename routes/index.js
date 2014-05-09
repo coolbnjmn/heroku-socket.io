@@ -112,7 +112,7 @@ router.get('/', function(req, res) {
       }
    });
    */
-  res.render('index', { title: 'GymBud' });
+  res.render('index', { user: req.user, title: 'GymBud' });
            });
 
 // Redirect the user to Facebook for authentication.  When complete,
