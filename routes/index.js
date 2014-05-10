@@ -284,7 +284,7 @@ router.post('/signup', passport.authenticate('local-signup', {
                                              }));
 
 router.get('/signup3', isLoggedIn, function(req, res) {
-  res.render('signup3', {user: req.user});
+  res.render('signup3', {title: 'GymBud', user: req.user});
 });
 
 router.get('/signup2', isLoggedIn, function(req, res) {
@@ -520,7 +520,7 @@ router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
 });
 router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
       User.find({}, function(e, docs) {
-         res.render('add-event', {user: req.user, userlist: docs, message: req.flash('eventMessage')});
+         res.render('add-event', {title: 'GymBud', user: req.user, userlist: docs, message: req.flash('eventMessage')});
         });
 });
 

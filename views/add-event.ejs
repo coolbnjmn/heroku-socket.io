@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <span class="fa fa-calendar"></span>  New Event
+            </h1>
+        </div>
+        <div class="panel panel-default">
+			<div id="message">
+				<% if (message.length > 0) { %>
+					<div class="alert alert-danger">
+						<%= message %>
+					</div>
+				<% } %>
+			</div>
+			<form action="/add-event" method="post">
+				<div class="form-group">
+					<label>Date (MM/DD/YYYY)</label>
+					<input type="text" name="date" class="form-control"/>
+				</div>
+				<div class="form-group">
+					<label>Where?</label>
+					<input type="text" name="place" placeholder="Wooden Center" class="form-control"/>
+				</div>
+				<div class="form-group">
+					<label>With...</label>
+					<div class="controls">
+						<select id="selectbasic" name="person" class="input-xlarge">
+							<% for (var i = 0; i < userlist.length; i++) { %>
+								<% if (userlist[i].local.name) { %>
+									<option value=<%=userlist[i].local.email%> > <%=userlist[i].local.name%> </option>
+								<% } %>
+							<% } %>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Description</label>
+					<textarea type="text" name="description" placeholder="We lifted heavy legs." class="form-control"> </textarea>
+				</div>
+				<br/>
+				<button type="submit" class="btn btn-warning btn-lg">Create Event</button>
+			</form>
+        </div>
+
+        <% include footer %>
+    </div>
+    <!-- /container -->
+	
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#about').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

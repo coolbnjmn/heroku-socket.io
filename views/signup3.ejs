@@ -7,21 +7,17 @@
     <div class="container">
         <div class="page-header">
             <h1>
-                List of Users, check out their profiles!
+                <span class="fa fa-mail-reply"></span>  Finish Signup
+				<br/>
+				<small>Please check your ucla email for a verification link. Thanks!</small>
             </h1>
         </div>
         <div class="panel panel-default">
-            <% for (var i = 0; i < userlist.length; i++) { %>
-				<% if (userlist[i].local.name) { %>
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="well">
-								<a href="/profile/<%=userlist[i].local.email%>"><%= userlist[i].local.name %></a>
-							</div>
-						</div>
-					</div>
-				<% } %>
-                <% } %>
+			<div class="col-sm-6 col-sm-offset-3">
+				Having problems? Send us a quick email with the subject [Email Not Received].
+				<br/>
+				<a href="mailto:gymbuducla@gmail.com?Subject=[Email%20Not%20Received]"> <strong> email us.</strong></a>
+			</div>
         </div>
 
         <% include footer %>
