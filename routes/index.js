@@ -69,6 +69,13 @@ var eventSchema = new mongoose.Schema({
 });
 
 var Event = mongoose.model('Event', eventSchema);
+var chatSchema = new mongoose.Schema({
+	from: String,
+	to: String, 
+	message: String
+});
+
+var Chat = mongoose.model('Chat', chatSchema);
 
 var braintree = require('braintree');
 var gateway = braintree.connect({ 
@@ -88,6 +95,55 @@ var smtpTransport = nodemailer.createTransport("SMTP", {
   }
 });
 
+var schedule = require('node-schedule');
+
+var rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [1,3,5]; 
+rule.hour = 19;
+rule.minute = 43;
+
+var job = schedule.scheduleJob(rule, function() {
+  console.log('Job Now');
+  User.findOne({"local.email" : "coolbnjmn@ucla.edu"}, function(err, docs) {
+   Chat.find({ $or: [{"to": docs.local.email}, {"from":docs.local.email} ]},	function(error, chats) {
+    Event.find({ $or: [{"person1": docs.local.email}, {"person2": docs.local.email}]}, function(e, events) {
+     Review.find({ "reviewee" : docs.local.email}, function(errorr, reviews) {
+    var htmlReview = "";
+    for(var i = 0; i < reviews.length; i++) {
+      htmlReview += "<h4> Review from: " + reviews[i].reviewer + "</h4><h5> Rating of: " + reviews[i].rating + "</h5><p>" + reviews[i].comments + "</p>";
+    }
+
+    var htmlChat = "";
+    for(var i = 0; i < chats.length; i++) {
+      var tmp = chats[i].to;
+      if(tmp == "undefined") tmp = "everyone";
+      htmlChat += "<h4> Message from: " + chats[i].from + "</h4><h5> Message to: " + tmp + "</h5><p>" + chats[i].message + "</p>";
+    }
+
+    var htmlEvent = "";
+    for(var i = 0; i < events.length; i++) {
+      htmlEvent += "<h4> Event with: " + events[i].person1 + " and " + events[i].person2 + "</h4><p>" + events[i].date + " " + events[i].place + "</p><p>" + events[i].description + "</p>";
+    }
+    var mailOptions = { 
+      from: "GymBud UCLA <gymbuducla@gmail.com>",
+      to: docs.local.email,
+      subject: "Status Update from GymBud!",
+      html: "<style> body { background-color: #FFF3DA;} </style>" + "<body>" + "<h1> GymBud Status Update! From www.gymbuducla.com </h1><h3>Hi there from GymBud. The following things have happened since the last time you were on GymBud.</h3>" + "<h3> Recent Chats </h3>" + htmlChat + "<h3> Recent Events </h3>" + htmlEvent + "<h3> Recent Reviews </h3>" + htmlReview + "<p>Login here: www.gymbuducla.com/login </p><p> or please feel free to contact us with any questions or concerns at gymbuducla@gmail.com </p>"+ "</body>" 
+    };
+
+    smtpTransport.sendMail(mailOptions, function(error, response) {
+      if(error) {
+        console.log('MAILING ERROR');
+        console.log(error);
+      } else {
+        console.log('Message sent: ' + response.message);
+      }
+      });
+      });
+      });
+   });
+    });
+});
 /*
 require('faceplate').middleware({
   app_id :"1413575708905968",
