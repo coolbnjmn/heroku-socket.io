@@ -383,7 +383,7 @@ router.get('/profile/:email', isLoggedIn, isVerified, function(req, res) {
 	  avgReview = reviewSum / reviews.length;
 	}
 
-        res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
+        res.render('profile-public', {title: "GymBud", user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
       });
     });
 });
