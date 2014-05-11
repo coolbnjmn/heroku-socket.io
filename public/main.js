@@ -257,11 +257,11 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Chat  &mdash; ";
+    var message = "Status Feed  &mdash; ";
     log(message, {
       prepend: true
     });
-    addParticipantsMessage(data);
+    //addParticipantsMessage(data);
     addMessages(data);
   });
 
@@ -273,14 +273,14 @@ $(function() {
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
     //log(data.username + ' joined');
-    addParticipantsMessage(data);
+    //addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', function (data) {
-    log(data.username + ' left');
-    addParticipantsMessage(data);
-    removeChatTyping(data);
+    //log(data.username + ' left');
+    //addParticipantsMessage(data);
+    //removeChatTyping(data);
   });
 
   // Whenever the server emits 'typing', show the typing message

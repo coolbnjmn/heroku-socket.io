@@ -249,7 +249,10 @@ router.post('/uploadImage', function(req, res) {
 	});
 
         User.find({}, function(e, userlist) {
-	  res.render('chat', {title: "GymBud", user: docs, userlist: userlist});
+          Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
+           res.render('chat', {title: "GymBud", user: docs, to:undefined, userlist: userlist, events: events});
+	   });
+	  //res.render('chat', {title: "GymBud", user: docs, to: undefined, userlist: userlist});
 	});
       });
     } else {
