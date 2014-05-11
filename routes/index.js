@@ -287,6 +287,14 @@ router.get('/signup3', isLoggedIn, function(req, res) {
   res.render('signup3', {title: 'GymBud', user: req.user});
 });
 
+router.get('/toc', isLoggedIn, function(req, res) {
+	var pdfFile = "public/Terms And Conditions - Gym Bud.pdf";
+	fs.readFile(pdfFile, function(err, data) {
+	  res.contentType('application/pdf');
+	  res.send(data);
+	});
+});
+
 router.get('/signup2', isLoggedIn, function(req, res) {
            res.render('signup2', {title: "GymBud", user : req.user, message: req.flash('signupMessage') });
            });
