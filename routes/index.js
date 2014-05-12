@@ -69,6 +69,13 @@ var eventSchema = new mongoose.Schema({
 });
 
 var Event = mongoose.model('Event', eventSchema);
+var chatSchema = new mongoose.Schema({
+	from: String,
+	to: String, 
+	message: String
+});
+
+var Chat = mongoose.model('Chat', chatSchema);
 
 var braintree = require('braintree');
 var gateway = braintree.connect({ 
@@ -88,6 +95,55 @@ var smtpTransport = nodemailer.createTransport("SMTP", {
   }
 });
 
+var schedule = require('node-schedule');
+
+var rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [1,3,5]; 
+rule.hour = 19;
+rule.minute = 43;
+
+var job = schedule.scheduleJob(rule, function() {
+  console.log('Job Now');
+  User.findOne({"local.email" : "coolbnjmn@ucla.edu"}, function(err, docs) {
+   Chat.find({ $or: [{"to": docs.local.email}, {"from":docs.local.email} ]},	function(error, chats) {
+    Event.find({ $or: [{"person1": docs.local.email}, {"person2": docs.local.email}]}, function(e, events) {
+     Review.find({ "reviewee" : docs.local.email}, function(errorr, reviews) {
+    var htmlReview = "";
+    for(var i = 0; i < reviews.length; i++) {
+      htmlReview += "<h4> Review from: " + reviews[i].reviewer + "</h4><h5> Rating of: " + reviews[i].rating + "</h5><p>" + reviews[i].comments + "</p>";
+    }
+
+    var htmlChat = "";
+    for(var i = 0; i < chats.length; i++) {
+      var tmp = chats[i].to;
+      if(tmp == "undefined") tmp = "everyone";
+      htmlChat += "<h4> Message from: " + chats[i].from + "</h4><h5> Message to: " + tmp + "</h5><p>" + chats[i].message + "</p>";
+    }
+
+    var htmlEvent = "";
+    for(var i = 0; i < events.length; i++) {
+      htmlEvent += "<h4> Event with: " + events[i].person1 + " and " + events[i].person2 + "</h4><p>" + events[i].date + " " + events[i].place + "</p><p>" + events[i].description + "</p>";
+    }
+    var mailOptions = { 
+      from: "GymBud UCLA <gymbuducla@gmail.com>",
+      to: docs.local.email,
+      subject: "Status Update from GymBud!",
+      html: "<style> body { background-color: #FFF3DA;} </style>" + "<body>" + "<h1> GymBud Status Update! From www.gymbuducla.com </h1><h3>Hi there from GymBud. The following things have happened since the last time you were on GymBud.</h3>" + "<h3> Recent Chats </h3>" + htmlChat + "<h3> Recent Events </h3>" + htmlEvent + "<h3> Recent Reviews </h3>" + htmlReview + "<p>Login here: www.gymbuducla.com/login </p><p> or please feel free to contact us with any questions or concerns at gymbuducla@gmail.com </p>"+ "</body>" 
+    };
+
+    smtpTransport.sendMail(mailOptions, function(error, response) {
+      if(error) {
+        console.log('MAILING ERROR');
+        console.log(error);
+      } else {
+        console.log('Message sent: ' + response.message);
+      }
+      });
+      });
+      });
+   });
+    });
+});
 /*
 require('faceplate').middleware({
   app_id :"1413575708905968",
@@ -112,7 +168,7 @@ router.get('/', function(req, res) {
       }
    });
    */
-  res.render('index', { title: 'GymBud' });
+  res.render('index', { user: req.user, title: 'GymBud' });
            });
 
 // Redirect the user to Facebook for authentication.  When complete,
@@ -147,7 +203,11 @@ router.get('/friends', isLoggedIn, function(req, res) {
 });
 
 router.get('/about', function(req, res) {
-           res.render('about', {user: req.user} );
+           res.render('about', {title: "GymBud", user: req.user} );
+});
+
+router.get('/team_page', function(req, res) {
+           res.render('team_page', {title: "GymBud", user: req.user} );
 });
 
 router.get('/team', function(req, res) {
@@ -158,7 +218,7 @@ router.get('/team', function(req, res) {
 router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
       User.find({}, function(e, docs) {
        Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
-        res.render('chat', {user: req.user, userlist: docs, events: events});
+        res.render('chat', {title: "GymBud", user: req.user, to:undefined, userlist: docs, events: events});
 	});
         });
 });
@@ -192,9 +252,9 @@ router.post('/uploadImage', function(req, res) {
 
         User.find({}, function(e, userlist) {
           Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
-           res.render('chat', {events: events, user: docs, to:undefined, userlist: userlist});
-          });
-	 // res.render('chat', {user: docs, userlist: userlist});
+           res.render('chat', {title: "GymBud", user: docs, to:undefined, userlist: userlist, events: events});
+	   });
+	  //res.render('chat', {title: "GymBud", user: docs, to: undefined, userlist: userlist});
 	});
       });
     } else {
@@ -209,7 +269,7 @@ router.get('/logout', function(req, res) {
         });
 
 router.get('/login', function(req, res) {
-           res.render('login', {user: req.user, message: req.flash('loginMessage') });
+           res.render('login', {title: "GymBud", user: req.user, message: req.flash('loginMessage') });
            });
 
 router.post('/login', passport.authenticate('local-login', {
@@ -219,7 +279,7 @@ router.post('/login', passport.authenticate('local-login', {
 }));
 
 router.get('/signup', function(req, res) {
-           res.render('signup', {user : req.user, message: req.flash('signupMessage') });
+           res.render('signup', {title: "GymBud", user : req.user, message: req.flash('signupMessage') });
            });
 
 router.post('/signup', passport.authenticate('local-signup', {
@@ -229,17 +289,25 @@ router.post('/signup', passport.authenticate('local-signup', {
                                              }));
 
 router.get('/signup3', isLoggedIn, function(req, res) {
-  res.render('signup3', {user: req.user});
+  res.render('signup3', {title: 'GymBud', user: req.user});
+});
+
+router.get('/toc', isLoggedIn, function(req, res) {
+	var pdfFile = "public/Terms And Conditions - Gym Bud.pdf";
+	fs.readFile(pdfFile, function(err, data) {
+	  res.contentType('application/pdf');
+	  res.send(data);
+	});
 });
 
 router.get('/signup2', isLoggedIn, function(req, res) {
-           res.render('signup2', {user : req.user, message: req.flash('signupMessage') });
+           res.render('signup2', {title: "GymBud", user : req.user, message: req.flash('signupMessage') });
            });
 
 router.post('/signup2', function(req, res) {
   if(!req.body.toc_agree) {
     req.flash('signupMessage', 'You must agree to the terms and conditions');
-    res.render('signup2', {user: req.user, message: req.flash('signupMessage') });
+    res.render('signup2', {title: "GymBud", user: req.user, message: req.flash('signupMessage') });
     return;
   }
   User.findOne({"local.email": req.user.local.email}, function(err, docs) {
@@ -293,13 +361,13 @@ router.get('/confirm/:verifyToken', function(req, res) {
 
 });
 router.get('/contact', function(req, res) {
-  res.render('contact', {user: req.user});
+  res.render('contact', {title: "GymBud", user: req.user});
 });
 
 router.get('/userlist', isLoggedIn, isVerified, function(req, res) {
   
       User.find({}, function(e, docs) {
-         res.render('userlist', {user: req.user, userlist: docs});
+         res.render('userlist', {title: "GymBud", user: req.user, userlist: docs});
         });
 });
 
@@ -317,13 +385,13 @@ router.get('/profile/:email', isLoggedIn, isVerified, function(req, res) {
 	  avgReview = reviewSum / reviews.length;
 	}
 
-        res.render('profile-public', {user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
+        res.render('profile-public', {title: "GymBud", user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
       });
     });
 });
 
 router.get('/edit-profile', isLoggedIn, isVerified, function(req, res) {
-   res.render('edit-profile', {user: req.user});
+   res.render('edit-profile', {title: "GymBud", user: req.user});
 });
 
 router.post('/edit-profile', isLoggedIn, isVerified, function(req, res) {
@@ -411,7 +479,7 @@ router.post('/add-trainer', isLoggedIn, isVerified, function(req, res) {
 	     }
 	   }, 
 	   funding: {
-	     destination: braintree.MerchantAccount.FundingDestination.Bank, 
+	     destination: "bank", 
 	     email: docs.local.email,
 	     mobilePhone: docs.banking.mobilePhone,
 	     accountNumber: docs.banking.accountNumber,
@@ -465,7 +533,7 @@ router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
 });
 router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
       User.find({}, function(e, docs) {
-         res.render('add-event', {user: req.user, userlist: docs, message: req.flash('eventMessage')});
+         res.render('add-event', {title: 'GymBud', user: req.user, userlist: docs, message: req.flash('eventMessage')});
         });
 });
 

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <span class="fa.fa-sign-in">Edit Profile</span>
+            </h1>
+        </div>
+		
+		<form action="/edit-profile" method="post">
+			<div id="user">
+				<div class="form-group">
+					<label>Full Name</label>
+					<input type="text" name="name" value="<%= user.local.name %>" class="form-control"/>
+				</div>
+				<div class="form-group">
+					<label>Interests 1
+						<div class="controls">
+							<select id="selectbasic" name="interest1" class="input-xlarge">
+								<option>Weightlifting</option>
+								<option>Aerobics</option>
+								<option>Swimming</option>
+								<option>Crossfit</option>
+								<option>Yoga</option>
+								<option>Cycling</option>
+								<option>Interval Training</option>
+							</select>
+						</div>
+					</label>
+					<label>Interests 2
+						<div class="controls">
+							<select id="selectbasic" name="interest2" class="input-xlarge">
+								<option>Weightlifting</option>
+								<option>Aerobics</option>
+								<option>Swimming</option>
+								<option>Crossfit</option>
+								<option>Yoga</option>
+								<option>Cycling</option>
+								<option>Interval Training</option>
+							</select>
+						</div>
+					</label>
+					<label>Interests 3
+						<div class="controls">
+							<select id="selectbasic" name="interest3" class="input-xlarge">
+								<option>Weightlifting</option>
+								<option>Aerobics</option>
+								<option>Swimming</option>
+								<option>Crossfit</option>
+								<option>Yoga</option>
+								<option>Cycling</option>
+								<option>Interval Training</option>
+							</select>
+						</div>
+					</label>
+				</div>
+				<div class="form-group">
+					<label>Phone Number (Optional)</label>
+					<input type="text" name="phonenum" value="<%= user.local.phonenum %>" class="form-control"/>
+				</div>
+				<div class="form-group">
+					<label>Background</label>
+					<textarea type="text" name="background" class="form-control">
+					<%= user.local.background %>
+					</textarea>
+				</div>
+				<div class="form-group">
+					<label>Achievements</label>
+					<textarea type="text" name="achievements" class="form-control">
+					<%= user.local.achievements %>
+					</textarea>
+				</div>
+				<div class="form-group">
+					<label>Your GymBud Goals</label>
+					<textarea type="text" name="goals" class="form-control">
+					<%= user.local.goals %>
+					</textarea>
+				</div>
+				<div class="form-group">
+					<label>Please Select One : </label>
+					<br/>
+					<input type="radio" name="trainer_filter" value="1"/>  Trainer
+					<input type="radio" name="trainer_filter" value="0"/>  Gym Goer
+				</div>
+				
+				<button type="submit" class="btn btn-warning btn-lg">Submit Changes</button>
+			</div>
+		</form>
+		
+        <% include footer %>
+    </div>
+    <!-- /container -->
+	
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#about').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

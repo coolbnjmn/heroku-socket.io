@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+    <div class="container">
+        <div class="page-header">
+			<h1>
+				<span class="fa fa-sign-in"></span>| Continue Signup
+			</h1>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+				<div id="message">
+						<% if (message.length) { %>
+						<div class="alert alert-danger"> <%= message%></div>
+						<% } %>
+				</div>				
+				
+				<form action="/signup2" method="post">
+				  <div class="form-group">
+					<label>Full Name</label>
+					<input type="text" name="name" class="form-control"/>
+				  </div>
+					<label>Interests 1
+					  <div class="controls">
+						<select id="selectbasic" name="interest1" class="input-xlarge">
+						  <option>Weightlifting</option>
+						  <option>Aerobics</option>
+						  <option>Swimming</option>
+						  <option>Crossfit</option>
+						  <option>Yoga</option>
+						  <option>Cycling</option>
+						  <option>Interval Training</option>
+						</select>
+					  </div>
+					</label>
+					<label>Interests 2
+					  <div class="controls">
+						<select id="selectbasic" name="interest2" class="input-xlarge">
+						  <option>Weightlifting</option>
+						  <option>Aerobics</option>
+						  <option>Swimming</option>
+						  <option>Crossfit</option>
+						  <option>Yoga</option>
+						  <option>Cycling</option>
+						  <option>Interval Training</option>
+						</select>
+					  </div>
+					</label>
+					<label>Interests 3
+					  <div class="controls">
+						<select id="selectbasic" name="interest3" class="input-xlarge">
+						  <option>Weightlifting</option>
+						  <option>Aerobics</option>
+						  <option>Swimming</option>
+						  <option>Crossfit</option>
+						  <option>Yoga</option>
+						  <option>Cycling</option>
+						  <option>Interval Training</option>
+						</select>
+					  </div>
+					</label>
+					</br>
+					<div class="form-group">
+					  <label>Phone Number (Optional)</label>
+					  <input type="text" name="phonenum" class="form-control"/>
+					</div>
+					<div class="form-group">
+					  <label>Background</label>
+					  <textarea type="text" name="background" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+					  <label>Achievements</label>
+					  <textarea type="text" name="achievements" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+					  <label>Your GymBud Goals</label>
+					  <textarea type="text" name="goals" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+					  <label>Please Select One : </label><br/>
+					  <input type="radio" name="trainer_filter" value="1"/>  Trainer
+					  <input type="radio" name="trainer_filter" value="0"/>  Gym Goer
+					</div>
+					<div class="form-group">
+					  <a href="/toc" target="_blank"> Terms and Conditions </a>
+					</div>
+					<input type="radio" name="toc_agree" value="0"/>					
+					I have read, and agree, to these Terms and Conditions
+					<br/>
+					<br/>
+					<button type="submit" class="btn btn-warning btn-lg">Finish Signup</button>
+				</form>
+				<hr/>
+				</div>
+        </div>
+ 
+        <hr>
+ 
+        <% include footer %>
+    </div>
+    <!-- /container -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#about').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

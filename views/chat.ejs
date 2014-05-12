@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+    <div class="container">
+	
+        <div class="page-header">
+			<h1>
+				Profile
+			</h1>
+        </div>
+		
+        <div class="panel panel-default">
+            <div class="panel-heading">
+			</div>
+            <div class="panel-body">
+				<div class="container>"
+					<div class="row pages">
+						<div class="col-sm-6">
+							<div id="user">
+								<div class="well">
+								  <h3>
+									<span class="fa fa-user"></span>  Local
+									<br/>
+									<strong>Name</strong>
+									<%= user.local.name %>
+									<br/>
+									<strong>Email</strong>
+									<%= user.local.email %>
+									<br/>
+									<strong>Interests:</strong>
+									<br/>
+									<%= user.local.interest1 %>
+									<br/>
+									<%= user.local.interest2 %>
+									<br/>
+									<%= user.local.interest3 %>
+									<br/>
+									
+									<% if (user.local.phonenum) { %>
+										<strong>Phone number:</strong>
+										<%= user.local.phonenum %>
+										</br>
+									<% } %>
+										
+									<strong>Background</strong>
+									<%= user.local.background %>
+									</br>
+									<strong>Achievements</strong>
+									<%= user.local.achievements %>
+									</br>
+									<strong>GymBud Goals</strong>
+									<%= user.local.goals %>
+									</br>
+									<strong>User Status:</strong>
+									
+									<% if (user.local.trainer_filter) { %>
+										Trainer
+									<% } else { %>
+										Gym Goer
+									<% } %>
+									<br/>
+									
+									<form action='/edit-profile'>
+										<input type='submit' value='Edit Profile'>
+									</form>
+									
+								  </h3>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<% if (user.image.contentType) { %>
+								<div class="well">
+									<h3>
+									<span class="fa fa-picture-o">Profile Picture</span>
+									</h3>
+									<img id="image" src="">
+									<script>
+										console.log('here');
+										// in Jade: 'data: user.image.contentType; base64, user.image.data'
+										document.getElementById('image').src = "data:" + "<%=user.image.contentType%>" + ";base64," + "<%=user.image.data%>";
+									</script>
+									</br>
+									<h3>
+									<span class="fa fa-edit">Change your picture:</span>
+									</h3>
+									<form id="formUpload" method="post" action="uploadImage" enctype="multipart/form-data">
+									  <input id="image" type="file" name="image"/>
+									  <button id="btnSubmit" type="submit">Submit</button>
+									</form>
+								</div>
+							<% } else { %>
+								<div class="well">
+									<h3>
+									<span class="fa fa-picture-o">Add a Profile Picture</span>
+									</h3>							
+									<form id="formUpload" method="post" action="/uploadImage" enctype="multipart/form-data">
+									  <input id="image" type="file" name="image"/>
+									  <br/>
+									  <button id="btnSubmit" type="submit">Submit</button>
+									</form>
+								</div>
+							<% } %>
+						</div>
+						
+							<div class="col-sm-6 chat page">
+								<div class="well chatArea">
+									<ul class="messages">
+										<input type="hidden" id="toField" value="<%=to%>"/>
+										<input type="hidden" id="username" value="<%= user.local.email %>"/>
+										<input placeholder="Type here..." class="inputMessage"/>
+									</ul>
+								</div>
+							</div>
+                            
+                            <div class="col-sm-6">
+                            <% if (user.facebook.accessToken) { %>
+                              <div class="well">
+                                <h3>
+                                <span class="fa fa-facebook"> Facebook Verified! </span>
+                                </h3>
+                            <% } else { %>
+                                <h3>
+                                <span class="fa fa-facebook"> Login with Facebook! </span>
+                                <br>
+                                <a href='/auth/facebook/ class='btn btn-primary'> Verify With Facebook </a>
+                            <% } %>
+                            </div>
+                            
+                            <div class="well">
+                              <a href="/add-event" class="btn btn-primary"> Create a new Event </a>
+                              
+                              <% for (var i = 0; i < events.length; i++) { %>
+                                <h3>
+                                  <%= events[i].description %>
+                                </h3>
+                                <h4>
+                                  With: <%= events[i].person1 %> and <%= events[i].person2 %>
+                                </h4>
+                                <h4>
+                                  On: <%= events[i].date %>
+                                </h4>
+                                <h4>
+                                  At: <%= events[i].place %>
+                                </h4>
+                            <% } %>
+                            </div>
+
+							<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+							<script src="/socket.io/socket.io.js"></script>
+							<script src="/main.js"></script>
+							
+					</div>
+				</div>
+            </div>
+        </div>
+ 
+        <hr>
+ 
+        <% include footer %>
+    </div>
+    <!-- /container -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#profile').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

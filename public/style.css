@@ -61,7 +61,7 @@ ul {
 
 .log {
   color: gray;
-  font-size: 50%;
+  font-size: 80%;
   margin: 5px;
   text-align: center;
 }
@@ -104,4 +104,20 @@ ul {
   position: absolute;
   right: 0;
   width: 100%;
+}
+
+/* Team Page */
+
+.team_member {
+	text-align: center;
+}
+
+.title {
+	text-align: center;
+}
+
+.headshot {
+	height: 200px;
+	width: 200px;
+	border-radius: 50%;
 }

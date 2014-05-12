@@ -1,6 +1,8 @@
 // Setup basic express server
 var express = require('express');
 var app = express();
+
+
 var server = require('http').createServer(app);
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
@@ -202,7 +204,7 @@ io.on('connection', function (socket) {
       });
 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
