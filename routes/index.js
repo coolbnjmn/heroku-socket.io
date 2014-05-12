@@ -99,8 +99,38 @@ var schedule = require('node-schedule');
 
 var rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [1,3,5]; 
-rule.hour = 19;
-rule.minute = 43;
+rule.hour = 20;
+rule.minute = 00;
+
+/*
+var emailblast = schedule.scheduleJob(rule, function() {
+
+ User.find({}, function(err, userlist) {
+  
+  for(var i = 0; i < userlist.length; i++) {
+   var mailOptions = {
+	from: "GymBud UCLA <gymbuducla@gmail.com>",
+//	to: "coolbnjmn@ucla.edu",
+	to: userlist[i].local.email,
+	subject: "Update from GymBud",
+	html: "<style> body { background-color: #FFF3DA;} </style>" + "<body>" + "<h2> GymBud Update! </h2>" + "<p> Hey GymBud Users, </p><p> Just a quick update from the GymBud team to inform you of some new features and design changes to the website!</p><p> 1) It's now mobile friendly, so you can now access GymBud on the go! </p> <p> 2) A new review feature has been added, so you can get/receive feedback from past workout partners. </p> <p> 3) A new event feature has been added, so you can create a workout with another person and see it on your profile. </p> <p> 4) *** And most importantly, we have decided to change the primary function of the website from being a platform to pair new/experienced gym users to simply coordinate work-outs with any UCLA members. </p> <br> <p> Regardless of your skill level, utilize the GymBud status update room to coordinate workouts, strategize gym plans, discuss nutrition, or whatever you desire. </p> <br> <p> Welcome to the GymBud community! </p><p> Please visit us at www.gymbuducla.com </p><p> Or send us any feedback or comments to gymbuducla@gmail.com </p> </body>"
+   };
+
+    smtpTransport.sendMail(mailOptions, function(error, response) {
+      if(error) {
+        console.log('MAILING ERROR');
+        console.log(error);
+      } else {
+        console.log('Message sent: ' + response.message);
+      }
+    });
+
+  }
+    });
+
+});
+*/
+
 
 var job = schedule.scheduleJob(rule, function() {
   console.log('Job Now');
