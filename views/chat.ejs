@@ -7,6 +7,9 @@
     <div class="container">
 	
         <div class="page-header">
+			<h1>
+				Profile
+			</h1>
         </div>
 		
         <div class="panel panel-default">
@@ -77,7 +80,8 @@
 									<img id="image" src="">
 									<script>
 										console.log('here');
-										document.getElementById('image').src = 'data: user.image.contentType; base64, user.image.data';
+										// in Jade: 'data: user.image.contentType; base64, user.image.data'
+										document.getElementById('image').src = "data:" + "<%=user.image.contentType%>" + ";base64," + "<%=user.image.data%>";
 									</script>
 									</br>
 									<h3>
@@ -161,7 +165,7 @@
     <!-- /container -->
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#about').addClass("active");
+            $('#profile').addClass("active");
         });
     </script>
     <!-- Bootstrap core JavaScript

@@ -6,9 +6,6 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>
-                Header
-            </h1>
         </div>
         <div class="panel panel-default">
 		
@@ -67,7 +64,8 @@
 							<img id="image" src="">
 							<script>
 								console.log('here');
-								document.getElementById("image").src = 'data:#{userProfile.image.contentType};base64,#{userProfile.image.data}';
+								// in Jade: 'data: user.image.contentType; base64, user.image.data'
+								document.getElementById('image').src = "data:" + "<%=userProfile.image.contentType%>" + ";base64," + "<%=userProfile.image.data%>";
 							</script>
 						</div>
 					<% } else { %>
@@ -104,17 +102,19 @@
 								Average Rating: <%= avg %>
 								<% if (reviews) { %>
 									<!-- each review, i in reviews -->
-									<span class="fa fa-comment-o"></span>
-									Rating: <%= review.rating %>
-									<br/>
-									Comments: <%= review.comments %>
-									<br/>
+									<% for (var i = 0; i < reviews.length; i++) { %>
+										<span class="fa fa-comment-o"></span>
+										Rating: <%= reviews[i].rating %>
+										<br/>
+										Comments: <%= reviews[i].comments %>
+										<br/>
+									<% } %>
 								<% } %>
 								<form action='/add-review/<%= userProfile.local.email %>'>
 									<input type='submit' value='Add Review'>
 								</form>
-						<% } %>
 							</div>
+						<% } %>
 					</div>
 				</div>
 			</div>
@@ -134,7 +134,7 @@
 	
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#about').addClass("active");
+            //$('#profile').addClass("active");
         });
     </script>
     <!-- Bootstrap core JavaScript
