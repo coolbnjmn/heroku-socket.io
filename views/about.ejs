@@ -3,57 +3,146 @@
 <% include header %>
 <body>
     <% include navbar %>
- 
-    <div class="container">
-        <div class="page-header">
-            <h1>
-                About Us
+
+	<div class="container">
+	
+		<div class="well">
+			<h1 id="about_header">
+				Our Story
 				<br>
 				<small>
 					Looking back on our previous gym experience, 
 					we realized how difficult it was to start going to the gym.
 				</small>
-            </h1>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">Our Story</div>
-            <div class="panel-body">
+			</h1>
 			
-                <p>
-				Between all of the different machines, exercises, crossfit, 
-				cardio machines, and dumbbells, it was intimidating to start. 
-				We then realized that this is most likely something that keeps 
-				people from getting healthier with regular exercise. We also 
-				realized that people like meeting people interested in the same 
-				thing they are and often look up to those more seasoned.
-				</p>
-				
-				<p>
-				From there, GymBud was born.
-				</p>
-				
-				<p>
-				GymBud allows both new and seasoned gym-goers an opportunity 
-				to meet one another and helps foster a learning environment in 
-				the gym. GymBuds can also chat with their own skill level and 
-				meet up with each other at the gym.  This is a great way to give 
-				back to your fellow UCLA students as well as potentially meet 
-				some lifelong friends.  So come on in and <a href='/signup'>join 
-				today!</a>
-				</p>
-				
-				<h2 style="text-align:center;">
-					<a href="/team_page"><strong>Meet the Team</strong></a>
-				</h2>
-				
-            </div>
-        </div>
- 
-        <hr>
- 
-        <% include footer %>
-    </div>
+			<p>
+			Between all of the different machines, exercises, crossfit, 
+			cardio machines, and dumbbells, it was intimidating to start. 
+			We then realized that this is most likely something that keeps 
+			people from getting healthier with regular exercise. We also 
+			realized that people like meeting people interested in the same 
+			thing they are and often look up to those more seasoned.
+			</p>
+			
+			<p>
+			From there, GymBud was born.
+			</p>
+			
+			<p>
+			GymBud allows both new and seasoned gym-goers an opportunity 
+			to meet one another and helps foster a learning environment in 
+			the gym. GymBuds can also chat with their own skill level and 
+			meet up with each other at the gym.  This is a great way to give 
+			back to your fellow UCLA students as well as potentially meet 
+			some lifelong friends.  So come on in and <a href='/signup'>join 
+			today!</a>
+			</p>
+		</div>	
+		
+		<hr>
+		
+		<div class="well">
+			<h2>Meet the Team</h2>
+		</div>
+		
+		<div class="well col-md-4">
+			<div class="team_member">
+				<h3>
+					Benjamin
+				</h3>
+				<span class="title">Developer</span>
+				<br>
+				<br>
+				<img class="headshot" src="images/benjaminhendricks.png" alt="Benjamin"/>
+			</div>
+			<br>
+			<p></p>
+			<br/>
+		</div>
+		
+		<div class="well col-md-4">
+			<div class="team_member">
+				<h3>
+					Colton
+				</h3>
+				<span class="title">Marketing</span>
+				<br>
+				<br>
+				<img class="headshot" src="images/cat-businessman.jpg" alt="Colton"/>
+			</div>
+			<br>
+			<p></p>
+			<br/>
+		</div>
+		
+		<div class="well col-md-4">
+			<div class="team_member">
+				<h3>
+					Jenna
+				</h3>
+				<span class="title">Marketing</span>
+				<br>
+				<br>
+				<img class="headshot" src="images/cat-businessman.jpg" alt="Jenna"/>
+			</div>
+			<br>
+			<p></p>
+			<br/>
+		</div>
+		
+		<div class="well col-md-4">
+			<div class="team_member">
+				<h3>
+					Aaron
+				</h3>
+				<span class="title">Marketing</span>
+				<br>
+				<br>
+				<img class="headshot" src="images/cat-businessman.jpg" alt="Aaron"/>
+			</div>
+			<br>
+			<p></p>
+			<br/>
+		</div>
+		
+		<div class="well col-md-4">
+			<div class="team_member">
+				<h3>
+					Riley
+				</h3>
+				<span class="title">Developer</span>
+				<br>
+				<br>
+				<img class="headshot" src="images/cat-businessman.jpg" alt="Riley"/>
+			</div>
+			<br>
+			<p></p>
+			<br/>
+		</div>
+		
+		<div class="well col-md-4">
+			<div class="team_member">
+				<h3>
+					Louise
+				</h3>
+				<span class="title">Developer</span>
+				<br>
+				<br>
+				<img class="headshot" src="images/louiselehman.png" alt="Louise"/>
+			</div>
+			<br>
+			<p></p>
+			<br/>
+		</div>
+			
+		</div>
+		
+		<% include footer %>
+	</div>
     <!-- /container -->
+
+
     <script type="text/javascript">
         $(document).ready(function() {
             $('#about').addClass("active");

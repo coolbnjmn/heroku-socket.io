@@ -127,7 +127,7 @@ ul {
 	border-radius: 50%;
 }
 
-/* GymBud added */
+/* new_design added */
 
 .jumbotron {
 	background-image: url('images/wooden_center_ucla_02.jpg');
@@ -144,5 +144,18 @@ ul {
 }
 
 h2 {
+	text-align: center;
+}
+
+.well {
+	background-color: white;
+	opacity: 0.6;
+}
+
+#about_header {
+	text-align: center;
+}
+
+.contact {
 	text-align: center;
 }
