@@ -23,6 +23,11 @@ html, body {
   padding: 0;
 }
 
+body {
+  background-color: #FFF3DA;
+  background-image: url('images/noise.png');
+}
+
 ul {
   list-style: none;
 }
@@ -120,4 +125,24 @@ ul {
 	height: 200px;
 	width: 200px;
 	border-radius: 50%;
+}
+
+/* GymBud added */
+
+.jumbotron {
+	background-image: url('images/wooden_center_ucla_02.jpg');
+	opacity: 0.7;
+	/*background-color: #ffffff;*/
+}
+
+.jumbotron p {
+	text-align: center;
+}
+
+#welcome {
+	color: #000000;
+}
+
+h2 {
+	text-align: center;
 }
