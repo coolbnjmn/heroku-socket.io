@@ -152,10 +152,23 @@ h2 {
 	opacity: 0.6;
 }
 
+.panel {
+	background-color: white;
+	opacity: 0.9;
+}
+
 #about_header {
 	text-align: center;
 }
 
 .contact {
 	text-align: center;
+}
+
+#signup2 {
+	opacity: 1;
+}
+
+#profile_picture img {
+	border-radius: 100%;
 }
