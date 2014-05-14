@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<% include header %>
+<body>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC84rv-BSkkveyH_wk--fb515cngkd6vLw&sensor=TRUE">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <% include navbar %>
+    <div id="map-canvas"/>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                List of Users, check out their profiles!
+            </h1>
+        </div>
+        <div class="well">
+            <% for (var i = 0; i < userlist.length; i++) { %>
+				<% if (userlist[i].local.name) { %>
+					<div class="row">
+						<div class="col-xs-6 col-md-4">
+						</div>
+						<div class="col-xs-6 col-md-4">
+							<div class="panel panel-default">
+								<div class="panel-body" style="text-align: center;">
+									<a href="/profile/<%=userlist[i].local.email%>"><%= userlist[i].local.name %></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				<% } %>
+            <% } %>
+		</div>
+        </div>
+
+		<hr/>
+        <% include footer %>
+    </div>
+    <!-- /container -->
+	
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#userlist').addClass("active");
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

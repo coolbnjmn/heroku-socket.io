@@ -569,6 +569,12 @@ router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
 });
 
 
+router.get('/map', isLoggedIn, isVerified, function(req, res) {
+      User.find({}, function(e, docs) {
+         res.render('map', {title: 'GymBud', user: req.user, userlist: docs });
+        });
+  
+});
 
 function makeid()
 {
