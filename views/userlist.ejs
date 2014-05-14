@@ -10,20 +10,26 @@
                 List of Users, check out their profiles!
             </h1>
         </div>
-        <div class="panel panel-default">
+        <div class="well">
             <% for (var i = 0; i < userlist.length; i++) { %>
 				<% if (userlist[i].local.name) { %>
 					<div class="row">
-						<div class="col-sm-6">
-							<div class="well">
-								<a href="/profile/<%=userlist[i].local.email%>"><%= userlist[i].local.name %></a>
+						<div class="col-xs-6 col-md-4">
+						</div>
+						<div class="col-xs-6 col-md-4">
+							<div class="panel panel-default">
+								<div class="panel-body" style="text-align: center;">
+									<a href="/profile/<%=userlist[i].local.email%>"><%= userlist[i].local.name %></a>
+								</div>
 							</div>
 						</div>
 					</div>
 				<% } %>
-                <% } %>
+            <% } %>
+		</div>
         </div>
 
+		<hr/>
         <% include footer %>
     </div>
     <!-- /container -->
