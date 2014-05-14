@@ -449,7 +449,7 @@ router.post('/edit-profile', isLoggedIn, isVerified, function(req, res) {
 
 router.get('/add-review/:email', isLoggedIn, isVerified, function(req, res) {
    // first check if this user has already added a review
-   res.render('add-review', {forUser: req.params.email, user: req.user});
+   res.render('add-review', {title: "GymBud", forUser: req.params.email, user: req.user});
 });
 
 router.post('/add-review/:email', isLoggedIn, isVerified, function(req, res) {
