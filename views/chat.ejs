@@ -6,48 +6,26 @@
  	
 	<div class="container">
         <div class="page-header">
-			<h1>
+			<h1 style="text-align: center;">
 				Personal Profile
-			</h1>			
-			<div class="col-sm-6" id="profile_picture">
+			</h1>
+			<div class="profile_picture">
 				<% if (user.image.contentType) { %>
-						<img id="image" src="">
-						<script>
-							console.log('here');
-							// in Jade: 'data: user.image.contentType; base64, user.image.data'
-							document.getElementById('image').src = "data:" + "<%=user.image.contentType%>" + ";base64," + "<%=user.image.data%>";
-						</script>
-						</br>
-						</br>
-					<div class="well">
-						<h3>Change your picture:</h3>
-						<form id="formUpload" method="post" action="uploadImage" enctype="multipart/form-data">
-						  <input id="image" type="file" name="image"/>
-						  <br/>
-						  <button id="btnSubmit" type="submit">Submit</button>
-						</form>
-					</div>
+					<img id="image" src="">
+					<script>
+						console.log('here');
+						// in Jade: 'data: user.image.contentType; base64, user.image.data'
+						document.getElementById('image').src = "data:" + "<%=user.image.contentType%>" + ";base64," + "<%=user.image.data%>";
+					</script>
 				<% } else { %>
-					<div class="well">
-						<h3>
-						<span class="fa fa-picture-o">  Add a Profile Picture</span>
-						</h3>							
-						<form id="formUpload" method="post" action="/uploadImage" enctype="multipart/form-data">
-						  <input id="image" type="file" name="image"/>
-						  <br/>
-						  <button id="btnSubmit" type="submit">Submit</button>
-						</form>
-					</div>
 				<% } %>
 			</div>
-			<div class="clearfix visible-xs visible-sm visible-md visible-lg"></div>
         </div>
 		
 		<div class="container">
 			<div class="col-sm-6">
 				<div class="well">
-					<span class="fa fa-user"></span>  Local
-					<br/>
+					<h2><span class="fa fa-user"></span> Personal Information</h2>
 					<strong>Name</strong>
 					<%= user.local.name %>
 					<br/>
@@ -93,6 +71,33 @@
 				</div>
 			</div>
 			
+			
+				<div class="profile_picture">
+					<% if (user.image.contentType) { %>
+						<div class="well col-xs-6 col-sm-4 col-md-4">
+							<h2>
+							<span class="fa fa-picture-o"></span> Change your picture:
+							</h2>
+							<form id="formUpload" method="post" action="uploadImage" enctype="multipart/form-data">
+							  <input id="image" type="file" name="image"/>
+							  <br/>
+							  <button id="btnSubmit" type="submit">Submit</button>
+							</form>
+						</div>
+					<% } else { %>
+						<div class="well col-xs-6 col-sm-4 col-md-4">
+							<h2>
+							<span class="fa fa-picture-o"></span> Add a Profile Picture
+							</h2>							
+							<form id="formUpload" method="post" action="/uploadImage" enctype="multipart/form-data">
+							  <input id="image" type="file" name="image"/>
+							  <br/>
+							  <button id="btnSubmit" type="submit">Submit</button>
+							</form>
+						</div>
+					<% } %>
+				</div>
+			
 			<div class="col-sm-6">
 				<div class="well chat chatArea">
 					<ul class="messages">
@@ -107,14 +112,15 @@
 			<div class="col-sm-6">
 				<% if (user.facebook.accessToken) { %>
 					<div class="well">
-						<h3>
-						<span class="fa fa-facebook"> Facebook Verified! </span>
-						</h3>
+						<h2>
+						<span class="fa fa-facebook"></span> Facebook Verified!
+						</h2>
 					</div>
 				<% } else { %>
 					<div class="well">
-						<h3>
-						<span class="fa fa-facebook"> Login with Facebook! </span>
+						<h2>
+						<span class="fa fa-facebook"></span> Login with Facebook!
+						</h2>
 						<br>
 						<a href='/auth/facebook/' class='btn btn-primary'> Verify With Facebook </a>
 					</div>
@@ -144,11 +150,11 @@
 			<script src="/socket.io/socket.io.js"></script>
 			<script src="/main.js"></script>
 	 
-			<hr/>
-			<% include footer %>
 		</div>
 		<!-- inner container -->
-		
+	
+		<hr/>
+		<% include footer %>	
 	</div>
 	<!-- container -->
 	

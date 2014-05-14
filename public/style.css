@@ -111,11 +111,7 @@ ul {
   width: 100%;
 }
 
-/* Team Page */
-
-.team_member {
-	text-align: center;
-}
+/* new_design added */
 
 .title {
 	text-align: center;
@@ -126,8 +122,6 @@ ul {
 	width: 200px;
 	border-radius: 50%;
 }
-
-/* new_design added */
 
 .jumbotron {
 	background-image: url('images/wooden_center_ucla_02.jpg');
@@ -169,6 +163,14 @@ h2 {
 	opacity: 1;
 }
 
-#profile_picture img {
+.profile_picture img {
 	border-radius: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.team_member {
+	text-align: center;
+	opacity: 0.8;
 }
