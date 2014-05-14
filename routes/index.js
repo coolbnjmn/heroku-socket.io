@@ -396,7 +396,8 @@ router.get('/contact', function(req, res) {
 
 router.get('/userlist', isLoggedIn, isVerified, function(req, res) {
   
-      User.find({}, function(e, docs) {
+      //User.find({}, function(e, docs) {
+      User.find({}, null, {sort: {'local.name' : 'ascending'}}, function(err, docs) {
          res.render('userlist', {title: "GymBud", user: req.user, userlist: docs});
         });
 });
