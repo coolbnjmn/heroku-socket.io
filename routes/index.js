@@ -109,7 +109,7 @@ var emailblast = schedule.scheduleJob(rule, function() {
   
   for(var i = 0; i < userlist.length; i++) {
    var mailOptions = {
-	from: "GymBud UCLA <gymbuducla@gmail.com>",
+	from: "GymBud <gymbuducla@gmail.com>",
 //	to: "coolbnjmn@ucla.edu",
 	to: userlist[i].local.email,
 	subject: "Update from GymBud",
