@@ -268,7 +268,7 @@ router.post('/uploadImage', function(req, res) {
   User.findOne({ "local.email": req.user.local.email}, function(err, docs) {
     if(req.files.image.type.match('image.*')) {
       var imgData;
-      im.convert([req.files.image.path, '-resize', '64x64', req.files.image.path], function(err) {
+      im.convert([req.files.image.path, '-resize', '200x200', req.files.image.path], function(err) {
         if(err) throw err;
 
 	docs.image.data = fs.readFileSync(req.files.image.path);
