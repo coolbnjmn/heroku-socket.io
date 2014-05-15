@@ -598,6 +598,12 @@ router.post('/searchUser', isLoggedIn, isVerified, function(req, res) {
     console.log(req.body);
     User.findOne({"local.name" : req.body.search}, function(e, docs) {
 	console.log(docs);
+	if(!docs) {
+      User.find({}, null, {sort: {'local.name' : 'ascending'}}, function(err, docs) {
+         res.render('userlist', {title: "GymBud", user: req.user, userlist: docs});
+        });
+		
+	} else {
       Review.find({reviewee: docs.local.email}, function(err, reviews) {
         var reviewSum = 0;
 	var avgReview = 0;
@@ -610,6 +616,7 @@ router.post('/searchUser', isLoggedIn, isVerified, function(req, res) {
 
         res.render('profile-public', {title: "GymBud", user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
       });
+      }
 	});
 });
 function makeid()
