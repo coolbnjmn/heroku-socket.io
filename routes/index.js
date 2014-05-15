@@ -90,7 +90,7 @@ var nodemailer = require('nodemailer');
 var smtpTransport = nodemailer.createTransport("SMTP", {
   service: "Gmail", 
   auth:  {
-     user: "gymbudco@gmail.com", 
+     user: "gymbudbruins@gmail.com", 
      pass: "gymbud123"
   }
 });
@@ -155,10 +155,10 @@ var job = schedule.scheduleJob(rule, function() {
       htmlEvent += "<h4> Event with: " + events[i].person1 + " and " + events[i].person2 + "</h4><p>" + events[i].date + " " + events[i].place + "</p><p>" + events[i].description + "</p>";
     }
     var mailOptions = { 
-      from: "GymBud <gymbudco@gmail.com>",
+      from: "GymBud <gymbudbruins@gmail.com>",
       to: docs.local.email,
       subject: "Status Update from GymBud!",
-      html: "<style> body { background-color: #FFF3DA;} </style>" + "<body>" + "<h1> GymBud Status Update! From www.gym-bud.co </h1><h3>Hi there from GymBud. The following things have happened since the last time you were on GymBud.</h3>" + "<h3> Recent Chats </h3>" + htmlChat + "<h3> Recent Events </h3>" + htmlEvent + "<h3> Recent Reviews </h3>" + htmlReview + "<p>Login here: www.gym-bud.co/login </p><p> or please feel free to contact us with any questions or concerns at gymbudco@gmail.com </p>"+ "</body>" 
+      html: "<style> body { background-color: #FFF3DA;} </style>" + "<body>" + "<h1> GymBud Status Update! From www.gymbudbruins.com </h1><h3>Hi there from GymBud. The following things have happened since the last time you were on GymBud.</h3>" + "<h3> Recent Chats </h3>" + htmlChat + "<h3> Recent Events </h3>" + htmlEvent + "<h3> Recent Reviews </h3>" + htmlReview + "<p>Login here: www.gymbudbruins.com/login </p><p> or please feel free to contact us with any questions or concerns at gymbudbruins@gmail.com </p>"+ "</body>" 
     };
 
     smtpTransport.sendMail(mailOptions, function(error, response) {
@@ -364,7 +364,7 @@ router.post('/signup2', function(req, res) {
       from: "GymBud <gymbudco@gmail.com>",
       to: docs.local.email,
       subject: "Please verify your new GymBud account!",
-      text: "Verification is simple! Just follow this link, and you're good to go! You'll be redirected to our home page and you can simply log in.  http://www.gym-bud.co/confirm/"+docs.local.verifyToken
+      text: "Verification is simple! Just follow this link, and you're good to go! You'll be redirected to our home page and you can simply log in.  http://www.gymbudbruins.com/confirm/"+docs.local.verifyToken
     };
 
     smtpTransport.sendMail(mailOptions, function(error, response) {
