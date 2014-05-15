@@ -576,6 +576,42 @@ router.get('/map', isLoggedIn, isVerified, function(req, res) {
   
 });
 
+router.get('/search_user', function(req, res) {
+  console.log('get search');
+  var regex = new RegExp(req.query["term"], 'i')
+  var query = User.find({"local.name" : regex}, {"local.name": 1}).limit(50);
+  query.exec(function(err, users) {
+    if(!err) {
+     var result = buildResultSet(users);
+     res.send(result, {
+      'Content-Type': 'application/json'
+      }, 200);
+    } else {
+      res.send(JSON.stringify(err), {
+        'Content-Type': 'application/json'
+      }, 404);
+    }
+  });
+});
+
+router.post('/searchUser', isLoggedIn, isVerified, function(req, res) {
+    console.log(req.body);
+    User.findOne({"local.name" : req.body.search}, function(e, docs) {
+	console.log(docs);
+      Review.find({reviewee: docs.local.email}, function(err, reviews) {
+        var reviewSum = 0;
+	var avgReview = 0;
+	if(reviews) {
+	  for(var i = 0; i < reviews.length; i++) {
+	    reviewSum += reviews[i].rating; 
+	  }
+	  avgReview = reviewSum / reviews.length;
+	}
+
+        res.render('profile-public', {title: "GymBud", user : req.user, userProfile: docs, to: docs.local.email, reviews:reviews, avg: avgReview});
+      });
+	});
+});
 function makeid()
 {
     var text = "";
@@ -586,6 +622,10 @@ function makeid()
        return text;
 }
 
+function buildResultSet(users) {
+  console.log(users);
+  return users;
+}
 function isVerified(req, res, next) {
     if(req.user.local.isVerified) {
        return next();
