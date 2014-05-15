@@ -127,22 +127,35 @@
 					</div>
 				<% } %>
 			</div>
+            
+            <div class="col-sm-6">
+					<div class="well">
+						<h2>
+						<span class="fa fa-calendar"></span> Check in with someone:
+						</h2>
+						<br>
+                        <form id="formSearchUsers" method='post' action="checkinWithUser" enctype="multipart/form-data">
+                            <input id="search" placeholder="Enter Name Here..." name="search" />
+                        <button id="searchSubmit" type="submit"> Check In </button>
+                        </form>
+
+					</div>
+			</div>
 			
 			<div class="col-sm-6 well">
+			   <h3>
+			     Previous Check Ins
+			   </h3>
+			   <!--
 				<a href="/add-event" class="btn btn-primary"> Create a new Event </a>
+				-->
 			  
 				<% for (var i = 0; i < events.length; i++) { %>
-					<h3>
-					  <%= events[i].description %>
-					</h3>
 					<h4>
 					  With: <%= events[i].person1 %> and <%= events[i].person2 %>
 					</h4>
 					<h4>
 					  On: <%= events[i].date %>
-					</h4>
-					<h4>
-					  At: <%= events[i].place %>
 					</h4>
 				<% } %>
 			</div>

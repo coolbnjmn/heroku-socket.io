@@ -62,10 +62,8 @@ var Review = mongoose.model('Review', reviewSchema);
 
 var eventSchema = new mongoose.Schema({
 	date: String,
-	place: String, 
 	person1: String,
 	person2: String,
-	description: String
 });
 
 var Event = mongoose.model('Event', eventSchema);
@@ -595,7 +593,14 @@ router.get('/search_user', function(req, res) {
 });
 
 router.post('/searchUser', isLoggedIn, isVerified, function(req, res) {
-    console.log(req.body);
+
+    console.log('About to log req.body.search:');
+    console.log(req.body.search);
+    if(!req.body.search) {
+      User.find({}, null, {sort: {'local.name' : 'ascending'}}, function(err, docs) {
+         res.render('userlist', {title: "GymBud", user: req.user, userlist: docs});
+        });
+    }
     User.findOne({"local.name" : req.body.search}, function(e, docs) {
 	console.log(docs);
 	if(!docs) {
@@ -618,6 +623,19 @@ router.post('/searchUser', isLoggedIn, isVerified, function(req, res) {
       });
       }
 	});
+});
+
+router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
+    console.log(req.body);
+    User.findOne({"local.name" : req.body.search}, function(e, docs) {
+	console.log(docs);
+	if(!docs) {
+		res.redirect('/chat');	
+	} else {
+	 	console.log('create new event here');
+		res.redirect('/');
+	}
+     });
 });
 function makeid()
 {
