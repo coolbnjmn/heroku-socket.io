@@ -79,6 +79,7 @@ var geoSchema = new mongoose.Schema({
   latitude: String,
   longitude: String,
   user: String,
+  name: String,
   date: String
 });
 
@@ -663,6 +664,22 @@ router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
      });
 });
 
+router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
+  console.log('add-geo');
+  console.log(req.body);
+  if(req.body.latitude == '') {
+    res.redirect('/map');
+    return;
+  }
+
+  var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, name: '', user: '', date: new Date()});
+  geoEvent.save(function(err) {
+    if(err) throw err;
+    res.redirect('/map');
+  });
+
+});
+
 router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
   console.log('add-geo');
   console.log(req.body);
@@ -671,7 +688,7 @@ router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
     return;
   }
 
-  var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, user: req.user.local.email, date: new Date()});
+  var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, name: req.user.local.name, user: req.user.local.email, date: new Date()});
   geoEvent.save(function(err) {
     if(err) throw err;
     res.redirect('/map');
