@@ -31,8 +31,9 @@
             mapOptions);
 	  
 	if(navigator.geolocation) {
+	  
 	  console.log('navigator.geolocation');
-	  navigator.geolocation.getCurrentPosition(currentPositionCallback);
+	  navigator.geolocation.getCurrentPosition(currentPositionCallback, errorCallback,{enableHighAccuracy: true});
 	} else {
 	  alert('The browser does not support geolocation');
 	}
@@ -48,6 +49,9 @@
 	}
       }
 
+      function errorCallback(error) {
+        alert('code: ' + error.code + '\n' + 'message: ' + error.message);
+      }
       function currentPositionCallback(position) {
         console.log('getting current position');
 	var user_lat_long = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
