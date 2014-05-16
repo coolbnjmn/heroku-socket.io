@@ -80,7 +80,8 @@ var geoSchema = new mongoose.Schema({
   longitude: String,
   user: String,
   name: String,
-  date: String
+  date: String,
+  description: String
 });
 
 var GeoTag = mongoose.model('Geotag', geoSchema);
@@ -579,7 +580,7 @@ router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
 
 router.get('/map', isLoggedIn, isVerified, function(req, res) {
       User.find({}, function(e, docs) {
-        var query = GeoTag.find({"user":req.user.local.email});
+        var query = GeoTag.find({});
 	query.select('-_id');
 	query.select('-__v');
         query.exec(function(err, geotags) {
@@ -667,14 +668,15 @@ router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
 router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
   console.log('add-geo');
   console.log(req.body);
-  if(req.body.latitude == '') {
+  if(req.body.latitudea == '') {
     res.redirect('/map');
     return;
   }
 
-  var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, name: '', user: '', date: new Date()});
+  var geoEvent = new GeoTag({latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', date: new Date()});
   geoEvent.save(function(err) {
     if(err) throw err;
+    console.log('added anonymous event');
     res.redirect('/map');
   });
 

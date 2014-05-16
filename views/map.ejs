@@ -6,17 +6,19 @@
 <body>
     <div id="checkInFormAnonymous">
     <form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
-	<input type="hidden" name="latitude" id="latitude" value=""/>
-	<input type="hidden" name="longitude" id="longitude" value=""/>
+	<input type="hidden" name="latitudea" id="latitudea" value=""/>
+	<input type="hidden" name="longitudea" id="longitudea" value=""/>
 	<input type="submit" value="Check In Anonymously" />
     </form>
+    </div>
+    <div id="checkInForm">
     <form action='/add-geo' method="post" enctype="multipart/form-data">
 	<input type="hidden" name="latitude" id="latitude" value=""/>
 	<input type="hidden" name="longitude" id="longitude" value=""/>
 	<input type="submit" value="Check In With Name" />
     </form>
-
     </div>
+
     <style type="text/css">
       #map-canvas { height: 300px; width:400px; }
     </style>
@@ -86,6 +88,8 @@
 
 	document.getElementById('latitude').value = position.coords.latitude;
 	document.getElementById('longitude').value = position.coords.longitude;
+	document.getElementById('latitudea').value = position.coords.latitude;
+	document.getElementById('longitudea').value = position.coords.longitude;
 	console.log(document.getElementById('latitude').value);
 	console.log(document.getElementById('longitude').value);
 
