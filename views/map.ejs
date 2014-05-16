@@ -39,8 +39,11 @@
 	}
 	 
       var geoTags = [<%- geotags %>];
-	for(var i = 0; i < geoTags; i++) {
+      console.log('Printing geotags');
+      console.log(geoTags);
+	for(var i = 0; i < geoTags.length; i++) {
 	   var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
+	  console.log(tmp_lat_long);
 	   var marker = new google.maps.Marker({
 	     position: tmp_lat_long,
 	     map: map,
