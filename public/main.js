@@ -221,6 +221,7 @@ $(function() {
   // Keyboard events
 
   $window.keydown(function (event) {
+   if($inputMessage.is(":focus")) {
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
       $currentInput.focus();
@@ -233,6 +234,9 @@ $(function() {
         typing = false;
       }
     }
+   } else {
+    console.log("inputMessage not focused");
+   }
   });
 
   $inputMessage.on('input', function() {

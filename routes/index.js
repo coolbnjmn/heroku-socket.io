@@ -627,13 +627,23 @@ router.post('/searchUser', isLoggedIn, isVerified, function(req, res) {
 
 router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
     console.log(req.body);
+    if(!req.body.search) {
+       res.redirect('/chat');
+    }
     User.findOne({"local.name" : req.body.search}, function(e, docs) {
 	console.log(docs);
 	if(!docs) {
 		res.redirect('/chat');	
 	} else {
 	 	console.log('create new event here');
-		res.redirect('/');
+		var datetime = new Date();
+		console.log(datetime);
+		var newEvent = new Event({date: datetime, person1: req.user.local.email, person2: docs.local.email});    
+		newEvent.save(function(err) {
+	   	if(err) throw err;
+	   	// save succeeeded
+	   	res.redirect('/chat');
+		});
 	}
      });
 });
