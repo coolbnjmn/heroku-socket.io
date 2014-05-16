@@ -75,6 +75,15 @@ var chatSchema = new mongoose.Schema({
 
 var Chat = mongoose.model('Chat', chatSchema);
 
+var geoSchema = new mongoose.Schema({
+  latitude: String,
+  longitude: String,
+  user: String,
+  date: String
+});
+
+var GeoTag = mongoose.model('Geotag', geoSchema);
+
 var braintree = require('braintree');
 var gateway = braintree.connect({ 
         environment:  braintree.Environment.Sandbox,
@@ -569,7 +578,13 @@ router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
 
 router.get('/map', isLoggedIn, isVerified, function(req, res) {
       User.find({}, function(e, docs) {
-         res.render('map', {title: 'GymBud', user: req.user, userlist: docs });
+        var query = GeoTag.find({"user":req.user.local.email});
+	query.select('-_id');
+	query.select('-__v');
+        query.exec(function(err, geotags) {
+	console.log(geotags);
+         res.render('map', {title: 'GymBud', user: req.user, userlist: docs, geotags: geotags });
+	 });
         });
   
 });
@@ -646,6 +661,22 @@ router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
 		});
 	}
      });
+});
+
+router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
+  console.log('add-geo');
+  console.log(req.body);
+  if(req.body.latitude == '') {
+    res.redirect('/map');
+    return;
+  }
+
+  var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, user: req.user.local.email, date: new Date()});
+  geoEvent.save(function(err) {
+    if(err) throw err;
+    res.redirect('/map');
+  });
+
 });
 function makeid()
 {
