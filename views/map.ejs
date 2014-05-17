@@ -61,47 +61,95 @@
       var geoTags = [<%- geotags %>];
       console.log('Printing geotags');
       console.log(geoTags);
-	for(var i = 0; i < geoTags.length; i++) {
-	   var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
-        var content = '<html><body><div><p>'+ geoTags[i].description + '</p><p>'+geoTags[i].location_name +'</p><a href="/profile/' + geoTags[i].user + '">'+ geoTags[i].name +'</a></div></body></html>';
+      
+      var infowindow = new google.maps.InfoWindow();
+      
+      for(var i = 0; i < geoTags.length; i++) {
+        attachMarker( geoTags[i] );
+      }
+      /*
+        for(var i = 0; i < geoTags.length; i++) {
+            var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
+            var content = '<html><body><div><p>'+ geoTags[i].description + '</p><p>'+geoTags[i].location_name +'</p><a href="/profile/' + geoTags[i].user + '">'+ geoTags[i].name +'</a></div></body></html>';
 
-        var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
-	   var geocoder = new google.maps.Geocoder();
-       	   var marker;
-           if(geoTags[i].location_name != '') {
-       geocoder.geocode({'address' : geoTags[i].location_name}, function(results, status) {
-         if(status == google.maps.GeocoderStatus.OK) {
-           //map.setCenter(results[0].geometry.location);
-           marker = new google.maps.Marker({
-             map: map, 
-             position: results[0].geometry.location,
-	         title: 'Check in'
-           });
+            var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
+            var geocoder = new google.maps.Geocoder();
+            var marker;
+            if(geoTags[i].location_name != '') {
+                geocoder.geocode({'address' : geoTags[i].location_name}, function(results, status) {
+                    if(status == google.maps.GeocoderStatus.OK) {
+                        //map.setCenter(results[0].geometry.location);
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            title: 'Check in'
+                        });
 
-	   if(marker.title != '') {
-	   var infowindow = new google.maps.InfoWindow();
-	   google.maps.event.addListener(marker, 'click', (function(marker, content, infowindow) {
-		return function() {
-          console.log(content);
-		  infowindow.setContent(content);
-		  infowindow.open(map, marker);
-		};
-	   })(marker, content, infowindow));
-	   }
+                        if(marker.title != '') {
+                            var infowindow = new google.maps.InfoWindow();
+                            google.maps.event.addListener(marker, 'click', (function(marker, content, infowindow) {
+                                    return function() {
+                                        console.log(content);
+                                        infowindow.setContent(content);
+                                        infowindow.open(map, marker);
+                                    };
+                                })(marker, content, infowindow));
+                        }
 
-         } else {
-           alert("Geocode was not successful for the following reason: " + status);
-         }
-       });
-       } else {
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            } else {
 
-         marker = new google.maps.Marker({
-           map: map, 
-           position: tmp_lat_long
-         });
-       }
-	  console.log(tmp_lat_long);
-	}
+                marker = new google.maps.Marker({
+                map: map,
+                position: tmp_lat_long
+                });
+            }
+            console.log(tmp_lat_long);
+        }
+        */
+      }
+      
+      function attachMarker(data) {
+            var content = '<html><body><div><p>'+ data.description + '</p><p>'+data.location_name +'</p><a href="/profile/' + data.user + '">'+ data.name +'</a></div></body></html>';
+
+            var tmp_lat_long = new google.maps.LatLng(data.latitude, data.longitude);
+            var geocoder = new google.maps.Geocoder();
+            var marker;
+            
+            if(data.location_name != '') {
+                geocoder.geocode({'address' : data.location_name}, function(results, status) {
+                    if(status == google.maps.GeocoderStatus.OK) {
+                        //map.setCenter(results[0].geometry.location);
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            title: 'Check in'
+                        });
+
+                        if(marker.title != '') {
+                            var infowindow = new google.maps.InfoWindow();
+                            google.maps.event.addListener(marker, 'click', function() {
+                                    console.log(content);
+                                    infowindow.setContent(content);
+                                    infowindow.open(map, this);
+                            });
+                        }
+
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            } else {
+
+                marker = new google.maps.Marker({
+                map: map,
+                position: tmp_lat_long
+                });
+            }
+
       }
 
       function errorCallback(error) {
