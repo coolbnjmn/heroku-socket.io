@@ -85,7 +85,9 @@ var geoSchema = new mongoose.Schema({
   description: String, 
   location_name: String,
   user2: String, 
-  user2_email: String
+  user2_email: String,
+  secret_user: String,
+  count: Number
 });
 
 var GeoTag = mongoose.model('Geotag', geoSchema);
@@ -677,11 +679,32 @@ router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
     return;
   }
 
-  var geoEvent = new GeoTag({latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', description: '', user2_email: '', user2: '', location_name: '', date: new Date()});
-  geoEvent.save(function(err) {
-    if(err) throw err;
-    console.log('added anonymous event');
-    res.redirect('/map');
+  GeoTag.findOne({"secret_user" : req.user.local.email}, function(e, docs) {
+     if(!docs) {
+  	var geoEvent = new GeoTag({count: 1,secret_user: req.user.local.email, latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', description: '', user2_email: '', user2: '', location_name: '', date: new Date()});
+  	geoEvent.save(function(err) {
+ 	   if(err) throw err;
+	    console.log('added anonymous event');
+	    res.redirect('/map');
+	  });
+
+     } else {
+        docs.count = docs.count + 1;
+        docs.latitude = req.body.latitudea;
+	docs.longitude = req.body.longitudea;
+	docs.name = '';
+	docs.user = '';
+	docs.description='';
+	docs.user2_email = '';
+	docs.user2 = '';
+	docs.location_name = '';
+	docs.date = new Date();
+	docs.save(function(err) {
+	  if(err) throw err;
+	  console.log('modified event object, and save');
+	  res.redirect('/map');
+	});
+     }
   });
 
 });
@@ -713,11 +736,33 @@ router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
                     return;
 
                     } else {
-  			var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, name: req.user.local.name, user: req.user.local.email, date: new Date(), location_name: req.body.location_name, user2: req.body.search, description: req.body.description, user2_email: docs.local.email});
-  			geoEvent.save(function(err) {
-    			if(err) throw err;
-    			res.redirect('/map');
-  			});
+                    GeoTag.findOne({"secret_user" : req.user.local.email}, function(e, docss) {
+                                   if(!docss) {
+                                   var geoEvent = new GeoTag({count: 1,secret_user: req.user.local.email, latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', description: '', user2_email: '', user2: '', location_name: '', date: new Date()});
+                                   geoEvent.save(function(err) {
+                                                 if(err) throw err;
+                                                 console.log('added anonymous event');
+                                                 res.redirect('/map');
+                                                 });
+                                   
+                                   } else {
+                                   docss.count = docss.count + 1;
+                                   docss.latitude = req.body.latitudea;
+                                   docss.longitude = req.body.longitudea;
+                                   docss.name = req.user.local.name;
+                                   docss.user = req.user.local.email;
+                                   docss.description=req.body.description;
+                                   docss.user2_email = docs.local.email;
+                                   docss.user2 = req.body.search;
+                                   docss.location_name = req.body.location_name;
+                                   docss.date = new Date();
+                                   docss.save(function(err) {
+                                             if(err) throw err;
+                                             console.log('modified event object, and save');
+                                             res.redirect('/map');
+                                             });
+                                   }
+                                   });
 		    }
                     });
                
