@@ -1,3 +1,4 @@
+
 var passport = require('passport');
 var mongoose = require('mongoose');
 var express = require('express');
@@ -81,7 +82,10 @@ var geoSchema = new mongoose.Schema({
   user: String,
   name: String,
   date: String,
-  description: String
+  description: String, 
+  location_name: String,
+  user2: String, 
+  user2_email: String
 });
 
 var GeoTag = mongoose.model('Geotag', geoSchema);
@@ -673,7 +677,7 @@ router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
     return;
   }
 
-  var geoEvent = new GeoTag({latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', date: new Date()});
+  var geoEvent = new GeoTag({latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', description: '', user2_email: '', user2: '', location_name: '', date: new Date()});
   geoEvent.save(function(err) {
     if(err) throw err;
     console.log('added anonymous event');
@@ -685,18 +689,43 @@ router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
 router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
   console.log('add-geo');
   console.log(req.body);
-  if(req.body.latitude == '') {
+  if(req.body.latitude == '' || req.body.search == "" || req.body.location_name == "" ) {
     res.redirect('/map');
     return;
   }
+ 
+  
+  User.findOne({"local.name" : req.body.search}, function(e, docs) {
+   if(!docs) {
+    res.redirect('/map'); 
+    return;
+   }
+        
+   var geocoder = require('geocoder');
+   geocoder.geocode(req.body.location_name, function(err, data) {
+                    console.log('geocoding');
+                    console.log(err);
+                    console.log(data);
+                    
+                    if(data && data.status == 'ZERO_RESULTS') {
+                    console.log('setting return flag to true');
+                    res.redirect('/map');
+                    return;
 
-  var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, name: req.user.local.name, user: req.user.local.email, date: new Date()});
-  geoEvent.save(function(err) {
-    if(err) throw err;
-    res.redirect('/map');
+                    } else {
+  			var geoEvent = new GeoTag({latitude: req.body.latitude, longitude: req.body.longitude, name: req.user.local.name, user: req.user.local.email, date: new Date(), location_name: req.body.location_name, user2: req.body.search, description: req.body.description, user2_email: docs.local.email});
+  			geoEvent.save(function(err) {
+    			if(err) throw err;
+    			res.redirect('/map');
+  			});
+		    }
+                    });
+               
   });
 
 });
+
+
 function makeid()
 {
     var text = "";
