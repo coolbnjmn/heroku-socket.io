@@ -23,6 +23,13 @@
 								<br/>
 								<strong>email</strong>: <%= userProfile.local.email %>
 								<br/>
+								<% if(userProfile.rank.points !== undefined) { %>
+								<strong> Points Earned </strong>: <%= userProfile.rank.points %>
+								<br/>
+					<% } else { %>
+					<strong> No Points Yet! </strong>
+					<br />
+					<% } %>
 								<strong>Interests: </strong>
 								<br/>
 								<%= userProfile.local.interest1 %>

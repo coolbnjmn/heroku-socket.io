@@ -65,6 +65,9 @@ var userSchema = new mongoose.Schema({
 				   // email and comments in reviews
 				   name: String
                                      },
+  rank: {
+    points: Number, 
+  },
 				     facebook: {
 				       accessToken: String
 				     },
@@ -124,6 +127,13 @@ io.on('connection', function (socket) {
       // when the client emits 'new message', this listens and executes
       socket.on('new message', function (from, data) {
                 // we tell the client to execute 'new message'
+        User.findOne({"local.email" : from}, function(err, docs) {
+	  if(docs.rank.points !== undefined) docs.rank.points += 10;
+	  else docs.rank.points = 10;
+	  docs.save(function(err) {
+	    if(err) throw err;
+	  });
+	});
 		var newMsg = new Chat({from: from, message: data});
 		newMsg.save(function(err) {
                   socket.broadcast.emit('new message', {
@@ -134,6 +144,15 @@ io.on('connection', function (socket) {
                   });
 		});
       socket.on('pm', function(from, to, message) {
+        User.findOne({"local.email" : from}, function(err, docs) {
+	  console.log(docs.rank);
+	  console.log(docs.rank.points);
+	  if(docs.rank.points !== undefined) docs.rank.points += 10;
+	  else docs.rank.points = 10;
+	  docs.save(function(err) {
+	    if(err) throw err;
+	  });
+	});
         var newMsg = new Chat({from: from, to: to, message: message});
 	newMsg.save(function(err) {
 	  console.log('new message saved in database');
@@ -239,6 +258,7 @@ passport.use('local-signup', new LocalStrategy({
 									       if(eduMatches) {
                                                                              var newUser = new User();
                                                                              newUser.local.email = email;
+									     newUser.rank.points = 0;
                                                                              newUser.local.password = newUser.generateHash(password);
                                                                              newUser.save(function(err) {
                                                                                           if(err) 

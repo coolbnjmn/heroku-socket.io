@@ -89,6 +89,14 @@
 					<strong>Email</strong>
 					<%= user.local.email %>
 					<br/>
+					<% if(user.rank.points !== undefined) { %>
+					<strong>Points Earned</strong>
+					<%= user.rank.points %>
+					<br />
+					<% } else { %>
+					<strong> No Points Yet! </strong>
+					<br />
+					<% } %>
 					<strong>Interests:</strong>
 					<br/>
 					<%= user.local.interest1 %>

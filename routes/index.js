@@ -32,6 +32,9 @@ var userSchema = new mongoose.Schema({
               rating: Number, 
 	      comments: String}]
   }, 
+  rank: {
+    points: Number, 
+  },
   facebook: {
     accessToken: String
   },
@@ -659,6 +662,13 @@ router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
 		res.redirect('/chat');	
 	} else {
 	 	console.log('create new event here');
+		if(docs.rank.points !== undefined) docs.rank.points += 25;
+		else docs.rank.points += 25;
+		docs.save(function(err) {
+		  console.log(docs.local.name);
+		  console.log("saving points");
+		  if(err) throw err;
+		});
 		var datetime = new Date();
 		console.log(datetime);
 		var newEvent = new Event({date: datetime, person1: req.user.local.email, person2: docs.local.email});    
@@ -678,7 +688,14 @@ router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
     res.redirect('/map');
     return;
   }
-
+  
+  User.findOne({"local.email" : req.user.local.email}, function(e, docs) {
+    if(docs.rank.points !== undefined) docs.rank.points += 25;
+    else docs.rank.points = 25;
+    docs.save(function(err) {
+      if(err) throw err;
+    });
+  });
   GeoTag.findOne({"secret_user" : req.user.local.email}, function(e, docs) {
      if(!docs) {
   	var geoEvent = new GeoTag({count: 1,secret_user: req.user.local.email, latitude: req.body.latitudea, longitude: req.body.longitudea, name: '', user: '', description: '', user2_email: '', user2: '', location_name: '', date: new Date()});
@@ -717,6 +734,13 @@ router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
     return;
   }
  
+  User.findOne({"local.email" : req.user.local.email}, function(e, docs) {
+    if(docs.rank.points !== undefined) docs.rank.points += 50;
+    else docs.rank.points = 50;
+    docs.save(function(err) {
+      if(err) throw err;
+    });
+  });
   
   User.findOne({"local.name" : req.body.search}, function(e, docs) {
    if(!docs) {
