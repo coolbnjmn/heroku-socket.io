@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+      <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+<div class="ui-widget">
+  <label for="search"> With: </label>
+  <form id="formSearchUsers" method='post' action="/add-people" enctype="multipart/form-data">
+  <input type="hidden" id="event_hash" name="event_hash" value="<%= this_event.hash %>">
+  <% if(this_event.users[0] !== undefined) { %>
+  <input id="search1" name="search1" value="<%= this_event.users[0].name %>">
+  <% } else { %>
+  <input id="search1" name="search1" placeholder="Enter Name Here...">
+  <% } %>
+  <% if(this_event.users[1] !== undefined) { %>
+  <input id="search2" name="search2" value="<%= this_event.users[1].name %>">
+  <% } else { %>
+  <input id="search2" name="search2" placeholder="Enter Name Here...">
+  <% } %>
+  <% if(this_event.users[2] !== undefined) { %>
+  <input id="search3" name="search3" value="<%= this_event.users[2].name %>">
+  <% } else { %>
+  <input id="search3" name="search3" placeholder="Enter Name Here...">
+  <% } %>
+  <% if(this_event.users[3] !== undefined) { %>
+  <input id="search4" name="search4" value="<%= this_event.users[3].name %>">
+  <% } else { %>
+  <input id="search4" name="search4" placeholder="Enter Name Here...">
+  <% } %>
+
+  <button id="searchSubmit" type="submit"> Add These People </button>
+  </form>
+</div>
+        <% include footer %>
+    <!-- /container -->
+	
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#userlist').addClass("active");
+        });
+    </script>
+    
+    <script>
+      $(function () {
+
+      var $searchBox1 = $("#search1");
+      $searchBox1.autocomplete({
+          source: function (request, response) {
+             $.ajax({
+                url: "/search_user",
+                type: "GET",
+                data: request,  // request is the value of search input
+                success: function (data) {
+                  // Map response values to fiedl label and value
+                   response($.map(data, function (el) {
+                       console.log(el);
+                      return {
+                         label: el.local.name,
+                         value: el.local.email
+                      };
+                      }));
+                   }
+                });
+             },
+             
+             // The minimum number of characters a user must type before a search is performed.
+             minLength: 3, 
+             
+             // set an onFocus event to show the result on input field when result is focused
+             focus: function (event, ui) { 
+                this.value = ui.item.label; 
+                // Prevent other event from not being execute
+                event.preventDefault();
+             },
+             select: function (event, ui) {
+                // Prevent value from being put in the input:
+                this.value = ui.item.label;
+                // Set the id to the next input hidden field
+                $(this).next("input").val(ui.item.value); 
+                // Prevent other event from not being execute            
+                event.preventDefault();
+                // optionnal: submit the form after field has been filled up
+                //$('#quicksearch').submit();
+             }
+      });
+      var $searchBox2 = $("#search2");
+      $searchBox2.autocomplete({
+          source: function (request, response) {
+             $.ajax({
+                url: "/search_user",
+                type: "GET",
+                data: request,  // request is the value of search input
+                success: function (data) {
+                  // Map response values to fiedl label and value
+                   response($.map(data, function (el) {
+                       console.log(el);
+                      return {
+                         label: el.local.name,
+                         value: el.local.email
+                      };
+                      }));
+                   }
+                });
+             },
+             
+             // The minimum number of characters a user must type before a search is performed.
+             minLength: 3, 
+             
+             // set an onFocus event to show the result on input field when result is focused
+             focus: function (event, ui) { 
+                this.value = ui.item.label; 
+                // Prevent other event from not being execute
+                event.preventDefault();
+             },
+             select: function (event, ui) {
+                // Prevent value from being put in the input:
+                this.value = ui.item.label;
+                // Set the id to the next input hidden field
+                $(this).next("input").val(ui.item.value); 
+                // Prevent other event from not being execute            
+                event.preventDefault();
+                // optionnal: submit the form after field has been filled up
+                //$('#quicksearch').submit();
+             }
+      });
+
+      var $searchBox3 = $("#search3");
+      $searchBox3.autocomplete({
+          source: function (request, response) {
+             $.ajax({
+                url: "/search_user",
+                type: "GET",
+                data: request,  // request is the value of search input
+                success: function (data) {
+                  // Map response values to fiedl label and value
+                   response($.map(data, function (el) {
+                       console.log(el);
+                      return {
+                         label: el.local.name,
+                         value: el.local.email
+                      };
+                      }));
+                   }
+                });
+             },
+             
+             // The minimum number of characters a user must type before a search is performed.
+             minLength: 3, 
+             
+             // set an onFocus event to show the result on input field when result is focused
+             focus: function (event, ui) { 
+                this.value = ui.item.label; 
+                // Prevent other event from not being execute
+                event.preventDefault();
+             },
+             select: function (event, ui) {
+                // Prevent value from being put in the input:
+                this.value = ui.item.label;
+                // Set the id to the next input hidden field
+                $(this).next("input").val(ui.item.value); 
+                // Prevent other event from not being execute            
+                event.preventDefault();
+                // optionnal: submit the form after field has been filled up
+                //$('#quicksearch').submit();
+             }
+      });
+
+      var $searchBox4 = $("#search4");
+      $searchBox4.autocomplete({
+          source: function (request, response) {
+             $.ajax({
+                url: "/search_user",
+                type: "GET",
+                data: request,  // request is the value of search input
+                success: function (data) {
+                  // Map response values to fiedl label and value
+                   response($.map(data, function (el) {
+                       console.log(el);
+                      return {
+                         label: el.local.name,
+                         value: el.local.email
+                      };
+                      }));
+                   }
+                });
+             },
+             
+             // The minimum number of characters a user must type before a search is performed.
+             minLength: 3, 
+             
+             // set an onFocus event to show the result on input field when result is focused
+             focus: function (event, ui) { 
+                this.value = ui.item.label; 
+                // Prevent other event from not being execute
+                event.preventDefault();
+             },
+             select: function (event, ui) {
+                // Prevent value from being put in the input:
+                this.value = ui.item.label;
+                // Set the id to the next input hidden field
+                $(this).next("input").val(ui.item.value); 
+                // Prevent other event from not being execute            
+                event.preventDefault();
+                // optionnal: submit the form after field has been filled up
+                //$('#quicksearch').submit();
+             }
+      });
+    });
+
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

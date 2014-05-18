@@ -66,8 +66,14 @@ var Review = mongoose.model('Review', reviewSchema);
 
 var eventSchema = new mongoose.Schema({
 	date: String,
-	person1: String,
-	person2: String,
+	start: String, 
+	end: String, 
+	place: String,
+	creator_name: String,
+	creator_email: String,
+	description: String,
+	users: Array,
+	hash: String
 });
 
 var Event = mongoose.model('Event', eventSchema);
@@ -573,11 +579,11 @@ router.post('/webhooks', function(req, res) {
 });
 
 router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
-	var newEvent = new Event({date: req.body.date, place: req.body.place, person1: req.user.local.email, person2: req.body.person, description: req.body.description});    
+	var newEvent = new Event({date: req.body.date, start: req.body.start, end: req.body.end, place: req.body.place, creator_name: req.user.local.name, creator_email: req.user.local.email, description: req.body.description, users: [], hash: makeid()});
 	newEvent.save(function(err) {
 	   if(err) throw err;
 	   // save succeeeded
-	   res.redirect('/chat');
+	   res.redirect('/events');
 	});
 });
 router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
@@ -586,6 +592,71 @@ router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
         });
 });
 
+router.get('/events', isLoggedIn, isVerified, function(req, res) {
+    Event.find({}, function(e, docs) {
+      res.render('events', {title: "GymBud", user: req.user, events: docs});
+    });
+});
+
+router.get('/add-people/:hash', isLoggedIn, isVerified, function(req, res) {
+    var hash = req.params.hash;
+    console.log('this');
+    Event.findOne({ "hash" : hash}, function(e, docs) {
+      res.render('add-people', {title:"GymBud", user: req.user, this_event: docs});
+    });
+});
+
+router.post('/add-people', isLoggedIn, isVerified, function(req, res) {
+      var users = [];
+      console.log(req.body.search1);
+            console.log(req.body);
+            console.log('hash');
+            console.log(req.body.event_hash);
+      
+            var query;
+            if(req.body.search1 == '') {
+                query = null;
+            }
+            if(req.body.search2 == '') {
+                query = User.findOne({"local.name" : req.body.search1});
+            }
+            if(req.body.search3 == '') {
+                query = User.find({ $or: [{"local.name" : req.body.search1}, {"local.name" : req.body.search2}] });
+            }
+            if(req.body.search4 == '') {
+                query = User.find({ $or: [{"local.name" : req.body.search1}, {"local.name" : req.body.search2}, {"local.name" : req.body.search3}]});
+            } else {
+                query = User.find({ $or: [{"local.name" : req.body.search1}, {"local.name" : req.body.search2}, {"local.name" : req.body.search3}, {"local.name" : req.body.search4}]});
+            }
+            
+            
+            query.exec(function(err, users) {
+                       var event_users = [];
+                       for(var i = 0; i < users.length; i++){
+                       if(users[i].local.name != '') {
+                        var user = {name:users[i].local.name, email:users[i].local.email};
+                        event_users[event_users.length] = user;
+                       }
+                       
+                       }
+                       Event.findOne({"hash" : req.body.event_hash}, function(e, this_event) {
+                                     this_event.users = event_users;
+                                     this_event.save(function(error) {
+                                                     console.log('saving event');
+                                                     console.log(this_event);
+                                                     console.log('redirecting');
+                                                     res.redirect('/events');
+                                                     });
+                                     });
+                     
+                       });
+//            User.find({ $or: [{"local.name" : req.body.search1}, {"local.name" : req.body.search2}, {"local.name" : req.body.search3}, {"local.name" : req.body.search4}]}, function(err, users) {
+//                      for(var i = 0; i < users.length; i++) {
+//                      console.log(users[i]);
+//                      }
+//                      }kk);
+
+});
 
 router.get('/map', isLoggedIn, isVerified, function(req, res) {
       User.find({}, function(e, docs) {

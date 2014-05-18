@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include header %>
+<body>
+    <% include navbar %>
+ 
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+      <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+    <div class="container">
+        <div class="page-header">
+            <h1>
+	        List of Events
+            </h1>
+        </div>
+        
+
+        <div class="well">
+
+            <% for (var i = 0; i < events.length; i++) { %>
+					<div class="row">
+						<div class="col-xs-6 col-md-4">
+						</div>
+						<div class="col-xs-6 col-md-4">
+							<div class="panel panel-default">
+								<div class="panel-body" style="text-align: center;">
+									<p> <%= events[i].date %></p>
+									<p> <%= events[i].start %></p>
+									<p> <%= events[i].end %></p>
+									<p> <%= events[i].place %></p>
+									<p> <%= events[i].creator_name %></p>
+									<p> <%= events[i].description %></p>
+									<p>
+									
+									<% for (var j = 0; j < events[i].users.length; j++) { %>
+									<p>
+									<%= events[i].users[j].name %>
+									</p>
+									<% } %>
+									</p>
+									<form id="edit-event" method="link" action="/add-people/<%= events[i].hash %>">
+									<button id="btnSubmit" type="submit"> Add People </button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+            <% } %>
+		</div>
+        </div>
+
+		<hr/>
+        <% include footer %>
+    </div>
+    <!-- /container -->
+	
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#userlist').addClass("active");
+        });
+    </script>
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!-- Latest compiled and minified JavaScript -->
+    <script
+        src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

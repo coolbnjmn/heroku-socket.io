@@ -4,6 +4,11 @@
 
 <% include header %>
 <body>
+    <div id="add-event">
+      <form action="/add-event" method="link">
+        <button id="btnSubmit" type="submit"> Make Event </button>
+      </form>
+    </div>
     <div id="checkInFormAnonymous">
     <form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
 	<input type="hidden" name="latitudea" id="latitudea" value=""/>
