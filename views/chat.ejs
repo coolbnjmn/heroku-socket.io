@@ -191,6 +191,7 @@
 					</div>
 				<% } %>
 			</div>
+			<!--
             <div class="col-sm-6">
 					<div class="well">
                     <div class="ui-widget">
@@ -207,10 +208,11 @@
 
                 </div>
 			</div>
+			-->
 
 			<div class="col-sm-6 well">
 			   <h3>
-			     Previous Check Ins
+			     Previous Events
 			   </h3>
 			   <!--
 				<a href="/add-event" class="btn btn-primary"> Create a new Event </a>
@@ -218,7 +220,7 @@
 			  
 				<% for (var i = 0; i < events.length; i++) { %>
 					<h4>
-					  With: <%= events[i].person1 %> and <%= events[i].person2 %>
+					  Event created by: <%= events[i].creator_name %>
 					</h4>
 					<h4>
 					  On: <%= events[i].date %>

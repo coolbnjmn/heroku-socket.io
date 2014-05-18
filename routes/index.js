@@ -73,7 +73,8 @@ var eventSchema = new mongoose.Schema({
 	creator_email: String,
 	description: String,
 	users: Array,
-	hash: String
+	hash: String,
+	expired: Boolean
 });
 
 var Event = mongoose.model('Event', eventSchema);
@@ -271,7 +272,7 @@ router.get('/team', function(req, res) {
 
 router.get('/chat', isLoggedIn, isVerified, function(req, res, next) {
       User.find({}, function(e, docs) {
-       Event.find({ $or:[ {'person1':req.user.local.email}, {'person2':req.user.local.email}]}, function(err, events) {
+       Event.find({'creator_email':req.user.local.email}, function(err, events) {
         res.render('chat', {title: "GymBud", user: req.user, to:undefined, userlist: docs, events: events});
 	});
         });
@@ -579,7 +580,7 @@ router.post('/webhooks', function(req, res) {
 });
 
 router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
-	var newEvent = new Event({date: req.body.date, start: req.body.start, end: req.body.end, place: req.body.place, creator_name: req.user.local.name, creator_email: req.user.local.email, description: req.body.description, users: [], hash: makeid()});
+	var newEvent = new Event({date: req.body.date, start: req.body.start, end: req.body.end, place: req.body.place, creator_name: req.user.local.name, creator_email: req.user.local.email, description: req.body.description, users: [], hash: makeid(), expired: false});
 	newEvent.save(function(err) {
 	   if(err) throw err;
 	   // save succeeeded
@@ -592,8 +593,12 @@ router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
         });
 });
 
+//var moment = require('moment');
+
 router.get('/events', isLoggedIn, isVerified, function(req, res) {
     Event.find({}, function(e, docs) {
+      // check if events have expired.
+               
       res.render('events', {title: "GymBud", user: req.user, events: docs});
     });
 });
