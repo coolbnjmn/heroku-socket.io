@@ -593,12 +593,26 @@ router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
         });
 });
 
-//var moment = require('moment');
+var moment = require('moment');
 
 router.get('/events', isLoggedIn, isVerified, function(req, res) {
     Event.find({}, function(e, docs) {
       // check if events have expired.
+               for(var i = 0; i < docs.length; i++) {
+               var endDate = moment(docs[i].date + " "+ docs[i].end, "MM/DD/YYYY HH:mm");
+               console.log(endDate);
+               var now = moment();
                
+               if(endDate - now < 0) {
+                docs[i].expired = true;
+               docs[i].save(function(err) {
+                            if(err) throw err;
+                            });
+               }
+               console.log(now);
+               console.log(endDate-now);
+               
+               }
       res.render('events', {title: "GymBud", user: req.user, events: docs});
     });
 });
@@ -650,7 +664,7 @@ router.post('/add-people', isLoggedIn, isVerified, function(req, res) {
                                                      console.log('saving event');
                                                      console.log(this_event);
                                                      console.log('redirecting');
-                                                     res.redirect('/events');
+                                                     res.redirect('/map');
                                                      });
                                      });
                      
@@ -669,8 +683,17 @@ router.get('/map', isLoggedIn, isVerified, function(req, res) {
 	query.select('-_id');
 	query.select('-__v');
         query.exec(function(err, geotags) {
-	console.log(geotags);
-         res.render('map', {title: 'GymBud', user: req.user, userlist: docs, geotags: geotags });
+                   var query2 = Event.find({"expired": false});
+                   query2.select('-_id');
+                   query2.select('-__v');
+                   query2.exec(function(e, events) {
+                               console.log('events');
+                               console.log(events);
+                               console.log('geotags');
+                               console.log(geotags);
+                               res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags });
+      
+                               });
 	 });
         });
   

@@ -70,7 +70,12 @@
       var infowindow = new google.maps.InfoWindow();
       
       for(var i = 0; i < geoTags.length; i++) {
-        attachMarker( geoTags[i] );
+        attachGeoMarker( geoTags[i] );
+      }
+
+      var eventlist = [<%- events %>];
+      for(var i = 0; i < eventlist.length; i++) {
+        attachEventMarker( eventlist[i] );
       }
       /*
         for(var i = 0; i < geoTags.length; i++) {
@@ -117,7 +122,7 @@
         */
       }
       
-      function attachMarker(data) {
+      function attachGeoMarker(data) {
             var content = '<html><body><div><p>'+data.date+'</p><p>'+ data.description + '</p><p>'+data.location_name +'</p><a href="/profile/' + data.user + '">'+ data.name +'</a></div></body></html>';
 
             var tmp_lat_long = new google.maps.LatLng(data.latitude, data.longitude);
@@ -155,6 +160,36 @@
                 });
             }
 
+      }
+
+      function attachEventMarker(data) {
+        var content = '<html><body><div><p>'+data.creator_name+'</p>'
+	
+	for(var i = 0; i < data.users.length; i++) {
+	  content += '<p>'+data.users[i].name+'</p>';
+	}
+	content += '<a href="/add-people/'+data.hash+'">Add People</a></div></body></html>';
+	var geocoder = new google.maps.Geocoder();
+	var marker;
+
+	geocoder.geocode({'address' : data.place}, function(results, status) {
+	  if(status == google.maps.GeocoderStatus.OK) {
+	    marker = new google.maps.Marker({
+	      map: map,
+	      position: results[0].geometry.location,
+	      title: 'Check In'
+	      });
+
+	      var infowindow = new google.maps.InfoWindow();
+	      google.maps.event.addListener(marker, 'click', function() {
+	        console.log(content);
+		infowindow.setContent(content);
+		infowindow.open(map, this);
+	      });
+	  } else {
+	    alert("Geocode was not successful for the following reason: " + status);
+	  }
+	});
       }
 
       function errorCallback(error) {
