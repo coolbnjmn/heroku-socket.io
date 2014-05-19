@@ -4,11 +4,13 @@
 
 <% include header %>
 <body>
+    <div class="well" style="width:50%; margin: 0 auto;">
     <div id="add-event">
       <form action="/add-event" method="link">
         <button id="btnSubmit" type="submit"> Make Event </button>
       </form>
     </div>
+    <br>
     <div id="checkInFormAnonymous">
     <form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
 	<input type="hidden" name="latitudea" id="latitudea" value=""/>
@@ -16,15 +18,18 @@
 	<input type="submit" value="Check In Anonymously" />
     </form>
     </div>
+    <br>
     <div class="ui-widget">
 
     <div id="checkInForm">
     <form action='/add-geo' method="post" enctype="multipart/form-data">
+    	<label> Check in...</label>
+	<br>
 	<input type="hidden" name="latitude" id="latitude" value=""/>
 	<input type="hidden" name="longitude" id="longitude" value=""/>
         <label for="search">With: </label>
-     <input id="search" name="search">
-
+        <input id="search" name="search">
+	<br>
     <label for="description"> You did: </label>
     <input name="description" id="description" value="" />
     <br>
@@ -35,11 +40,13 @@
     </form>
     </div>
          </div>
+	 </div>
 
 
     <style type="text/css">
-      #map-canvas { height: 300px; width:400px; }
+      #map-canvas { height: 100%; width:75%; }
     </style>
+    <div id="map-canvas" style="margin: 0 auto;"/>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAElbKleGQ_ucrGrHsRNJiR2SMGtDGsV2U&sensor=TRUE">
     </script>
@@ -165,7 +172,7 @@
       }
 
       function attachEventMarker(data) {
-        var content = '<html><body><div><p>'+data.creator_name+'</p>'
+        var content = '<html><body><div><p>'+data.creator_name+'</p><br>'
 	
 	for(var i = 0; i < data.users.length; i++) {
 	  content += '<p>'+data.users[i].name+'</p>';
@@ -304,7 +311,6 @@
 
     </script>
 
-    <div id="map-canvas"/>
 
         <% include footer %>
     <!-- /container -->
