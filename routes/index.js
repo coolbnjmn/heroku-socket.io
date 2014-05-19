@@ -225,8 +225,18 @@ router.get('/', function(req, res) {
       }
    });
    */
-  res.render('index', { user: req.user, title: 'GymBud' });
-           });
+  var query = GeoTag.find({});
+  query.select('-_id');
+  query.select('-__v');
+  query.exec(function(err, geotags) {
+         var query2 = Event.find({"expired": false});
+         query2.select('-_id');
+         query2.select('-__v');
+         query2.exec(function(e, events) {
+ 		 res.render('index', { events:events, geotags:geotags, user: req.user, title: 'GymBud' });
+ 	});
+  });
+ });
 
 // Redirect the user to Facebook for authentication.  When complete,
 // Facebook will redirect the user back to the application at
