@@ -74,7 +74,8 @@ var eventSchema = new mongoose.Schema({
 	description: String,
 	users: Array,
 	hash: String,
-	expired: Boolean
+	expired: Boolean,
+	type: String
 });
 
 var Event = mongoose.model('Event', eventSchema);
@@ -580,11 +581,11 @@ router.post('/webhooks', function(req, res) {
 });
 
 router.post('/add-event', isLoggedIn, isVerified, function(req, res) {
-	var newEvent = new Event({date: req.body.date, start: req.body.start, end: req.body.end, place: req.body.place, creator_name: req.user.local.name, creator_email: req.user.local.email, description: req.body.description, users: [], hash: makeid(), expired: false});
+	var newEvent = new Event({date: req.body.date, start: req.body.start, end: req.body.end, place: req.body.place, creator_name: req.user.local.name, creator_email: req.user.local.email, description: req.body.description, users: [], hash: makeid(), expired: false, type: req.body.type});
 	newEvent.save(function(err) {
 	   if(err) throw err;
 	   // save succeeeded
-	   res.redirect('/events');
+	   res.redirect('/map');
 	});
 });
 router.get('/add-event', isLoggedIn, isVerified, function(req, res) {
@@ -599,7 +600,7 @@ router.get('/events', isLoggedIn, isVerified, function(req, res) {
     Event.find({}, function(e, docs) {
       // check if events have expired.
                for(var i = 0; i < docs.length; i++) {
-               var endDate = moment(docs[i].date + " "+ docs[i].end, "MM/DD/YYYY HH:mm");
+               var endDate = moment(docs[i].date + " "+ docs[i].end, "MM/DD/YYYY HH:mm A");
                console.log(endDate);
                var now = moment();
                
