@@ -130,7 +130,7 @@
       }
       
       function attachGeoMarker(data) {
-            var content = '<html><body><div><p>'+data.date+'</p><p>'+ data.description + '</p><p>'+data.location_name +'</p><a href="/profile/' + data.user + '">'+ data.name +'</a></div></body></html>';
+            var content = '<html><body><div><p>Check In</p><p>'+data.date+'</p><p>'+ data.description + '</p><p>'+data.location_name +'</p><a href="/profile/' + data.user + '">'+ data.name +'</a></div></body></html>';
 
             var tmp_lat_long = new google.maps.LatLng(data.latitude, data.longitude);
             var geocoder = new google.maps.Geocoder();
@@ -172,7 +172,7 @@
       }
 
       function attachEventMarker(data) {
-        var content = '<html><body><div><p>'+data.creator_name+'</p><br>'
+        var content = '<html><body><div><p>Event</p><p>'+data.date+'</p><p>'+data.start+'</p><p>'+data.end+'</p><p>'+data.description+'</p><p>'+data.creator_name+'</p><br>'
 	
 	for(var i = 0; i < data.users.length; i++) {
 	  content += '<p>'+data.users[i].name+'</p>';
