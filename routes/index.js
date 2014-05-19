@@ -82,6 +82,7 @@ var Event = mongoose.model('Event', eventSchema);
 var chatSchema = new mongoose.Schema({
 	from: String,
 	to: String, 
+	time: String,
 	message: String
 });
 

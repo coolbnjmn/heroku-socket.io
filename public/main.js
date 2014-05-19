@@ -68,7 +68,8 @@ $(function() {
       addChatMessage({
         username: data.previousChats[i].from,
 	message: data.previousChats[i].message,
-	to: data.previousChats[i].to
+	to: data.previousChats[i].to,
+	time: data.previousChats[i].time
 	});
     }
   }
@@ -114,9 +115,19 @@ $(function() {
       data.username + '</span>';
     var msg;
     if(data.to !== 'undefined' && data.to!==undefined) {
+      if(data.time !== 'undefined' && data.time !== undefined) {
+	msg = 'to:'+data.to+':<i>'+date.time+'</i>:'+data.message
+	} else {
 	msg = 'to:'+data.to+'::'+data.message
+	}
       } else {
+      console.log(data);
+      console.log(data.time);
+        if(data.time !== 'undefined' && data.time !== undefined) {
+	msg= '<i>'+data.time+'</i>:  '+data.message
+	} else {
 	msg= data.message
+	}
       }
     var messageBodyDiv = '<span class="messageBody">' +
       msg + '</span>';

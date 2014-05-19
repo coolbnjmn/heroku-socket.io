@@ -107,6 +107,7 @@ var Review = mongoose.model('review', reviewSchema);
 var chatSchema = new mongoose.Schema({
 	from: String,
 	to: String, 
+	time: String,
 	message: String
 });
 
@@ -134,11 +135,16 @@ io.on('connection', function (socket) {
 	    if(err) throw err;
 	  });
 	});
-		var newMsg = new Chat({from: from, message: data});
+	        var now = new Date();
+		var nowString = now.toDateString();
+
+		console.log(nowString);
+		var newMsg = new Chat({from: from, message: data, to: "undefined", time:nowString});
 		newMsg.save(function(err) {
                   socket.broadcast.emit('new message', {
                                       username: socket.username,
                                       message: data,
+				      time: nowString,
 				      to: 'undefined'
                                       });
                   });
@@ -153,13 +159,18 @@ io.on('connection', function (socket) {
 	    if(err) throw err;
 	  });
 	});
-        var newMsg = new Chat({from: from, to: to, message: message});
+	var now = new Date();
+	var nowString = now.toDateString();
+	console.log('nowString');
+	console.log(nowString);
+        var newMsg = new Chat({from: from, to: to, time:nowString, message: message});
 	newMsg.save(function(err) {
 	  console.log('new message saved in database');
     	  var id = onlineUsers[to];
 	  io.sockets.socket(id).emit('new message', {
 		username: socket.username,
 		message: message,
+		time: nowString,
 		to: to
 	  });
 	});
