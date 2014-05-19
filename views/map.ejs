@@ -136,7 +136,8 @@
                         marker = new google.maps.Marker({
                             map: map,
                             position: results[0].geometry.location,
-                            title: 'Check in'
+                            title: 'Check in',
+			    icon: 'images/user.png'
                         });
 
                         if(marker.title != '') {
@@ -156,7 +157,8 @@
 
                 marker = new google.maps.Marker({
                 map: map,
-                position: tmp_lat_long
+                position: tmp_lat_long,
+		icon: 'images/user.png'
                 });
             }
 
@@ -171,13 +173,15 @@
 	content += '<a href="/add-people/'+data.hash+'">Add People</a></div></body></html>';
 	var geocoder = new google.maps.Geocoder();
 	var marker;
+	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
 
 	geocoder.geocode({'address' : data.place}, function(results, status) {
 	  if(status == google.maps.GeocoderStatus.OK) {
 	    marker = new google.maps.Marker({
 	      map: map,
 	      position: results[0].geometry.location,
-	      title: 'Check In'
+	      title: 'Event',
+	      icon: 'images/users.png'
 	      });
 
 	      var infowindow = new google.maps.InfoWindow();
