@@ -179,3 +179,12 @@ h2 {
 	text-align: center;
 	opacity: 0.8;
 }
+
+#map-canvas {
+	height: 100%;
+	width:75%;
+	margin: 0 auto;
+	border-radius: 1%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}

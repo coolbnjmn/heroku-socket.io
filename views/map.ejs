@@ -4,13 +4,23 @@
 
 <% include header %>
 <body>
-    <div class="well" style="width:50%; margin: 0 auto;">
+	<div class="well" style="width:50%; margin: 0 auto;">
+	
+		<form action="">
+			<input type="radio" name="checkin" value="add_event"> Make Event
+			<br/>
+			<input type="radio" name="checkin" value="anonymous"> Check in Anonymously
+			<br/>
+			<input type="radio" name="checkin" value="names"> Check In With Names
+			<br/>
+		</form>
+	
 		<div id="add-event">
-			<form action="/add-event" method="link">
+			<form action="/add-event" method="link" class="navbar-form">
 				<button id="btnSubmit" type="submit"> Make Event </button>
 			</form>
 		</div>
-		<br>
+		
 		<div id="checkInFormAnonymous">
 			<form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
 				<input type="hidden" name="latitudea" id="latitudea" value=""/>
@@ -18,9 +28,8 @@
 				<input type="submit" value="Check In Anonymously" />
 			</form>
 		</div>
-		<br>
+		
 		<div class="ui-widget">
-
 			<div id="checkInForm">
 				<form action='/add-geo' method="post" enctype="multipart/form-data">
 					<label> Check in...</label>
@@ -42,94 +51,89 @@
 		</div>
 	</div>
 
-
-    <style type="text/css">
-		#map-canvas { height: 100%; width:75%; }
-    </style>
-    <div id="map-canvas" style="margin: 0 auto;"></div>
+    <div id="map-canvas"></div>
+	
     <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAElbKleGQ_ucrGrHsRNJiR2SMGtDGsV2U&sensor=TRUE">
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAElbKleGQ_ucrGrHsRNJiR2SMGtDGsV2U&sensor=TRUE">
     </script>
     <script type="text/javascript">
-      var map;
+		var map;
 
+		function initialize() {
+			var mapOptions = {
+				center: new google.maps.LatLng(0,0),
+				zoom: 8
+			};
+			
+			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+		  
+			if(navigator.geolocation) {
+				console.log('navigator.geolocation');
+				navigator.geolocation.getCurrentPosition(currentPositionCallback, errorCallback,{enableHighAccuracy: true});
+			} else {
+				alert('The browser does not support geolocation');
+			}
+		 
+			var geoTags = [<%- geotags %>];
+			console.log('Printing geotags');
+			console.log(geoTags);
+		  
+			var infowindow = new google.maps.InfoWindow();
+		  
+			for(var i = 0; i < geoTags.length; i++) {
+				attachGeoMarker( geoTags[i] );
+			}
+
+			var eventlist = [<%- events %>];
+			for(var i = 0; i < eventlist.length; i++) {
+				attachEventMarker( eventlist[i] );
+			}
+		  /*
+			for(var i = 0; i < geoTags.length; i++) {
+				var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
+				var content = '<html><body><div><p>'+ geoTags[i].description + '</p><p>'+geoTags[i].location_name +'</p><a href="/profile/' + geoTags[i].user + '">'+ geoTags[i].name +'</a></div></body></html>';
+
+				var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
+				var geocoder = new google.maps.Geocoder();
+				var marker;
+				if(geoTags[i].location_name != '') {
+					geocoder.geocode({'address' : geoTags[i].location_name}, function(results, status) {
+						if(status == google.maps.GeocoderStatus.OK) {
+							//map.setCenter(results[0].geometry.location);
+							marker = new google.maps.Marker({
+								map: map,
+								position: results[0].geometry.location,
+								title: 'Check in'
+							});
+
+							if(marker.title != '') {
+								var infowindow = new google.maps.InfoWindow();
+								google.maps.event.addListener(marker, 'click', (function(marker, content, infowindow) {
+										return function() {
+											console.log(content);
+											infowindow.setContent(content);
+											infowindow.open(map, marker);
+										};
+									})(marker, content, infowindow));
+							}
+
+						} else {
+							alert("Geocode was not successful for the following reason: " + status);
+						}
+					});
+				} else {
+
+					marker = new google.maps.Marker({
+					map: map,
+					position: tmp_lat_long
+					});
+				}
+				console.log(tmp_lat_long);
+			}
+			*/
+		}
       
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(0,0),
-          zoom: 8
-        };
-        map = new google.maps.Map(document.getElementById("map-canvas"),
-            mapOptions);
-	  
-	if(navigator.geolocation) {
-	  
-	  console.log('navigator.geolocation');
-	  navigator.geolocation.getCurrentPosition(currentPositionCallback, errorCallback,{enableHighAccuracy: true});
-	} else {
-	  alert('The browser does not support geolocation');
-	}
-	 
-      var geoTags = [<%- geotags %>];
-      console.log('Printing geotags');
-      console.log(geoTags);
-      
-      var infowindow = new google.maps.InfoWindow();
-      
-      for(var i = 0; i < geoTags.length; i++) {
-        attachGeoMarker( geoTags[i] );
-      }
-
-      var eventlist = [<%- events %>];
-      for(var i = 0; i < eventlist.length; i++) {
-        attachEventMarker( eventlist[i] );
-      }
-      /*
-        for(var i = 0; i < geoTags.length; i++) {
-            var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
-            var content = '<html><body><div><p>'+ geoTags[i].description + '</p><p>'+geoTags[i].location_name +'</p><a href="/profile/' + geoTags[i].user + '">'+ geoTags[i].name +'</a></div></body></html>';
-
-            var tmp_lat_long = new google.maps.LatLng(geoTags[i].latitude, geoTags[i].longitude);
-            var geocoder = new google.maps.Geocoder();
-            var marker;
-            if(geoTags[i].location_name != '') {
-                geocoder.geocode({'address' : geoTags[i].location_name}, function(results, status) {
-                    if(status == google.maps.GeocoderStatus.OK) {
-                        //map.setCenter(results[0].geometry.location);
-                        marker = new google.maps.Marker({
-                            map: map,
-                            position: results[0].geometry.location,
-                            title: 'Check in'
-                        });
-
-                        if(marker.title != '') {
-                            var infowindow = new google.maps.InfoWindow();
-                            google.maps.event.addListener(marker, 'click', (function(marker, content, infowindow) {
-                                    return function() {
-                                        console.log(content);
-                                        infowindow.setContent(content);
-                                        infowindow.open(map, marker);
-                                    };
-                                })(marker, content, infowindow));
-                        }
-
-                    } else {
-                        alert("Geocode was not successful for the following reason: " + status);
-                    }
-                });
-            } else {
-
-                marker = new google.maps.Marker({
-                map: map,
-                position: tmp_lat_long
-                });
-            }
-            console.log(tmp_lat_long);
-        }
-        */
-      }
-      
-      function attachGeoMarker(data) {
+		function attachGeoMarker(data) {
             var content = '<html><body><div><p>Check In</p><p>'+data.date+'</p><p>'+ data.description + '</p><p>'+data.location_name +'</p><a href="/profile/' + data.user + '">'+ data.name +'</a></div></body></html>';
 
             var tmp_lat_long = new google.maps.LatLng(data.latitude, data.longitude);
@@ -144,15 +148,15 @@
                             map: map,
                             position: results[0].geometry.location,
                             title: 'Check in',
-			    icon: 'images/user.png'
+							icon: 'images/user.png'
                         });
 
                         if(marker.title != '') {
                             var infowindow = new google.maps.InfoWindow();
                             google.maps.event.addListener(marker, 'click', function() {
-                                    console.log(content);
-                                    infowindow.setContent(content);
-                                    infowindow.open(map, this);
+								console.log(content);
+								infowindow.setContent(content);
+								infowindow.open(map, this);
                             });
                         }
 
@@ -161,104 +165,106 @@
                     }
                 });
             } else {
-
                 marker = new google.maps.Marker({
-                map: map,
-                position: tmp_lat_long,
-		icon: 'images/user.png'
+					map: map,
+					position: tmp_lat_long,
+					icon: 'images/user.png'
                 });
             }
 
-      }
+		}
 
-      function attachEventMarker(data) {
-        var content = '<html><body><div><p>Event</p><p>'+data.date+'</p><p>'+data.start+'</p><p>'+data.end+'</p><p>'+data.description+'</p><p>'+data.creator_name+'</p><br>'
+		function attachEventMarker(data) {
+			var content = '<html><body><div><p>Event</p><p>'+data.date+'</p><p>'+data.start+'</p><p>'+data.end+'</p><p>'+data.description+'</p><p>'+data.creator_name+'</p><br>'
 	
-	for(var i = 0; i < data.users.length; i++) {
-	  content += '<p>'+data.users[i].name+'</p>';
-	}
-	content += '<a href="/add-people/'+data.hash+'">Add People</a></div></body></html>';
-	var geocoder = new google.maps.Geocoder();
-	var marker;
-	var icon = "";
-	switch(data.type) {
-	  case "Weightlifting":
-	    icon = "images/weightlifting.png";
-	   break;
-	  case "Aerobics":
-	    icon = "images/aerobics.png";
-	    break;
-	  case "Swimming":
-	    icon= "images/swimming.png";
-	    break;
-	  case "Crossfit":
-	    icon = "images/crossfit.png";
-	    break;
-	  case "Yoga" :
-	    icon = "images/yoga.png";
-	    break;
-	  case "Cycling" :
-	    icon = "images/cycling.png";
-	    break;
-	  case "Interval Training":
-	    icon = "images/intervaltraining.png";
-	    break;
-	  default:
-	      icon = "images/users.png";
-	    break;
-	}
+			for(var i = 0; i < data.users.length; i++) {
+				content += '<p>'+data.users[i].name+'</p>';
+			}
+			
+			content += '<a href="/add-people/'+data.hash+'">Add People</a></div></body></html>';
+			var geocoder = new google.maps.Geocoder();
+			var marker;
+			var icon = "";
+			switch(data.type) {
+			  case "Weightlifting":
+				icon = "images/weightlifting.png";
+			   break;
+			  case "Aerobics":
+				icon = "images/aerobics.png";
+				break;
+			  case "Swimming":
+				icon= "images/swimming.png";
+				break;
+			  case "Crossfit":
+				icon = "images/crossfit.png";
+				break;
+			  case "Yoga" :
+				icon = "images/yoga.png";
+				break;
+			  case "Cycling" :
+				icon = "images/cycling.png";
+				break;
+			  case "Interval Training":
+				icon = "images/intervaltraining.png";
+				break;
+			  default:
+				  icon = "images/users.png";
+				break;
+			}
 
-	geocoder.geocode({'address' : data.place}, function(results, status) {
-	  if(status == google.maps.GeocoderStatus.OK) {
-	    marker = new google.maps.Marker({
-	      map: map,
-	      position: results[0].geometry.location,
-	      title: 'Event',
-	      icon: icon
-	      });
+			geocoder.geocode({'address' : data.place}, function(results, status) {
+			  if(status == google.maps.GeocoderStatus.OK) {
+				marker = new google.maps.Marker({
+				  map: map,
+				  position: results[0].geometry.location,
+				  title: 'Event',
+				  icon: icon
+				  });
 
-	      var infowindow = new google.maps.InfoWindow();
-	      google.maps.event.addListener(marker, 'click', function() {
-	        console.log(content);
-		infowindow.setContent(content);
-		infowindow.open(map, this);
-	      });
-	  } else {
-	    alert("Geocode was not successful for the following reason: " + status);
-	  }
-	});
-      }
+				  var infowindow = new google.maps.InfoWindow();
+				  google.maps.event.addListener(marker, 'click', function() {
+					console.log(content);
+				infowindow.setContent(content);
+				infowindow.open(map, this);
+				  });
+			  } else {
+				alert("Geocode was not successful for the following reason: " + status);
+			  }
+			});
+		}
 
-      function errorCallback(error) {
-        alert('code: ' + error.code + '\n' + 'message: ' + error.message);
-      }
-      function currentPositionCallback(position) {
-        console.log('getting current position');
-	var user_lat_long = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+		function errorCallback(error) {
+			alert('code: ' + error.code + '\n' + 'message: ' + error.message);
+		}
+		
+		function currentPositionCallback(position) {
+			console.log('getting current position');
+			var user_lat_long = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-	document.getElementById('latitude').value = position.coords.latitude;
-	document.getElementById('longitude').value = position.coords.longitude;
-	document.getElementById('latitudea').value = position.coords.latitude;
-	document.getElementById('longitudea').value = position.coords.longitude;
-	console.log(document.getElementById('latitude').value);
-	console.log(document.getElementById('longitude').value);
+			document.getElementById('latitude').value = position.coords.latitude;
+			document.getElementById('longitude').value = position.coords.longitude;
+			document.getElementById('latitudea').value = position.coords.latitude;
+			document.getElementById('longitudea').value = position.coords.longitude;
+			console.log(document.getElementById('latitude').value);
+			console.log(document.getElementById('longitude').value);
 
-/*
-	var marker = new google.maps.Marker({
-	  position: user_lat_long,
-	  map: map
-	  });
-	  */
+			/*
+			var marker = new google.maps.Marker({
+				position: user_lat_long,
+				map: map
+			});
+			*/
 
-	 map.setCenter(user_lat_long);
-	 map.setZoom(15);
-      }
+			map.setCenter(user_lat_long);
+			map.setZoom(15);
+		}
 
-      google.maps.event.addDomListener(window, 'load', initialize);
+		google.maps.event.addDomListener(window, 'load', initialize);
     </script>
+	
     <% include navbar %>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-      <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -312,8 +318,8 @@
     </script>
 
 
-        <% include footer %>
-    <!-- /container -->
+    <% include footer %>
+		
     <script type="text/javascript">
         $(document).ready(function() {
             $('#map').addClass("active");
