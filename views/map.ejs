@@ -173,7 +173,27 @@
 	content += '<a href="/add-people/'+data.hash+'">Add People</a></div></body></html>';
 	var geocoder = new google.maps.Geocoder();
 	var marker;
-	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+	var icon = "";
+	switch(data.type) {
+	  case "Weightlifting":
+	    icon = "images/weightlifting.png";
+	   break;
+	  case "Aerobics":
+	    icon = "images/aerobics.png";
+	    break;
+	  case "Swimming":
+	    icon= "images/swimming.png";
+	    break;
+	  case "Crossfit":
+	    icon = "images/crossfit.png";
+	    break;
+	  case "Interval Training":
+	    icon = "images/intervaltraining.png";
+	    break;
+	  default:
+	      icon = "images/users.png";
+	    break;
+	}
 
 	geocoder.geocode({'address' : data.place}, function(results, status) {
 	  if(status == google.maps.GeocoderStatus.OK) {
@@ -181,7 +201,7 @@
 	      map: map,
 	      position: results[0].geometry.location,
 	      title: 'Event',
-	      icon: 'images/users.png'
+	      icon: icon
 	      });
 
 	      var infowindow = new google.maps.InfoWindow();
