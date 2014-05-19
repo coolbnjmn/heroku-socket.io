@@ -116,7 +116,7 @@ $(function() {
     var msg;
     if(data.to !== 'undefined' && data.to!==undefined) {
       if(data.time !== 'undefined' && data.time !== undefined) {
-	msg = 'to:'+data.to+':<i>'+date.time+'</i>:'+data.message
+	msg = 'to:'+data.to+':<i>'+date.time+'</i><br>'+data.message
 	} else {
 	msg = 'to:'+data.to+'::'+data.message
 	}
@@ -124,7 +124,7 @@ $(function() {
       console.log(data);
       console.log(data.time);
         if(data.time !== 'undefined' && data.time !== undefined) {
-	msg= '<i>'+data.time+'</i>:  '+data.message
+	msg= '<i>'+data.time+'</i><br>'+data.message
 	} else {
 	msg= data.message
 	}
