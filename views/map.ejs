@@ -5,48 +5,48 @@
 <% include header %>
 <body>
     <div class="well" style="width:50%; margin: 0 auto;">
-    <div id="add-event">
-      <form action="/add-event" method="link">
-        <button id="btnSubmit" type="submit"> Make Event </button>
-      </form>
-    </div>
-    <br>
-    <div id="checkInFormAnonymous">
-    <form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
-	<input type="hidden" name="latitudea" id="latitudea" value=""/>
-	<input type="hidden" name="longitudea" id="longitudea" value=""/>
-	<input type="submit" value="Check In Anonymously" />
-    </form>
-    </div>
-    <br>
-    <div class="ui-widget">
+		<div id="add-event">
+			<form action="/add-event" method="link">
+				<button id="btnSubmit" type="submit"> Make Event </button>
+			</form>
+		</div>
+		<br>
+		<div id="checkInFormAnonymous">
+			<form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
+				<input type="hidden" name="latitudea" id="latitudea" value=""/>
+				<input type="hidden" name="longitudea" id="longitudea" value=""/>
+				<input type="submit" value="Check In Anonymously" />
+			</form>
+		</div>
+		<br>
+		<div class="ui-widget">
 
-    <div id="checkInForm">
-    <form action='/add-geo' method="post" enctype="multipart/form-data">
-    	<label> Check in...</label>
-	<br>
-	<input type="hidden" name="latitude" id="latitude" value=""/>
-	<input type="hidden" name="longitude" id="longitude" value=""/>
-        <label for="search">With: </label>
-        <input id="search" name="search">
-	<br>
-    <label for="description"> You did: </label>
-    <input name="description" id="description" value="" />
-    <br>
-    <label for="location_name"> At: </label>
-    <input name="location_name" id="location_name" value="" />
-    <br>
-	<input type="submit" value="Check In With Name" />
-    </form>
-    </div>
-         </div>
-	 </div>
+			<div id="checkInForm">
+				<form action='/add-geo' method="post" enctype="multipart/form-data">
+					<label> Check in...</label>
+					<br>
+					<input type="hidden" name="latitude" id="latitude" value=""/>
+					<input type="hidden" name="longitude" id="longitude" value=""/>
+					<label for="search">With: </label>
+					<input name="search" id="search">
+					<br>
+					<label for="description"> You did: </label>
+					<input name="description" id="description" value="" />
+					<br>
+					<label for="location_name"> At: </label>
+					<input name="location_name" id="location_name" value="" />
+					<br>
+					<input type="submit" value="Check In With Name" />
+				</form>
+			</div>
+		</div>
+	</div>
 
 
     <style type="text/css">
-      #map-canvas { height: 100%; width:75%; }
+		#map-canvas { height: 100%; width:75%; }
     </style>
-    <div id="map-canvas" style="margin: 0 auto;"/>
+    <div id="map-canvas" style="margin: 0 auto;"></div>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAElbKleGQ_ucrGrHsRNJiR2SMGtDGsV2U&sensor=TRUE">
     </script>
@@ -316,7 +316,7 @@
     <!-- /container -->
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#userlist').addClass("active");
+            $('#map').addClass("active");
         });
     </script>
     <!-- Bootstrap core JavaScript
