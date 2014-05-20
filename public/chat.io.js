@@ -216,13 +216,17 @@
   function addRoom(name, announce){
   // clear the trailing '/'
   name = name.replace('/','');
+  console.log('adding room');
   console.log(name);
   // check if the room is not already in the list
   if($('.chat-rooms ul li[data-roomId="' + name + '"]').length == 0){
   $.tmpl(tmplt.room, { room: name }).appendTo('.chat-rooms ul');
   // if announce is true, show a message about this room
   if(announce){
+  console.log('announce was true');
   insertMessage(serverDisplayName, 'The room `' + name + '` created...', true, false, true);
+  } else {
+  console.log('announce was false');
   }
   }
   }
