@@ -691,6 +691,20 @@ router.post('/add-people', isLoggedIn, isVerified, function(req, res) {
 });
 
 router.get('/map', isLoggedIn, isVerified, function(req, res) {
+    Event.find({}, function(e, docs) {
+      // check if events have expired.
+               for(var i = 0; i < docs.length; i++) {
+               var endDate = moment(docs[i].date + " "+ docs[i].end, "MM/DD/YYYY HH:mm A");
+               var now = moment();
+               
+               if(endDate - now < 0) {
+                docs[i].expired = true;
+               docs[i].save(function(err) {
+                            if(err) throw err;
+                            });
+               }
+               }
+    });
       User.find({}, function(e, docs) {
         var query = GeoTag.find({});
 	query.select('-_id');
