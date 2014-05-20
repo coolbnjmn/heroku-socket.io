@@ -126,6 +126,7 @@
   // after the server created a client for us, the ready event
   // is fired in the server with our clientId, now we can start
   socket.on('ready', function(data){
+            console.log('ready');
 			// hiding the 'connecting...' message
 			$('.chat-shadow').animate({ 'opacity': 0 }, 200, function(){
                                       $(this).hide();
@@ -161,6 +162,7 @@
             });
   
   socket.on('pastmessages', function(data) {
+            console.log('passtmessages here');
             for(var i = 0; i<data.length; i++) {
             console.log('pastmessages' + i);
             console.log(data);
