@@ -157,9 +157,14 @@
 			var message = data.message;
             
 			//display the message in the chat window
-			insertMessage(nickname, message, true, false, false);
+			insertMessage(nickname, message, null, false, true, false, false);
             });
   
+  socket.on('pastmessages', function(data) {
+            for(var i = 0; i<data.length; i++) {
+                insertMessage(data[i].name, data[i].message, data[i].time, true, true, false, false)
+            }
+            });
   // when we subscribes to a room, the server sends a list
   // with the clients in this room
   socket.on('roomclients', function(data){
@@ -171,7 +176,7 @@
 			setCurrentRoom(data.room);
             
 			// announce a welcome message
-			insertMessage(serverDisplayName, 'Welcome to the room: `' + data.room + '`... enjoy!', true, false, true);
+			insertMessage(serverDisplayName, 'Welcome to the room: `' + data.room + '`... enjoy!', null, false, true, false, true);
 			$('.chat-clients ul').empty();
             
 			// add the clients to the clients list
@@ -225,7 +230,7 @@
   // if announce is true, show a message about this room
   if(announce){
   console.log('announce was true');
-  insertMessage(serverDisplayName, 'The room `' + name + '` created...', true, false, true);
+  insertMessage(serverDisplayName, 'The room `' + name + '` created...', null, false, true, false, true);
   } else {
   console.log('announce was false');
   }
@@ -237,7 +242,7 @@
   $('.chat-rooms ul li[data-roomId="' + name + '"]').remove();
   // if announce is true, show a message about this room
   if(announce){
-  insertMessage(serverDisplayName, 'The room `' + name + '` destroyed...', true, false, true);
+  insertMessage(serverDisplayName, 'The room `' + name + '` destroyed...',null, false,  true, false, true);
   }
   }
   
@@ -252,7 +257,7 @@
   
   // if announce is true, show a message about this client
   if(announce){
-  insertMessage(serverDisplayName, client.nickname + ' has joined the room...', true, false, true);
+  insertMessage(serverDisplayName, client.nickname + ' has joined the room...', null, false, true, false, true);
   }
   $html.appendTo('.chat-clients ul')
   }
@@ -263,7 +268,7 @@
   
   // if announce is true, show a message about this room
   if(announce){
-  insertMessage(serverDisplayName, client.nickname + ' has left the room...', true, false, true);
+  insertMessage(serverDisplayName, client.nickname + ' has left the room...', null, false, true, false, true);
   }
   }
   
@@ -324,7 +329,7 @@
   socket.emit('chatmessage', { message: message, room: currentRoom });
   
   // display the message in the chat window
-  insertMessage(nickname, message, true, true);
+  insertMessage(nickname, message, null, false, true, true);
   $('.chat-input input').val('');
   } else {
   shake('.chat', '.chat input', 'wobble', 'yellow');
@@ -333,12 +338,21 @@
   
   // insert a message to the chat window, this function can be
   // called with some flags
-  function insertMessage(sender, message, showTime, isMe, isServer){
-  var $html = $.tmpl(tmplt.message, {
+  function insertMessage(sender, message, time, hasTime, showTime, isMe, isServer){
+  if(hasTime) {
+    var $html = $.tmpl(tmplt.message, {
+                     sender: sender,
+                     text: message,
+                     time: showTime ? getTimeFromDate(time) : ''
+                     });
+  } else {
+    var $html = $.tmpl(tmplt.message, {
                      sender: sender,
                      text: message,
                      time: showTime ? getTime() : ''
                      });
+  }
+
   
   // if isMe is true, mark this message so we can
   // know that this is our message in the chat window
@@ -358,6 +372,10 @@
   // return a short time format for the messages
   function getTime(){
   var date = new Date();
+  return (date.getHours() < 10 ? '0' + date.getHours().toString() : date.getHours()) + ':' +
+  (date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes());
+  }
+  function getTimeFromDate(date){
   return (date.getHours() < 10 ? '0' + date.getHours().toString() : date.getHours()) + ':' +
   (date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes());
   }

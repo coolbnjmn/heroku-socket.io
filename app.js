@@ -115,6 +115,13 @@ var chatSchema = new mongoose.Schema({
 
 var Chat = mongoose.model('chat', chatSchema);
 
+var messageSchema = new mongoose.Schema({
+	message: String, 
+	room: String, 
+	date: Object, 
+});
+
+var Message = mongoose.model('message', messageSchema);
 // usernames which are currently connected to the chat
 /*
 var usernames = {};
@@ -168,6 +175,8 @@ function connect(socket, data) {
   subscribe(socket, {room: "lobby"});
 
   socket.emit('roomslist', {rooms: getRooms() });
+
+  socket.emit('pastmessages', {messages: getMessages()});
 }
 
 function disconnect(socket) {
@@ -183,7 +192,11 @@ function disconnect(socket) {
 }
       
 function chatmessage(socket, data) {
-  socket.broadcast.to(data.room).emit('chatmessage', {client: chatClients[socket.id], message: data.message, room: data.room });
+  
+  var newMessage = new Message({message: data.message, room: data.room, date: new Date()});
+  newMessage.save(function(err) {
+     socket.broadcast.to(data.room).emit('chatmessage', {client: chatClients[socket.id], message: data.message, room: data.room });
+  });
 }
 
 function subscribe(socket, data) {
@@ -213,6 +226,11 @@ function getRooms() {
   return Object.keys(io.sockets.manager.rooms);
 }
 
+function getMessages(room) {
+  Message.find({"room": room}, function(err, messages) {
+    return messages;
+  });
+}
 function getClientsInRoom(socketId, room) {
   var socketIds = io.sockets.manager.rooms['/' + room];
   var clients = [];
