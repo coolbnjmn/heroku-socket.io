@@ -36,6 +36,7 @@ var userSchema = new mongoose.Schema({
     points: Number, 
   },
   facebook: {
+    id: String,
     accessToken: String
   },
   banking: {
@@ -252,7 +253,7 @@ router.get('/auth/facebook', function(req, res, next) {
 // authentication has failed.
 router.get('/auth/facebook/callback', function(req, res, next) {
            passport.authenticate('facebook', { scope: 'emails',
-                                 successRedirect: '/chat',
+                                 successRedirect: '/map',
                                  failureRedirect: '/' })(req, res, next);
            });
 

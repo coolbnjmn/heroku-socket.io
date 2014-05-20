@@ -69,7 +69,9 @@ var userSchema = new mongoose.Schema({
     points: Number, 
   },
 				     facebook: {
+				       id: String,
 				       accessToken: String
+
 				     },
 				     banking: {
                                       firstName: String,
@@ -311,14 +313,16 @@ passport.use(new FacebookStrategy({
                                   },
                                   function(req, accessToken, refreshToken, profile, done) {
                                   console.log('here');
-                                  console.log(profile.id);
-                                  console.log(profile.displayName);
+				  console.log(profile);
                                   console.log('IM HERE');
                                   
-				  User.findOne({"facebook.accessToken" : accessToken}, function(err, docs) {
+				  User.findOne({"facebook.id" : profile.id}, function(err, docs) {
 				    if(!docs) {
 				    	var user = new User();
 					user.facebook.accessToken = accessToken;
+					user.facebook.id = profile.id;
+					user.local.name = profile.displayName;
+					user.local.isVerified = true;
 					user.save(function(err) {
 					  if(err) throw err;
 					  return done(null, user);
