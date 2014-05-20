@@ -1,7 +1,7 @@
  (function($){
   
   // create global app parameters...
-  var NICK_MAX_LENGTH = 15,
+  var NICK_MAX_LENGTH = 30,
   ROOM_MAX_LENGTH = 10,
   lockShakeAnimation = false,
   socket = null,
