@@ -316,12 +316,15 @@ passport.use(new FacebookStrategy({
                                   console.log('IM HERE');
                                   
                                   var user = req.user;
-                                  user.facebook.accessToken = accessToken;
+				  console.log(req.user);
+                                  //user.facebook.accessToken = accessToken;
                                   
+				  /*
                                   user.save(function(err) {
                                             if(err) throw err;
                                             return done(null, user);
                                             });
+					    */
 }));
 
 
