@@ -316,7 +316,7 @@ passport.use(new FacebookStrategy({
 				  console.log(profile);
                                   console.log('IM HERE');
                                   
-				  User.findOne({"facebook.id" : profile.id}, function(err, docs) {
+				  User.findOne({$or: [{"facebook.id" : profile.id}, {"local.name" : profile.displayName}]}, function(err, docs) {
 				    if(!docs) {
 				    	var user = new User();
 					user.facebook.accessToken = accessToken;
