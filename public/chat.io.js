@@ -167,7 +167,7 @@
             for(var i = 0; i<data.messages.length; i++) {
             console.log('pastmessages' + i);
             console.log(data);
-                insertMessage(data.messages[i].name, data.messages[i].message, data.messages[i].time, true, true, false, false)
+                insertMessage(data.messages[i].name, data.messages[i].message, data.messages[i].date, true, true, false, false)
             }
             });
   // when we subscribes to a room, the server sends a list
