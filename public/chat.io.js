@@ -66,7 +66,7 @@
                                       if(key == 13) { createRoom(); }
                                       });
   
-  $('#addroom-popup .create').on('click', function(){
+  $('#addroom-popup .input input').on('click', function(){
                                  createRoom();
                                  });
   
