@@ -331,6 +331,8 @@ passport.use(new FacebookStrategy({
 				    	//var user = docs;
 					if(!docs.facebook.id)
 					  docs.facebook.id = profile.id;
+					if(!docs.facebook.accessToken)
+					  docs.facebook.accessToken = accessToken;
 					  docs.save(function(err) {
 					    return done(null, docs);
 					  });
