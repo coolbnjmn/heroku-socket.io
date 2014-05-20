@@ -176,7 +176,11 @@ function connect(socket, data) {
 
   socket.emit('roomslist', {rooms: getRooms() });
 
-  socket.emit('pastmessages', {messages: getMessages()});
+  console.log('about to emit past messages');
+  Message.find({"room": 'lobby'}, function(err, messages) {
+        console.log('got messages');
+  	socket.emit('pastmessages', {messages: messages});
+  });
 }
 
 function disconnect(socket) {
@@ -226,11 +230,6 @@ function getRooms() {
   return Object.keys(io.sockets.manager.rooms);
 }
 
-function getMessages(room) {
-  Message.find({"room": room}, function(err, messages) {
-    return messages;
-  });
-}
 function getClientsInRoom(socketId, room) {
   var socketIds = io.sockets.manager.rooms['/' + room];
   var clients = [];
