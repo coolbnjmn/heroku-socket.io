@@ -222,9 +222,11 @@ function unsubscribe(socket, data) {
   updatePresence(data.room, socket, 'offline');
   socket.leave(data.room);
   
+  /*
   if(!countClientsInRoom(data.room)) {
     io.sockets.emit('removeroom', {room: data.room });
   }
+  */
 }
 
 function getRooms() {
