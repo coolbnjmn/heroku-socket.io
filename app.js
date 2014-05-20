@@ -321,11 +321,9 @@ passport.use(new FacebookStrategy({
 					user.facebook.accessToken = accessToken;
 					user.save(function(err) {
 					  if(err) throw err;
-					  res.redirect('/map');
 					});
 				    } else {
 				       // update facebook profile pic?
-				       res.redirect('/map');
 				    }
 				  });
                                  // var user = req.user;
