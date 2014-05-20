@@ -329,6 +329,8 @@ passport.use(new FacebookStrategy({
 					});
 				    } else {
 				    	var user = docs;
+					if(!user.facebook.id)
+					  user.facebook.id = profile.id;
 					return done(null, user);
 				       // update facebook profile pic?
 				    }
