@@ -50,20 +50,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="pa info animate">
-					<h2>About this Project</h2>
-					<div class="image">
-						<img alt="" src="http://0.gravatar.com/avatar/838347acc4c97bfc938a2dac4043bd2a" />
-					</div>
-					<div class="text">
-						This project created by Udi Talias</br>
-						as part of a Node.js & Socket.io tutorial.<br />
-						You can read the full tutorial <a href="http://udidu.blogspot.com/2012/11/chat-evolution-nodejs-and-socketio.html">here</a>.
-						<br/><br />
-					</div>
-
-
-				</div>
 			</div>
 
 		</div>
@@ -71,7 +57,7 @@
 		<aside id="nickname-popup" class="popup animate avgrund-popup">
 			<div class="title">Enter a nickname</div>
 			<div class="content">Please select a nickname, up to 15 characters</div>
-			<div class="input"><input type="text" maxlength="15" placeholder="nickname..." /></div>
+			<div class="input"><input type="text" maxlength="15" value="<%= user.local.name %>" /></div>
 			<div class="big-button-green small begin">&mdash; Begin &mdash;</div>
 		</aside>
 		<aside id="addroom-popup" class="popup animate avgrund-popup">
