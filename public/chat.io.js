@@ -162,6 +162,8 @@
   
   socket.on('pastmessages', function(data) {
             for(var i = 0; i<data.length; i++) {
+            console.log('pastmessages' + i);
+            console.log(data);
                 insertMessage(data[i].name, data[i].message, data[i].time, true, true, false, false)
             }
             });
