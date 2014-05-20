@@ -116,6 +116,7 @@ var chatSchema = new mongoose.Schema({
 var Chat = mongoose.model('chat', chatSchema);
 
 var messageSchema = new mongoose.Schema({
+        name: String,
 	message: String, 
 	room: String, 
 	date: String, 
@@ -197,7 +198,7 @@ function disconnect(socket) {
       
 function chatmessage(socket, data) {
   
-  var newMessage = new Message({message: data.message, room: data.room, date: new Date()});
+  var newMessage = new Message({name: chatClients[socket.id].nickname, message: data.message, room: data.room, date: new Date()});
   newMessage.save(function(err) {
      socket.broadcast.to(data.room).emit('chatmessage', {client: chatClients[socket.id], message: data.message, room: data.room });
   });
