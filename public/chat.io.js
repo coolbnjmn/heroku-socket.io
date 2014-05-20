@@ -345,10 +345,11 @@
   // called with some flags
   function insertMessage(sender, message, time, hasTime, showTime, isMe, isServer){
   if(hasTime) {
+  console.log(time);
     var $html = $.tmpl(tmplt.message, {
                      sender: sender,
                      text: message,
-                     time: showTime ? getTimeFromDate(time) : ''
+                     time: showTime ? time : ''
                      });
   } else {
     var $html = $.tmpl(tmplt.message, {
@@ -380,10 +381,7 @@
   return (date.getHours() < 10 ? '0' + date.getHours().toString() : date.getHours()) + ':' +
   (date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes());
   }
-  function getTimeFromDate(date){
-  return (date.getHours() < 10 ? '0' + date.getHours().toString() : date.getHours()) + ':' +
-  (date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes());
-  }
+
   
   // just for animation
   function shake(container, input, effect, bgColor){

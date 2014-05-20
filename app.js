@@ -118,7 +118,7 @@ var Chat = mongoose.model('chat', chatSchema);
 var messageSchema = new mongoose.Schema({
 	message: String, 
 	room: String, 
-	date: Object, 
+	date: String, 
 });
 
 var Message = mongoose.model('message', messageSchema);
