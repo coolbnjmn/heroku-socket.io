@@ -87,8 +87,10 @@ $(function() {
       });
       // tell server to execute 'new message' and send along one parameter
       if(to !== undefined) {
+       console.log('pm');
        socket.emit('pm', username, to, message); 
       } else{
+       console.log('message');
       socket.emit('new message', username, message);
       }
     }
