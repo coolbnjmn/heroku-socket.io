@@ -116,18 +116,132 @@ var chatSchema = new mongoose.Schema({
 var Chat = mongoose.model('chat', chatSchema);
 
 // usernames which are currently connected to the chat
+/*
 var usernames = {};
 var onlineUsers = {};
 var numUsers = 0;
+*/
+
+var chatClients = new Object();
 
 io.configure(function() {
   io.set('transports', ['xhr-polling']);
   io.set('polling duration', 10);
 });
 io.on('connection', function (socket) {
-      var addedUser = false;
+      socket.on('connect', function(data) {
+        connect(socket, data);
+      });
+
+      socket.on('chatmessage', function(data) {
+        chatmessage(socket, data);
+      });
+
+      socket.on('unsubscribe', function(data) {
+        unsubscribe(socket, data);
+      });
+
+      socket.on('disconnect', function() {
+        disconnect(socket);
+      });
+});
+
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for( var i=0; i < 20; i++ )
+           text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+       return text;
+}
+
+function connect(socket, data) {
+  data.clientId = makeid(); 
+  chatClients[socket.id] = data;
+
+  socket.emit('ready', { clientId: data.clientId });
+
+  subscribe(socket, {room: "lobby"});
+
+  socket.emit('roomslist', {rooms: getRooms() });
+}
+
+function disconnect(socket) {
+  var rooms = io.sockets.manager.roomClients[socket.id];
+
+  for(var room in rooms) {
+    if(room && rooms[room]) {
+      unsubscribe(socket, {room: room.replace('/','') } );
+    }
+  }
+
+  delete chatClients[socket.id];
+}
       
+function chatmessage(socket, data) {
+  socket.broadcast.to(data.room).emit('chatmessage', {client: chatClients[socket.id], message: data.message, room: data.room });
+}
+
+function subscribe(socket, data) {
+  var rooms = getRooms();
+
+  if(rooms.indexOf('/' + data.room) < 0) {
+    socket.broadcast.emit('addroom', {room:data.room});
+  }
+
+  socket.join(data.room);
+  updatePresence(data.room, socket, 'online');
+
+  socket.emit('roomclients', {room: data.room, clients: getClientsInRoom(socket.id, data.room) });
+
+}
+
+function unsubscribe(socket, data) {
+  updatePresence(data.room, socket, 'offline');
+  socket.leave(data.room);
+  
+  if(!countClientsInRoom(data.room)) {
+    io.sockets.emit('removeroom', {room: data.room });
+  }
+}
+
+function getRooms() {
+  return Object.keys(io.sockets.manager.rooms);
+}
+
+function getClientsInRoom(socketId, room) {
+  var socketIds = io.sockets.manager.rooms['/' + room];
+  var clients = [];
+
+  if(socketIds && socketIds.length>0) {
+    socketsCount = socketIds.length;
+
+    for(var i = 0, len = socketIds.length; i < len; i++) {
+      if(socketIds[i] != socketId) {
+        clients.push(chatClients[socketIds[i]]);
+      }
+    }
+  }
+
+  return clients;
+}
+
+function countClientsInRoom(room) {
+  if(io.sockets.manager.rooms['/' + room]) {
+    return io.sockets.manager.room['/' + room].length;
+  }
+
+  return 0;
+}
+
+function updatePresence(room, socket, state) {
+  room = room.replace('/', '');
+
+  socket.broadcast.to(room).emit('precense', {client: chatClients[socket.id], state: state, room: room });
+}
       // when the client emits 'new message', this listens and executes
+      /*
       socket.on('new message', function (from, data) {
                 // we tell the client to execute 'new message'
         User.findOne({"local.email" : from}, function(err, docs) {
@@ -151,6 +265,8 @@ io.on('connection', function (socket) {
                                       });
                   });
 		});
+		*/
+		/*
       socket.on('pm', function(from, to, message) {
         User.findOne({"local.email" : from}, function(err, docs) {
 	  console.log(docs.rank);
@@ -176,10 +292,10 @@ io.on('connection', function (socket) {
 		to: to
 	  });
 	});
-
-
        });
+	*/
       // when the client emits 'add user', this listens and executes
+		/*
       socket.on('add user', function (username) {
                 // we store the username in the socket session for this client
                 socket.username = username;
@@ -234,6 +350,7 @@ io.on('connection', function (socket) {
                 }
                 });
       });
+		*/
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

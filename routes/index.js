@@ -847,6 +847,9 @@ router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
 
 });
 
+router.get('/messages', isLoggedIn, isVerified, function(req, res) {
+  res.render('messages');
+});
 router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
   console.log('add-geo');
   console.log(req.body);
