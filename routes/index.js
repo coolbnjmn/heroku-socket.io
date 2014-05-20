@@ -700,12 +700,7 @@ router.get('/map', isLoggedIn, isVerified, function(req, res) {
                    query2.select('-_id');
                    query2.select('-__v');
                    query2.exec(function(e, events) {
-                               console.log('events');
-                               console.log(events);
-                               console.log('geotags');
-                               console.log(geotags);
                                res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags });
-      
                                });
 	 });
         });

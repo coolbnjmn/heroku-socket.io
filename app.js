@@ -328,10 +328,12 @@ passport.use(new FacebookStrategy({
 					  return done(null, user);
 					});
 				    } else {
-				    	var user = docs;
-					if(!user.facebook.id)
-					  user.facebook.id = profile.id;
-					return done(null, user);
+				    	//var user = docs;
+					if(!docs.facebook.id)
+					  docs.facebook.id = profile.id;
+					  docs.save(function(err) {
+					    return done(null, docs);
+					  });
 				       // update facebook profile pic?
 				    }
 				  });
