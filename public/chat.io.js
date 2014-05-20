@@ -66,7 +66,8 @@
                                       if(key == 13) { createRoom(); }
                                       });
   
-  $('#addroom-popup .input input').on('click', function(){
+  $('#addroom-popup .create').on('click', function(){
+                                 console.log('calling create room');
                                  createRoom();
                                  });
   
@@ -274,7 +275,8 @@
   function createRoom(){
   var room = $('#addroom-popup .input input').val().trim();
   if(room && room.length <= ROOM_MAX_LENGTH && room != currentRoom){
-  
+  console.log('in create room');
+  console.log(room);
   // show room creating message
   $('.chat-shadow').show().find('.content').html('Creating room: ' + room + '...');
   $('.chat-shadow').animate({ 'opacity': 1 }, 200);

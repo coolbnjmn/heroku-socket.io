@@ -137,6 +137,9 @@ io.on('connection', function (socket) {
         chatmessage(socket, data);
       });
 
+      socket.on('subscribe', function(data) {
+        subscribe(socket, data);
+      });
       socket.on('unsubscribe', function(data) {
         unsubscribe(socket, data);
       });
