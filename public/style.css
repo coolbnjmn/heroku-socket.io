@@ -148,7 +148,9 @@ h2 {
 
 .well {
 	background-color: white;
-	opacity: 0.6;
+	opacity: 0.95; 
+	-moz-opacity: 0.95; 
+	-webkit-opacity: 0.95;
 }
 
 .panel {
