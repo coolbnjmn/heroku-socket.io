@@ -450,8 +450,6 @@ passport.use(new FacebookStrategy({
                                   },
                                   function(req, accessToken, refreshToken, profile, done) {
                                   console.log('here');
-				  console.log(profile);
-                                  console.log('IM HERE');
                                   
 				  User.findOne({$or: [{"facebook.id" : profile.id}, {"local.name" : profile.displayName}]}, function(err, docs) {
 				    if(!docs) {
