@@ -59,6 +59,8 @@
                                  handleNickname();
                                  });
   
+  handleNickname();
+  
   $('#addroom-popup .input input').on('keydown', function(e){
                                       var key = e.which || e.keyCode;
                                       if(key == 13) { createRoom(); }
@@ -373,6 +375,7 @@
   // in order to init the connection with the server
   function connect(){
   // show connecting message
+  console.log('connecting');
   $('.chat-shadow .content').html('Connecting...');
   
   // creating the connection and saving the socket
