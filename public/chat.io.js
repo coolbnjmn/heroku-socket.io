@@ -163,10 +163,11 @@
   
   socket.on('pastmessages', function(data) {
             console.log('passtmessages here');
-            for(var i = 0; i<data.length; i++) {
+            console.log(data.messages);
+            for(var i = 0; i<data.messages.length; i++) {
             console.log('pastmessages' + i);
             console.log(data);
-                insertMessage(data[i].name, data[i].message, data[i].time, true, true, false, false)
+                insertMessage(data.messages[i].name, data.messages[i].message, data.messages[i].time, true, true, false, false)
             }
             });
   // when we subscribes to a room, the server sends a list
