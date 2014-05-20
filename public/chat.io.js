@@ -311,7 +311,7 @@
   function handleMessage(){
   var message = $('.chat-input input').val().trim();
   if(message){
-  
+  console.log(socket);
   // send the message to the server with the room name
   socket.emit('chatmessage', { message: message, room: currentRoom });
   
