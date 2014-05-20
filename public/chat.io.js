@@ -216,7 +216,7 @@
   function addRoom(name, announce){
   // clear the trailing '/'
   name = name.replace('/','');
-  
+  console.log(name);
   // check if the room is not already in the list
   if($('.chat-rooms ul li[data-roomId="' + name + '"]').length == 0){
   $.tmpl(tmplt.room, { room: name }).appendTo('.chat-rooms ul');
