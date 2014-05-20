@@ -299,9 +299,9 @@
   // calling the 'connect()' function
   function handleNickname(){
   var nick = $('#nickname-popup .input input').val().trim();
+  console.log(nick);
   if(nick && nick.length <= NICK_MAX_LENGTH){
   nickname = nick;
-  Avgrund.hide();
   connect();
   } else {
   shake('#nickname-popup', '#nickname-popup .input input', 'tada', 'yellow');
