@@ -321,8 +321,11 @@ passport.use(new FacebookStrategy({
 					user.facebook.accessToken = accessToken;
 					user.save(function(err) {
 					  if(err) throw err;
+					  return done(null, user);
 					});
 				    } else {
+				    	var user = docs;
+					return done(null, user);
 				       // update facebook profile pic?
 				    }
 				  });
