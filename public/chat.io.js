@@ -12,7 +12,7 @@
   currentRoom = null,
   
   // server information
-  serverAddress = 'http://localhost',
+  serverAddress = 'http://www.gym-bud.co',
   serverDisplayName = 'Server',
   serverDisplayColor = '#1c5380',
   
