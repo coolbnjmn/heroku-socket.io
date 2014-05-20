@@ -315,8 +315,21 @@ passport.use(new FacebookStrategy({
                                   console.log(profile.displayName);
                                   console.log('IM HERE');
                                   
-                                  var user = req.user;
-				  console.log(req.user);
+				  User.findOne({"facebook.accessToken" : accessToken}, function(err, docs) {
+				    if(!docs) {
+				    	var user = new User();
+					user.facebook.accessToken = accessToken;
+					user.save(function(err) {
+					  if(err) throw err;
+					  res.redirect('/map');
+					});
+				    } else {
+				       // update facebook profile pic?
+				       res.redirect('/map');
+				    }
+				  });
+                                 // var user = req.user;
+				 // console.log(req.user);
                                   //user.facebook.accessToken = accessToken;
                                   
 				  /*
