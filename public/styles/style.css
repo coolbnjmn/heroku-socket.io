@@ -82,7 +82,7 @@ a:hover{color:#9d8b83;text-decoration:underline;}
 .wrapper .info .text{color:#eee;font-style:italic;line-height:24px;}
 .wrapper .info .share{margin-top:35px;}
 iframe{text-align:center !important;}
-.wrapper .chat{z-index:2;text-align:left;width:80%;height:80%;background:#fff;display:inline-block;border-radius:15px;box-shadow:0 0 125px rgba(0,0,0,.3);border-bottom:solid 3px #ccc;}
+.wrapper .chat{z-index:2;text-align:left;width:960px;height:500px;background:#fff;display:inline-block;border-radius:15px;box-shadow:0 0 125px rgba(0,0,0,.3);border-bottom:solid 3px #ccc;}
 .wrapper .chat .chat-shadow{z-index:1;border-radius:15px;top:0;left:0;background:rgba(0,0,0,0.5);width:960px;height:503px;text-align:center;font-size:28px;color:#fff;overflow:hidden;}
 .wrapper .chat .chat-shadow .content{margin-top:220px;}
 .big-button-green{
