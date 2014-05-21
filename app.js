@@ -551,7 +551,7 @@ passport.use(new FacebookStrategy({
 					user.facebook.accessToken = accessToken;
 					user.facebook.id = profile.id;
 					console.log(profile.email);
-					user.local.email = profile.email;
+					user.local.email = profile.emails[0].value;
 					user.local.name = profile.displayName;
 					user.local.isVerified = true;
 					user.save(function(err) {
@@ -564,7 +564,7 @@ passport.use(new FacebookStrategy({
 					console.log(profile.email);
 					console.log('can we update user?');
 					if(!docs.local.email)
-					  docs.local.email = profile.email;
+					  docs.local.email = profile.emails[0].value;
 					
 					if(!docs.facebook.id)
 					  docs.facebook.id = profile.id;
