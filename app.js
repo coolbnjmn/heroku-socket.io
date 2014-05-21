@@ -542,9 +542,10 @@ passport.use(new FacebookStrategy({
                                   },
                                   function(req, accessToken, refreshToken, profile, done) {
                                   console.log('here');
-				  console.log(profile);
                                   
 				  User.findOne({$or: [{"facebook.id" : profile.id}, {"local.name" : profile.displayName}]}, function(err, docs) {
+				    console.log(profile);
+				    console.log(docs);
 				    if(!docs) {
 				    	var user = new User();
 					user.facebook.accessToken = accessToken;
