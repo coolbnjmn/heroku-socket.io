@@ -714,16 +714,7 @@ router.get('/map', isLoggedIn, isVerified, function(req, res) {
                    query2.select('-_id');
                    query2.select('-__v');
                    query2.exec(function(e, events) {
-//<<<<<<< HEAD
-                               console.log('events');
-                               console.log(events);
-                               console.log('geotags');
-                               console.log(geotags);
                                res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags, message: req.flash('eventMessage')});
-      
-//=======
- //                              res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags });
-//>>>>>>> 8449da747a62c5bdaab81802ef0ec84309817cfb
                                });
 	 });
         });
