@@ -803,7 +803,7 @@ router.post('/checkinWithUser', isLoggedIn, isVerified, function(req, res) {
 });
 
 router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
-  console.log('add-geo');
+  console.log('add-geo-anonymous');
   console.log(req.body);
   if(req.body.latitudea == '') {
     res.redirect('/map');
