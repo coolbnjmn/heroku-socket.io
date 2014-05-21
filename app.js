@@ -549,6 +549,7 @@ passport.use(new FacebookStrategy({
 				    	var user = new User();
 					user.facebook.accessToken = accessToken;
 					user.facebook.id = profile.id;
+					console.log(profile.email);
 					user.local.email = profile.email;
 					user.local.name = profile.displayName;
 					user.local.isVerified = true;
@@ -558,6 +559,9 @@ passport.use(new FacebookStrategy({
 					});
 				    } else {
 				    	//var user = docs;
+					console.log('updating user');
+					console.log(docs);
+					console.log(profile.email);
 					if(!docs.local.email)
 					  docs.local.email = profile.email;
 					
