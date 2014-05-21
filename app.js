@@ -536,11 +536,13 @@ passport.use(new FacebookStrategy({
                                   clientSecret: 'cedb405616b258b3710dabd99024646d',
                                   //callbackURL: "http://www.gym-bud.co/auth/facebook/callback",
 				  callbackURL: "http://www.gymbudbruins.com/auth/facebook/callback",
+				  //callbackURL: "http://localhost:5000/auth/facebook/callback",
                                   passReqToCallback : true,
                                   profileUrl: 'https://graph.facebook.com/me?fields=location,first_name,last_name,middle_name,name,link,username,work,education,gender,timezone,locale,verified,picture,about,address,age_range,bio,birthday,cover,currency,devices,emails,favorite_athletes,id,hometown,favorite_teams,inspirational_people,install_type,installed,interested_in,languages,meeting_for,name_format,political,quotes,relationship_status,religion,significant_other,sports,updated_time,website'
                                   },
                                   function(req, accessToken, refreshToken, profile, done) {
                                   console.log('here');
+				  console.log(profile);
                                   
 				  User.findOne({$or: [{"facebook.id" : profile.id}, {"local.name" : profile.displayName}]}, function(err, docs) {
 				    if(!docs) {
