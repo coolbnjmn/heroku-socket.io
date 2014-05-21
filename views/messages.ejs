@@ -25,7 +25,8 @@
 						<div class="fl chat-right">
 							<div class="chat-clients">
 								<div class="cf title">
-									<div class="fl">Users</div>
+									<div class="fl">Private Rooms</div>
+                                    <div class="fr title-button">+</div>
 								</div>
 								<ul></ul>
 							</div>
@@ -36,6 +37,7 @@
 								</div>
 								<ul class="pr"></ul>
 							</div>
+
 						</div>
 					</div>
 					<div class="cf chat-bottom">
@@ -64,6 +66,61 @@
 			<div class="input"><input type="text" maxlength="10" placeholder="room name..." /></div>
 			<div class="big-button-green small create">Create &rarr;</div>
 		</aside>
+        
+        <aside id="addprivateroom-popup" class="popup animate avgrund-popup">
+			<div class="title">Enter a user name</div>
+			<div class="input"><input type="text" placeholder="user name..." /></div>
+			<div class="big-button-green small create">Create &rarr;</div>
+		</aside>
+        <script>
+      $(function () {
+
+      var $searchBox = $("#addprivateroom-popup .input input");
+      console.log($searchBox);
+      $searchBox.autocomplete({
+          source: function (request, response) {
+             $.ajax({
+                url: "/search_user",
+                type: "GET",
+                data: request,  // request is the value of search input
+                success: function (data) {
+                  // Map response values to fiedl label and value
+                   response($.map(data, function (el) {
+                       console.log(el);
+                      return {
+                         label: el.local.name,
+                         value: el.local.email
+                      };
+                      }));
+                   }
+                });
+             },
+             
+             // The minimum number of characters a user must type before a search is performed.
+             minLength: 3, 
+             
+             // set an onFocus event to show the result on input field when result is focused
+             focus: function (event, ui) { 
+                this.value = ui.item.label; 
+                // Prevent other event from not being execute
+                event.preventDefault();
+             },
+             select: function (event, ui) {
+                // Prevent value from being put in the input:
+                this.value = ui.item.label;
+                // Set the id to the next input hidden field
+                $(this).next("input").val(ui.item.value); 
+                // Prevent other event from not being execute            
+                event.preventDefault();
+                // optionnal: submit the form after field has been filled up
+                $('#quicksearch').submit();
+             }
+      });
+
+        });
+
+    </script>
+
 		<div class="avgrund-cover"></div>
 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
@@ -79,6 +136,8 @@
 		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 		  })();
 		</script>
+        
+
 		<script type="text/javascript">
 		$('h1 sup').on('click', function () {
 			if($('.chat').hasClass('bounceOutRight')){

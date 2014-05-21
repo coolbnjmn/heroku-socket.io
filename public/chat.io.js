@@ -12,7 +12,8 @@
   currentRoom = null,
   
   // server information
-  serverAddress = 'http://www.gym-bud.co',
+ // serverAddress = 'http://www.gym-bud.co',
+  serverAddress = 'http://localhost:5000',
   serverDisplayName = 'Server',
   serverDisplayColor = '#1c5380',
   
@@ -86,6 +87,23 @@
                                                       $('#addroom-popup .input input').focus();
                                                       },100);
                                     });
+  
+  $('#addprivateroom-popup .input input').on('keydown', function(e){
+                                      var key = e.which || e.keyCode;
+                                      if(key == 13) { createPrivateRoom(); }
+                                      });
+  
+  $('#addprivateroom-popup .create').on('click', function(){
+                                 console.log('calling create private room');
+                                 createPrivateRoom();
+                                 });
+  $('.chat-clients .title-button').on('click', function(){
+                                      $('#addprivateroom-popup .input input').val('');
+                                      Avgrund.show('#addprivateroom-popup');
+                                      window.setTimeout(function(){
+                                                        $('#addroom-popup .input input').focus();
+                                                        },100);
+                                      });
   
   $('.chat-rooms ul').on('scroll', function(){
                          $('.chat-rooms ul li.selected').css('top', $(this).scrollTop());
@@ -174,18 +192,21 @@
   // with the clients in this room
   socket.on('roomclients', function(data){
             
+            if(data.isPrivate) {
+            addPrivateRoom(data.room, false);
+            } else {
 			// add the room name to the rooms list
 			addRoom(data.room, false);
-            
+            }
 			// set the current room
 			setCurrentRoom(data.room);
             
 			// announce a welcome message
 			insertMessage(serverDisplayName, 'Welcome to the room: `' + data.room + '`... enjoy!', null, false, true, false, true);
-			$('.chat-clients ul').empty();
+			//$('.chat-clients ul').empty();
             
 			// add the clients to the clients list
-			addClient({ nickname: nickname, clientId: clientId }, false, true);
+			//addClient({ nickname: nickname, clientId: clientId }, false, true);
 			for(var i = 0, len = data.clients.length; i < len; i++){
             if(data.clients[i]){
             addClient(data.clients[i], false);
@@ -211,6 +232,10 @@
 			removeRoom(data.room, true);
             });
   
+  socket.on('addprivateroom', function(data) {
+            console.log('addprivateroom');
+            })
+  
   // with this event the server tells us when a client
   // is connected or disconnected to the current room
   socket.on('presence', function(data){
@@ -222,6 +247,23 @@
             });
   }
   
+  function addPrivateRoom(name, announce){
+  // clear the trailing '/'
+  name = name.replace('/','');
+  console.log('adding private room');
+  console.log(name);
+  // check if the room is not already in the list
+  if($('.chat-clients ul li[data-roomId="' + name + '"]').length == 0){
+  $.tmpl(tmplt.room, { room: name }).appendTo('.chat-clients ul');
+  // if announce is true, show a message about this room
+  if(announce){
+  console.log('announce was true');
+  insertMessage(serverDisplayName, 'The room `' + name + '` created...', null, false, true, false, true);
+  } else {
+  console.log('announce was false');
+  }
+  }
+  }
   // add a room to the rooms list, socket.io may add
   // a trailing '/' to the name so we are clearing it
   function addRoom(name, announce){
@@ -251,6 +293,7 @@
   }
   }
   
+  /*
   // add a client to the clients list
   function addClient(client, announce, isMe){
   var $html = $.tmpl(tmplt.client, client);
@@ -276,12 +319,35 @@
   insertMessage(serverDisplayName, client.nickname + ' has left the room...', null, false, true, false, true);
   }
   }
-  
+  */
   // every client can create a new room, when creating one, the client
   // is unsubscribed from the current room and then subscribed to the
   // room he just created, if he trying to create a room with the same
   // name like another room, then the server will subscribe the user
   // to the existing room
+  
+  function createPrivateRoom() {
+  console.log('time to add a private chat room');
+  var room = $('#addprivateroom-popup .input input').val().trim();
+  if(room != currentRoom){
+  console.log('in create private room');
+  console.log(room);
+  // show room creating message
+  $('.chat-shadow').show().find('.content').html('Creating room: ' + room + '...');
+  $('.chat-shadow').animate({ 'opacity': 1 }, 200);
+  
+  // unsubscribe from the current room
+  socket.emit('unsubscribe', { room: currentRoom });
+  
+  // create and subscribe to the new room
+  socket.emit('subscribe', { room: room, isPrivate:true, user:nickname});
+  Avgrund.hide();
+  } else {
+  shake('#addprivateroom-popup', '#addprivateroom-popup .input input', 'tada', 'yellow');
+  $('#addprivateroom-popup .input input').val('');
+  }
+  }
+  
   function createRoom(){
   var room = $('#addroom-popup .input input').val().trim();
   if(room && room.length <= ROOM_MAX_LENGTH && room != currentRoom){
@@ -295,7 +361,7 @@
   socket.emit('unsubscribe', { room: currentRoom });
   
   // create and subscribe to the new room
-  socket.emit('subscribe', { room: room });
+  socket.emit('subscribe', { room: room, isPrivate:false });
   Avgrund.hide();
   } else {
   shake('#addroom-popup', '#addroom-popup .input input', 'tada', 'yellow');

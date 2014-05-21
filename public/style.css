@@ -24,14 +24,18 @@ html, body {
 }
 
 body {
-  background-color: #FFF3DA;
   background-image: url('images/barbell-w.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 ul {
   list-style: none;
 }
 
+.loginbutton {
+  
+}
 
 /* Pages */
 

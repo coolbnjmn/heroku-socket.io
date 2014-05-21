@@ -124,9 +124,17 @@ var messageSchema = new mongoose.Schema({
 
 var Message = mongoose.model('message', messageSchema);
 
+var privateRoomSchema = new mongoose.Schema({
+  user1: String,
+  user2: String, 
+  id: String
+});
+
+var PrivateRoom = mongoose.model('privateroom', privateRoomSchema);
+
+
 var roomSchema = new mongoose.Schema({
-	name: String, 
-	users: Array
+	name: String 
 });
 
 var Room = mongoose.model('room', roomSchema);
@@ -175,22 +183,28 @@ function makeid()
 }
 
 function connect(socket, data) {
+  console.log('in connect');
   var skipRest = false;
   var existingClient;
+  console.log(chatClients);
   for(var client in chatClients) {
-    if(client.nickname == data.nickname)
+    console.log('printing client');
+    console.log(chatClients[client].nickname);
+    console.log(data.nickname);
+    if(chatClients[client].nickname == data.nickname)
     {
-      console.log('existingClient');
-      console.log(client.nickname);
+      console.log('skiprest to true');
       skipRest = true;
-      existingClient = client;
+      existingClient = chatClients[client];
+      delete chatClients[client];
       break;
       }
   }
 
-
-
   if(skipRest) {
+  	console.log('existingClient:');
+	console.log(existingClient);
+    chatClients[socket.id] = existingClient;
     socket.emit('ready', {clientId: existingClient.clientId });
   } else {
   data.clientId = makeid(); 
@@ -202,11 +216,13 @@ function connect(socket, data) {
 
   socket.emit('roomslist', {rooms: getRooms() });
 
+/*
   console.log('about to emit past messages');
   Message.find({"room": 'lobby'}, function(err, messages) {
         console.log('got messages');
   	socket.emit('pastmessages', {messages: messages});
   });
+  */
 }
 
 function disconnect(socket) {
@@ -233,17 +249,47 @@ function subscribe(socket, data) {
   var rooms = getRooms();
 
   if(rooms.indexOf('/' + data.room) < 0) {
-    socket.broadcast.emit('addroom', {room:data.room});
-  }
 
-  socket.join(data.room);
-  updatePresence(data.room, socket, 'online');
+   if(data.isPrivate) {
+     var newid = makeid();
+     socket.broadcast.emit('addprivateroom', {room: newid});
 
-  Message.find({"room": data.room}, function(err, messages) {
+     var privateroom = new PrivateRoom({ user1: data.user, user2: data.room, id: newid});
+     privateroom.save(function(err) {
+       if(err) throw err;
+     });
+     socket.join(newid);
+    updatePresence(newid, socket, 'online');
+
+    Message.find({"room": newid}, function(err, messages) {
         console.log('got messages');
   	socket.emit('pastmessages', {messages: messages});
-  });
-  socket.emit('roomclients', {room: data.room, clients: getClientsInRoom(socket.id, data.room) });
+    });
+    socket.emit('roomclients', {room: newid, isPrivate: true, clients: getClientsInRoom(socket.id, newid) });
+   } else {
+    socket.broadcast.emit('addroom', {room:data.room});
+    Room.find({"name":data.room}, function(error, found_rooms) {
+      if(found_rooms.length){
+        var newroom = new Room({ name: data.room });
+        newroom.save(function(err) {
+          if(err) throw err;
+        });
+      } else {
+       console.log('found_rooms is not empty');  
+      }
+    });
+    socket.join(data.room);
+    updatePresence(data.room, socket, 'online');
+
+    Message.find({"room": data.room}, function(err, messages) {
+        console.log('got messages');
+  	socket.emit('pastmessages', {messages: messages});
+    });
+    socket.emit('roomclients', {room: data.room, isPrivate: false, clients: getClientsInRoom(socket.id, data.room) });
+   }
+
+  }
+
 
 }
 
@@ -477,7 +523,8 @@ passport.use('local-login', new LocalStrategy({
 passport.use(new FacebookStrategy({
                                   clientID: '1413575708905968',
                                   clientSecret: 'cedb405616b258b3710dabd99024646d',
-                                  callbackURL: "http://www.gym-bud.co/auth/facebook/callback",
+                                  //callbackURL: "http://www.gym-bud.co/auth/facebook/callback",
+				  callbackURL: "http://localhost:5000/auth/facebook/callback",
                                   passReqToCallback : true,
                                   profileUrl: 'https://graph.facebook.com/me?fields=location,first_name,last_name,middle_name,name,link,username,work,education,gender,timezone,locale,verified,picture,about,address,age_range,bio,birthday,cover,currency,devices,emails,favorite_athletes,id,hometown,favorite_teams,inspirational_people,install_type,installed,interested_in,languages,meeting_for,name_format,political,quotes,relationship_status,religion,significant_other,sports,updated_time,website'
                                   },
