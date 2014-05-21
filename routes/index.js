@@ -859,6 +859,7 @@ router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
   }
  
   User.findOne({"local.email" : req.user.local.email}, function(e, docs) {
+    console.log('addinag points');
     if(docs.rank.points !== undefined) docs.rank.points += 50;
     else docs.rank.points = 50;
     docs.save(function(err) {
@@ -867,6 +868,7 @@ router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
   });
   
   User.findOne({"local.name" : req.body.search}, function(e, docs) {
+   console.log('found a user');
    if(!docs) {
     res.redirect('/map'); 
     return;
