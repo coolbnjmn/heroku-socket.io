@@ -54,12 +54,16 @@
 			</div>
 			<form action="/add-event" method="post">
 				<div class="form-group">
-					<label>Start Date and Time:</label>
-					<input type="datetime-local" name="starttime">
-					<label>End Date and Time:</label>
-					<input type="datetime-local" name="endtime">
-					
+					<label>Date:</label>
+					<input type="date" name="date" class="form-control">
 					<br/>
+					<label>Start Time:</label>
+					<input type="time" name="start" class="form-control">
+					<br/>
+					<label>End Time:</label>
+					<input type="time" name="end" class="form-control">
+					<br/>
+					
 					<!--
 					<label>Date (MM/DD/YYYY)</label>
 					<input type="text" name="date" class="form-control"/>
@@ -68,9 +72,8 @@
 					<label> End Time (HH:MM AM/PM) </label>
 					<input type="text" name="end" class="form-control" />
 					-->
-					<br/>
 					
-					<label> Type: </label>
+					<label> Category: </label>
 					<select id="selectbasic" name="type" class="input-xlarge">
 					  <option>Weightlifting</option>
 					  <option>Aerobics</option>
@@ -83,7 +86,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label>Where?</label>
+					<label>Location</label>
 					<input type="text" name="place" placeholder="Wooden Center" class="form-control"/>
 				</div>
 				<div class="form-group">
