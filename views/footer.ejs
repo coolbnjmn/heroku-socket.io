@@ -1,1 +1,16 @@
-<footer>&copy; GymBud 2014</footer>
+<footer>
+<p>&copy; GymBud 2014</p>
+<% if(user) { %>
+<div class="navbar navbar-inverse navbar-fixed-bottom">
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav">
+<li id="abous"><a href="/about">About Us</a></li>
+<li id="contact"><a href="/contact">Contact Us</a></li>
+<li id="toc"><a href="/toc">Terms and Conditions</a></li>
+</ul>
+</div>
+</div>
+<% } %>
+
+
+</footer>

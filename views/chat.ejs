@@ -137,6 +137,18 @@
 			</div>
 			
 			
+			
+			<div class="col-sm-6">
+				<div class="well chat chatArea">
+					<ul class="messages">
+						<input type="hidden" id="toField" value="<%=to%>"/>
+						<input type="hidden" id="username" value="<%= user.local.email %>"/>
+						<input placeholder="Type here..." class="inputMessage"/>
+					</ul>
+				</div>
+			</div>
+			<br/>
+			
 				<div class="profile_picture">
 					<% if (user.image.contentType) { %>
 						<div class="well col-xs-6 col-sm-4 col-md-4">

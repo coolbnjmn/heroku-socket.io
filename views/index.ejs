@@ -21,6 +21,7 @@
 	  -->
           
     <!-- Main jumbotron for a primary marketing message or call to action -->
+    <!--
     <div class="jumbotron">
 		<h1 id="welcome">Welcome to GymBud</h1>
 		<br/>
@@ -36,7 +37,102 @@
 		</div>
 		<br/>
     </div>
+    -->
+      <p>
+        <a class="btn btn-primary btn-lg col-md-4 col-md-offset-4" role="button" href="/auth/facebook" style="position:absolute;"> Login with Facebook </a>
+      </p>
  
+ <!--
+    <style type="text/css">
+ 	#map-canvas { height: 50%; width: 100%; }
+    </style>
+    <div id="map-canvas" style="margin: 0 auto;"></div>
+    -->
+
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAElbKleGQ_ucrGrHsRNJiR2SMGtDGsV2U&sensor=FALSE">
+    </script>
+    <script type="text/javascript">
+      var map;
+
+      function initialize() {
+        var mapOptions = {
+	  center: new google.maps.LatLng(34.06908392, -118.43581748),
+	  zoom: 14
+	};
+	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+	var geoTags = [<%- geotags %>];
+	var eventlist = [<%- events %>];
+	for(var i = 0; i< geoTags.length; i++) {
+	  attachGeoMarker( geoTags[i] );
+	}
+
+	for(var i = 0; i < eventlist.length; i++) {
+	  attachEventMarker( eventlist[i]);
+	}
+      }
+
+      function attachGeoMarker(data) {
+        var tmp_lat_long = new google.maps.LatLng(data.latitude, data.longitude);
+	var marker;
+	marker = new google.maps.Marker({
+	  map: map,
+	  position: tmp_lat_long, 
+	  title: 'Check In'
+	});
+      }
+
+      function attachEventMarker(data) {
+        var geocoder = new google.maps.Geocoder();
+	var marker;
+	var icon = "";
+	switch(data.type) {
+	  case "Weightlifting":
+	    icon = "images/weightlifting.png";
+	    break;
+	  case "Aerobics":
+	    icon = "images/aerobics.png";
+	    break;
+	  case "Swimming":
+	    icon = "images/swimming.png";
+	    break;
+	  case "Crossfit":
+	    icon = "images/crossfit.png";
+	    break;
+	  case "Yoga":
+	    icon = "images/yoga.png";
+	    break;
+	  case "Cycling" : 
+	    icon = "images/cycling.png";
+	    break;
+	  case "Interval Training":
+	    icon = "images/intervaltraining.png";
+	    break;
+	  default: 
+	    icon = "images/users.png";
+	    break;
+	}
+
+	geocoder.geocode({"address" : data.place}, function(results, status) {
+	  if(status = google.maps.GeocoderStatus.OK) {
+	    marker = new google.maps.Marker({ 
+	      map: map, 
+	      position: results[0].geometry.location,
+	      title: "Event",
+	      icon: icon
+	    });
+	  } else {
+	    alert("An event was not able to be placed on the map. We will fix this promptly");
+	  }
+	});
+	 
+
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <!--
     <div class="container">
 		<div class="row">
 			<h1>How does it work?</h1>
@@ -69,6 +165,7 @@
         <hr>
 		<% include footer %>
     </div>
+    -->
 	
     <script type="text/javascript">
         $(document).ready(function() {

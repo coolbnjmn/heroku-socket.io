@@ -69,7 +69,9 @@ var userSchema = new mongoose.Schema({
     points: Number, 
   },
 				     facebook: {
+				       id: String,
 				       accessToken: String
+
 				     },
 				     banking: {
                                       firstName: String,
@@ -113,19 +115,248 @@ var chatSchema = new mongoose.Schema({
 
 var Chat = mongoose.model('chat', chatSchema);
 
+var messageSchema = new mongoose.Schema({
+        name: String,
+	message: String, 
+	room: String, 
+	date: String, 
+});
+
+var Message = mongoose.model('message', messageSchema);
+
+var privateRoomSchema = new mongoose.Schema({
+  user1: String,
+  user2: String, 
+  id: String
+});
+
+var PrivateRoom = mongoose.model('privateroom', privateRoomSchema);
+
+
+var roomSchema = new mongoose.Schema({
+	name: String 
+});
+
+var Room = mongoose.model('room', roomSchema);
 // usernames which are currently connected to the chat
 var usernames = {};
 var onlineUsers = {};
 var numUsers = 0;
 
+var chatClients = new Object();
+
 io.configure(function() {
   io.set('transports', ['xhr-polling']);
   io.set('polling duration', 10);
 });
+
+/*
 io.on('connection', function (socket) {
-      var addedUser = false;
+      socket.on('connect', function(data) {
+        connect(socket, data);
+      });
+
+      socket.on('chatmessage', function(data) {
+        chatmessage(socket, data);
+      });
+
+      socket.on('subscribe', function(data) {
+        subscribe(socket, data);
+      });
+      socket.on('unsubscribe', function(data) {
+        unsubscribe(socket, data);
+      });
+
+      socket.on('disconnect', function() {
+        disconnect(socket);
+      });
+});
+*/
+
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for( var i=0; i < 20; i++ )
+           text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+       return text;
+}
+
+function connect(socket, data) {
+  console.log('in connect');
+  var skipRest = false;
+  var existingClient;
+  console.log(chatClients);
+  for(var client in chatClients) {
+    console.log('printing client');
+    console.log(chatClients[client].nickname);
+    console.log(data.nickname);
+    if(chatClients[client].nickname == data.nickname)
+    {
+      console.log('skiprest to true');
+      skipRest = true;
+      existingClient = chatClients[client];
+      delete chatClients[client];
+      break;
+      }
+  }
+
+  if(skipRest) {
+  	console.log('existingClient:');
+	console.log(existingClient);
+    chatClients[socket.id] = existingClient;
+    socket.emit('ready', {clientId: existingClient.clientId });
+  } else {
+  data.clientId = makeid(); 
+  chatClients[socket.id] = data;
+  socket.emit('ready', { clientId: data.clientId });
+  }
+
+  subscribe(socket, {room: "lobby"});
+
+  PrivateRoom.find({}, function(err, privaterooms) {
+    console.log('logging private rooms');
+    console.log(privaterooms);
+
+    socket.emit('roomslist', {rooms: getRooms(), privaterooms: privaterooms });
+  });
+
+/*
+  console.log('about to emit past messages');
+  Message.find({"room": 'lobby'}, function(err, messages) {
+        console.log('got messages');
+  	socket.emit('pastmessages', {messages: messages});
+  });
+  */
+}
+
+function disconnect(socket) {
+  var rooms = io.sockets.manager.roomClients[socket.id];
+
+  for(var room in rooms) {
+    if(room && rooms[room]) {
+      unsubscribe(socket, {room: room.replace('/','') } );
+    }
+  }
+
+  delete chatClients[socket.id];
+}
       
+function chatmessage(socket, data) {
+  
+  var newMessage = new Message({name: chatClients[socket.id].nickname, message: data.message, room: data.room, date: new Date()});
+  newMessage.save(function(err) {
+     socket.broadcast.to(data.room).emit('chatmessage', {client: chatClients[socket.id], message: data.message, room: data.room });
+  });
+}
+
+function subscribe(socket, data) {
+  var rooms = getRooms();
+  console.log(rooms);
+  console.log(data);
+
+  var newid = makeid();
+  if(rooms.indexOf('/' + data.room) < 0) {
+    if(data.isPrivate) {
+     PrivateRoom.find( {$or:[{"user1": data.user }, {"user2" : data.user}]}, function(error, private_rooms) {
+       if(!private_rooms.length) {
+       console.log('adding a new room');
+         var privateroom = new PrivateRoom({ user1: data.user, user2: data.room, id: newid});
+         privateroom.save(function(err) {
+         if(err) throw err;
+         });
+       } else {
+         console.log('private_rooms is not empty');
+	 newid = private_rooms[0].id;
+       }
+     });
+     socket.broadcast.emit('addprivateroom', {room: newid});
+    } else {
+      socket.broadcast.emit('addroom', {room:data.room});
+    Room.find({"name":data.room}, function(error, found_rooms) {
+      if(!found_rooms.length){
+        var newroom = new Room({ name: data.room });
+        newroom.save(function(err) {
+          if(err) throw err;
+        });
+      } else {
+       console.log('found_rooms is not empty');  
+      }
+      });
+    }
+   }
+
+   if(data.isPrivate) {
+
+     socket.join(newid);
+    updatePresence(newid, socket, 'online');
+
+    Message.find({"room": newid}, function(err, messages) {
+        console.log('got messages');
+  	socket.emit('pastmessages', {messages: messages});
+    });
+    socket.emit('roomclients', {room: newid, isPrivate: true, clients: getClientsInRoom(socket.id, newid) });
+   } else {
+    socket.join(data.room);
+    updatePresence(data.room, socket, 'online');
+
+    Message.find({"room": data.room}, function(err, messages) {
+        console.log('got messages');
+  	socket.emit('pastmessages', {messages: messages});
+    });
+    socket.emit('roomclients', {room: data.room, isPrivate: false, clients: getClientsInRoom(socket.id, data.room) });
+   }
+}
+
+function unsubscribe(socket, data) {
+  updatePresence(data.room, socket, 'offline');
+  socket.leave(data.room);
+  
+  /*
+  if(!countClientsInRoom(data.room)) {
+    io.sockets.emit('removeroom', {room: data.room });
+  }
+  */
+}
+
+function getRooms() {
+  console.log(Object.keys(io.sockets.manager.rooms));
+  return Object.keys(io.sockets.manager.rooms);
+}
+
+function getClientsInRoom(socketId, room) {
+  var socketIds = io.sockets.manager.rooms['/' + room];
+  var clients = [];
+
+  if(socketIds && socketIds.length>0) {
+    socketsCount = socketIds.length;
+
+    for(var i = 0, len = socketIds.length; i < len; i++) {
+      if(socketIds[i] != socketId) {
+        clients.push(chatClients[socketIds[i]]);
+      }
+    }
+  }
+
+  return clients;
+}
+
+function countClientsInRoom(room) {
+  if(io.sockets.manager.rooms['/' + room]) {
+    return io.sockets.manager.room['/' + room].length;
+  }
+
+  return 0;
+}
+
+function updatePresence(room, socket, state) {
+  room = room.replace('/', '');
+
+  socket.broadcast.to(room).emit('precense', {client: chatClients[socket.id], state: state, room: room });
+}
       // when the client emits 'new message', this listens and executes
+io.on('connection', function (socket) {
       socket.on('new message', function (from, data) {
                 // we tell the client to execute 'new message'
         User.findOne({"local.email" : from}, function(err, docs) {
@@ -174,8 +405,6 @@ io.on('connection', function (socket) {
 		to: to
 	  });
 	});
-
-
        });
       // when the client emits 'add user', this listens and executes
       socket.on('add user', function (username) {
@@ -305,23 +534,47 @@ passport.use('local-login', new LocalStrategy({
 passport.use(new FacebookStrategy({
                                   clientID: '1413575708905968',
                                   clientSecret: 'cedb405616b258b3710dabd99024646d',
-                                  callbackURL: "http://www.gymbudbruins.com/auth/facebook/callback",
+                                  //callbackURL: "http://www.gym-bud.co/auth/facebook/callback",
+				  callbackURL: "http://localhost:5000/auth/facebook/callback",
                                   passReqToCallback : true,
                                   profileUrl: 'https://graph.facebook.com/me?fields=location,first_name,last_name,middle_name,name,link,username,work,education,gender,timezone,locale,verified,picture,about,address,age_range,bio,birthday,cover,currency,devices,emails,favorite_athletes,id,hometown,favorite_teams,inspirational_people,install_type,installed,interested_in,languages,meeting_for,name_format,political,quotes,relationship_status,religion,significant_other,sports,updated_time,website'
                                   },
                                   function(req, accessToken, refreshToken, profile, done) {
                                   console.log('here');
-                                  console.log(profile.id);
-                                  console.log(profile.displayName);
-                                  console.log('IM HERE');
                                   
-                                  var user = req.user;
-                                  user.facebook.accessToken = accessToken;
+				  User.findOne({$or: [{"facebook.id" : profile.id}, {"local.name" : profile.displayName}]}, function(err, docs) {
+				    if(!docs) {
+				    	var user = new User();
+					user.facebook.accessToken = accessToken;
+					user.facebook.id = profile.id;
+					user.local.name = profile.displayName;
+					user.local.isVerified = true;
+					user.save(function(err) {
+					  if(err) throw err;
+					  return done(null, user);
+					});
+				    } else {
+				    	//var user = docs;
+					if(!docs.facebook.id)
+					  docs.facebook.id = profile.id;
+					if(!docs.facebook.accessToken)
+					  docs.facebook.accessToken = accessToken;
+					  docs.save(function(err) {
+					    return done(null, docs);
+					  });
+				       // update facebook profile pic?
+				    }
+				  });
+                                 // var user = req.user;
+				 // console.log(req.user);
+                                  //user.facebook.accessToken = accessToken;
                                   
+				  /*
                                   user.save(function(err) {
                                             if(err) throw err;
                                             return done(null, user);
                                             });
+					    */
 }));
 
 

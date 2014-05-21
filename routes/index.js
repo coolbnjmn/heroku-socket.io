@@ -36,6 +36,7 @@ var userSchema = new mongoose.Schema({
     points: Number, 
   },
   facebook: {
+    id: String,
     accessToken: String
   },
   banking: {
@@ -225,8 +226,18 @@ router.get('/', function(req, res) {
       }
    });
    */
-  res.render('index', { user: req.user, title: 'GymBud' });
-           });
+  var query = GeoTag.find({});
+  query.select('-_id');
+  query.select('-__v');
+  query.exec(function(err, geotags) {
+         var query2 = Event.find({"expired": false});
+         query2.select('-_id');
+         query2.select('-__v');
+         query2.exec(function(e, events) {
+ 		 res.render('index', { events:events, geotags:geotags, user: req.user, title: 'GymBud' });
+ 	});
+  });
+ });
 
 // Redirect the user to Facebook for authentication.  When complete,
 // Facebook will redirect the user back to the application at
@@ -242,7 +253,7 @@ router.get('/auth/facebook', function(req, res, next) {
 // authentication has failed.
 router.get('/auth/facebook/callback', function(req, res, next) {
            passport.authenticate('facebook', { scope: 'emails',
-                                 successRedirect: '/chat',
+                                 successRedirect: '/map',
                                  failureRedirect: '/' })(req, res, next);
            });
 
@@ -601,7 +612,7 @@ router.get('/events', isLoggedIn, isVerified, function(req, res) {
     Event.find({}, function(e, docs) {
       // check if events have expired.
                for(var i = 0; i < docs.length; i++) {
-               var endDate = moment(docs[i].date + " "+ docs[i].end, "MM/DD/YYYY HH:mm A");
+               var endDate = moment(docs[i].date + " "+ docs[i].end, "YYYY-MM-DD HH:mm");
                console.log(endDate);
                var now = moment();
                
@@ -680,6 +691,20 @@ router.post('/add-people', isLoggedIn, isVerified, function(req, res) {
 });
 
 router.get('/map', isLoggedIn, isVerified, function(req, res) {
+    Event.find({}, function(e, docs) {
+      // check if events have expired.
+               for(var i = 0; i < docs.length; i++) {
+               var endDate = moment(docs[i].date + " "+ docs[i].end, "YYYY-MM-DD HH:mm");
+               var now = moment();
+               
+               if(endDate - now < 0) {
+                docs[i].expired = true;
+               docs[i].save(function(err) {
+                            if(err) throw err;
+                            });
+               }
+               }
+    });
       User.find({}, function(e, docs) {
         var query = GeoTag.find({});
 	query.select('-_id');
@@ -689,12 +714,16 @@ router.get('/map', isLoggedIn, isVerified, function(req, res) {
                    query2.select('-_id');
                    query2.select('-__v');
                    query2.exec(function(e, events) {
+//<<<<<<< HEAD
                                console.log('events');
                                console.log(events);
                                console.log('geotags');
                                console.log(geotags);
                                res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags, message: req.flash('eventMessage')});
       
+//=======
+ //                              res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags });
+//>>>>>>> 8449da747a62c5bdaab81802ef0ec84309817cfb
                                });
 	 });
         });
@@ -827,6 +856,9 @@ router.post('/add-geo-anonymous', isLoggedIn, isVerified, function(req, res) {
 
 });
 
+router.get('/messages', isLoggedIn, isVerified, function(req, res) {
+  res.render('messages', { title: "GymBud", user: req.user });
+});
 router.post('/add-geo', isLoggedIn, isVerified, function(req, res) {
   console.log('add-geo');
   console.log(req.body);

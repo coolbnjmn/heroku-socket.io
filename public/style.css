@@ -24,14 +24,19 @@ html, body {
 }
 
 body {
-  background-color: #FFF3DA;
-  background-image: url('images/noise.png');
+  background-image: url('images/barbell-w.png');
+ /* background-repeat: no-repeat;
+ */
+  background-size: 100% 100%;
 }
 
 ul {
   list-style: none;
 }
 
+.loginbutton {
+  
+}
 
 /* Pages */
 
@@ -148,7 +153,9 @@ h2 {
 
 .well {
 	background-color: white;
-	opacity: 0.6;
+	opacity: 0.95; 
+	-moz-opacity: 0.95; 
+	-webkit-opacity: 0.95;
 }
 
 .panel {
