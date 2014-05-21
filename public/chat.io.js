@@ -124,7 +124,16 @@
                               var room = $(this).attr('data-roomId');
                               if(room != currentRoom){
                               socket.emit('unsubscribe', { room: currentRoom });
-                              socket.emit('subscribe', { room: room });
+                              socket.emit('subscribe', { room: room, isPrivate:false });
+                              }
+                              });
+  $('.chat-clients ul li').live('click', function(){
+                              var room = $(this).attr('data-roomId');
+                              if(room != currentRoom){
+                                console.log('room: ' + room);
+                                console.log('currentRoom: ' + currentRoom);
+                              socket.emit('unsubscribe', { room: currentRoom });
+                              socket.emit('subscribe', { room: room, isPrivate:true, user:nickname });
                               }
                               });
   }
@@ -167,6 +176,11 @@
             addRoom(data.rooms[i], false);
             }
 			}
+            for(var i = 0; i < data.privaterooms.length; i++) {
+            console.log('printing private room');
+            console.log(data.privaterooms[i]);
+            addPrivateRoom(data.privaterooms[i], false);
+            }
             });
   
   // when someone sends a message, the sever push it to
@@ -193,13 +207,18 @@
   socket.on('roomclients', function(data){
             
             if(data.isPrivate) {
+            console.log('printing data in roomclients');
+            console.log(data);
             addPrivateRoom(data.room, false);
             } else {
+            console.log('printing data in roomclients not private');
+            console.log(data);
 			// add the room name to the rooms list
 			addRoom(data.room, false);
             }
 			// set the current room
-			setCurrentRoom(data.room);
+            console.log('calling setcurrentroom, data is: ' + data.isPrivate);
+			setCurrentRoom(data.room, data.isPrivate);
             
 			// announce a welcome message
 			insertMessage(serverDisplayName, 'Welcome to the room: `' + data.room + '`... enjoy!', null, false, true, false, true);
@@ -249,7 +268,7 @@
   
   function addPrivateRoom(name, announce){
   // clear the trailing '/'
-  name = name.replace('/','');
+//  name = name.replace('/','');
   console.log('adding private room');
   console.log(name);
   // check if the room is not already in the list
@@ -371,10 +390,19 @@
   
   // sets the current room when the client
   // makes a subscription
-  function setCurrentRoom(room){
+  function setCurrentRoom(room, isPrivate){
+  console.log('setCurrentRoom');
+  if(!isPrivate) {
+    currentRoom = room;
+    $('.chat-rooms ul li.selected').removeClass('selected');
+  $('.chat-clients ul li.selected').removeClass('selected');
+    $('.chat-rooms ul li[data-roomId="' + room + '"]').addClass('selected');
+  } else {
   currentRoom = room;
   $('.chat-rooms ul li.selected').removeClass('selected');
-  $('.chat-rooms ul li[data-roomId="' + room + '"]').addClass('selected');
+  $('.chat-clients ul li.selected').removeClass('selected');
+  $('.chat-clients ul li[data-roomId="' + room + '"]').addClass('selected');
+  }
   }
   
   // save the client nickname and start the chat by

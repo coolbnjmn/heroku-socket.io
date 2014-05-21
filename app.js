@@ -139,11 +139,9 @@ var roomSchema = new mongoose.Schema({
 
 var Room = mongoose.model('room', roomSchema);
 // usernames which are currently connected to the chat
-/*
 var usernames = {};
 var onlineUsers = {};
 var numUsers = 0;
-*/
 
 var chatClients = new Object();
 
@@ -151,6 +149,8 @@ io.configure(function() {
   io.set('transports', ['xhr-polling']);
   io.set('polling duration', 10);
 });
+
+/*
 io.on('connection', function (socket) {
       socket.on('connect', function(data) {
         connect(socket, data);
@@ -171,6 +171,7 @@ io.on('connection', function (socket) {
         disconnect(socket);
       });
 });
+*/
 
 function makeid()
 {
@@ -214,7 +215,12 @@ function connect(socket, data) {
 
   subscribe(socket, {room: "lobby"});
 
-  socket.emit('roomslist', {rooms: getRooms() });
+  PrivateRoom.find({}, function(err, privaterooms) {
+    console.log('logging private rooms');
+    console.log(privaterooms);
+
+    socket.emit('roomslist', {rooms: getRooms(), privaterooms: privaterooms });
+  });
 
 /*
   console.log('about to emit past messages');
@@ -247,17 +253,42 @@ function chatmessage(socket, data) {
 
 function subscribe(socket, data) {
   var rooms = getRooms();
+  console.log(rooms);
+  console.log(data);
 
+  var newid = makeid();
   if(rooms.indexOf('/' + data.room) < 0) {
+    if(data.isPrivate) {
+     PrivateRoom.find( {$or:[{"user1": data.user }, {"user2" : data.user}]}, function(error, private_rooms) {
+       if(!private_rooms.length) {
+       console.log('adding a new room');
+         var privateroom = new PrivateRoom({ user1: data.user, user2: data.room, id: newid});
+         privateroom.save(function(err) {
+         if(err) throw err;
+         });
+       } else {
+         console.log('private_rooms is not empty');
+	 newid = private_rooms[0].id;
+       }
+     });
+     socket.broadcast.emit('addprivateroom', {room: newid});
+    } else {
+      socket.broadcast.emit('addroom', {room:data.room});
+    Room.find({"name":data.room}, function(error, found_rooms) {
+      if(!found_rooms.length){
+        var newroom = new Room({ name: data.room });
+        newroom.save(function(err) {
+          if(err) throw err;
+        });
+      } else {
+       console.log('found_rooms is not empty');  
+      }
+      });
+    }
+   }
 
    if(data.isPrivate) {
-     var newid = makeid();
-     socket.broadcast.emit('addprivateroom', {room: newid});
 
-     var privateroom = new PrivateRoom({ user1: data.user, user2: data.room, id: newid});
-     privateroom.save(function(err) {
-       if(err) throw err;
-     });
      socket.join(newid);
     updatePresence(newid, socket, 'online');
 
@@ -267,17 +298,6 @@ function subscribe(socket, data) {
     });
     socket.emit('roomclients', {room: newid, isPrivate: true, clients: getClientsInRoom(socket.id, newid) });
    } else {
-    socket.broadcast.emit('addroom', {room:data.room});
-    Room.find({"name":data.room}, function(error, found_rooms) {
-      if(found_rooms.length){
-        var newroom = new Room({ name: data.room });
-        newroom.save(function(err) {
-          if(err) throw err;
-        });
-      } else {
-       console.log('found_rooms is not empty');  
-      }
-    });
     socket.join(data.room);
     updatePresence(data.room, socket, 'online');
 
@@ -287,10 +307,6 @@ function subscribe(socket, data) {
     });
     socket.emit('roomclients', {room: data.room, isPrivate: false, clients: getClientsInRoom(socket.id, data.room) });
    }
-
-  }
-
-
 }
 
 function unsubscribe(socket, data) {
@@ -340,7 +356,7 @@ function updatePresence(room, socket, state) {
   socket.broadcast.to(room).emit('precense', {client: chatClients[socket.id], state: state, room: room });
 }
       // when the client emits 'new message', this listens and executes
-      /*
+io.on('connection', function (socket) {
       socket.on('new message', function (from, data) {
                 // we tell the client to execute 'new message'
         User.findOne({"local.email" : from}, function(err, docs) {
@@ -364,8 +380,6 @@ function updatePresence(room, socket, state) {
                                       });
                   });
 		});
-		*/
-		/*
       socket.on('pm', function(from, to, message) {
         User.findOne({"local.email" : from}, function(err, docs) {
 	  console.log(docs.rank);
@@ -392,9 +406,7 @@ function updatePresence(room, socket, state) {
 	  });
 	});
        });
-	*/
       // when the client emits 'add user', this listens and executes
-		/*
       socket.on('add user', function (username) {
                 // we store the username in the socket session for this client
                 socket.username = username;
@@ -449,7 +461,6 @@ function updatePresence(room, socket, state) {
                 }
                 });
       });
-		*/
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
