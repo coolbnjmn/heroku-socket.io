@@ -168,10 +168,26 @@ function makeid()
 }
 
 function connect(socket, data) {
+  var skipRest = false;
+  var existingClient;
+  for(var client in chatClients) {
+    if(client.nickname == data.nickname)
+    {
+      skipRest = true;
+      existingClient = client;
+      break;
+      }
+  }
+
+
+
+  if(skipRest) {
+    socket.emit('ready', {clientId: existingClient.clientId });
+  } else {
   data.clientId = makeid(); 
   chatClients[socket.id] = data;
-
   socket.emit('ready', { clientId: data.clientId });
+  }
 
   subscribe(socket, {room: "lobby"});
 
