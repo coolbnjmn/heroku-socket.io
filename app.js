@@ -554,6 +554,10 @@ passport.use(new FacebookStrategy({
 					user.local.email = profile.emails[0].value;
 					user.local.name = profile.displayName;
 					user.local.isVerified = true;
+					user.local.background = '';
+					user.local.achievements = '';
+					user.local.goals = '';
+					user.local.phonenum = '';
 					user.save(function(err) {
 					  if(err) throw err;
 					  return done(null, user);
