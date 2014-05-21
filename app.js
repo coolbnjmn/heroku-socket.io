@@ -123,6 +123,13 @@ var messageSchema = new mongoose.Schema({
 });
 
 var Message = mongoose.model('message', messageSchema);
+
+var roomSchema = new mongoose.Schema({
+	name: String, 
+	users: Array
+});
+
+var Room = mongoose.model('room', roomSchema);
 // usernames which are currently connected to the chat
 /*
 var usernames = {};
@@ -173,6 +180,8 @@ function connect(socket, data) {
   for(var client in chatClients) {
     if(client.nickname == data.nickname)
     {
+      console.log('existingClient');
+      console.log(client.nickname);
       skipRest = true;
       existingClient = client;
       break;
@@ -246,6 +255,7 @@ function unsubscribe(socket, data) {
 }
 
 function getRooms() {
+  console.log(Object.keys(io.sockets.manager.rooms));
   return Object.keys(io.sockets.manager.rooms);
 }
 
