@@ -239,7 +239,7 @@ function subscribe(socket, data) {
   socket.join(data.room);
   updatePresence(data.room, socket, 'online');
 
-  Message.find({"room": 'lobby'}, function(err, messages) {
+  Message.find({"room": data.room}, function(err, messages) {
         console.log('got messages');
   	socket.emit('pastmessages', {messages: messages});
   });
