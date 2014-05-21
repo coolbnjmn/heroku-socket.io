@@ -29,7 +29,7 @@
 		</script>
 	
 		<form>
-			<input type="radio" name="checkin" value="add_event" onClick="changeMapEventType(1);"> Make Event (Allow Others to Add to Event)
+			<input type="radio" name="checkin" value="add_event" onClick="changeMapEventType(1);"> Add Event (Allow Others to Add to Event)
 			<br/>
 			<input type="radio" name="checkin" value="anonymous" onClick="changeMapEventType(2);"> Check in Anonymously (Drop a Pin)
 			<br/>
@@ -40,8 +40,58 @@
 		<br/>
 		
 		<div id="add-event">
+			<!--
 			<form action="/add-event" method="link" class="navbar-form">
-				<button id="btnSubmit" type="submit"> Make Event </button>
+				<button id="btnSubmit" type="submit"> Add Event </button>
+			</form>
+			-->
+			<div id="message">
+				<% if (message.length > 0) { %>
+					<div class="alert alert-danger">
+						<%= message %>
+					</div>
+				<% } %>
+			</div>
+			<form action="/add-event" method="post">
+				<div class="form-group">
+					<label>Start Date and Time:</label>
+					<input type="datetime-local" name="starttime">
+					<label>End Date and Time:</label>
+					<input type="datetime-local" name="endtime">
+					
+					<br/>
+					<!--
+					<label>Date (MM/DD/YYYY)</label>
+					<input type="text" name="date" class="form-control"/>
+					<label> Start Time (HH:MM AM/PM) </label>
+					<input type="text" name="start" class="form-control" />
+					<label> End Time (HH:MM AM/PM) </label>
+					<input type="text" name="end" class="form-control" />
+					-->
+					<br/>
+					
+					<label> Type: </label>
+					<select id="selectbasic" name="type" class="input-xlarge">
+					  <option>Weightlifting</option>
+					  <option>Aerobics</option>
+					  <option>Swimming</option>
+					  <option>Crossfit</option>
+					  <option>Yoga</option>
+					  <option>Cycling</option>
+					  <option>Interval Training</option>
+					  <option>Other</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Where?</label>
+					<input type="text" name="place" placeholder="Wooden Center" class="form-control"/>
+				</div>
+				<div class="form-group">
+					<label>Description</label>
+					<textarea type="text" name="description" placeholder="We lifted heavy legs." class="form-control"> </textarea>
+				</div>
+				<br/>
+				<button type="submit" class="btn btn-warning btn-lg">Create Event</button>
 			</form>
 		</div>
 		
@@ -49,7 +99,8 @@
 			<form action='/add-geo-anonymous' method="post" enctype="multipart/form-data">
 				<input type="hidden" name="latitudea" id="latitudea" value=""/>
 				<input type="hidden" name="longitudea" id="longitudea" value=""/>
-				<input type="submit" value="Check In Anonymously" />
+				<!-- <input type="submit" value="Check In Anonymously" /> -->
+				<button type="submit" class="btn btn-warning btn-lg">Check In Anonymously</button>
 			</form>
 		</div>
 		
@@ -70,7 +121,8 @@
 					<input name="location_name" id="location_name" value="" />
 					<br>
 					<br>
-					<input type="submit" value="Check In With Name" />
+					<!-- <input type="submit" value="Check In With Name" /> -->
+					<button type="submit" class="btn btn-warning btn-lg">Check In With Name</button>
 				</form>
 			</div>
 		</div>

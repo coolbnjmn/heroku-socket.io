@@ -693,7 +693,7 @@ router.get('/map', isLoggedIn, isVerified, function(req, res) {
                                console.log(events);
                                console.log('geotags');
                                console.log(geotags);
-                               res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags });
+                               res.render('map', {title: 'GymBud', user: req.user, events: events, userlist: docs, geotags: geotags, message: req.flash('eventMessage')});
       
                                });
 	 });
