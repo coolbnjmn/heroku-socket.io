@@ -230,6 +230,10 @@ function subscribe(socket, data) {
   socket.join(data.room);
   updatePresence(data.room, socket, 'online');
 
+  Message.find({"room": 'lobby'}, function(err, messages) {
+        console.log('got messages');
+  	socket.emit('pastmessages', {messages: messages});
+  });
   socket.emit('roomclients', {room: data.room, clients: getClientsInRoom(socket.id, data.room) });
 
 }
