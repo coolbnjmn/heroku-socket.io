@@ -6,15 +6,39 @@
 <body>
 	<div class="well" style="width:50%; margin: 0 auto;">
 	
-		<form action="">
-			<input type="radio" name="checkin" value="add_event"> Make Event
+		<script type="text/javascript">
+			function changeMapEventType(type) {
+				switch(type) {
+					case 1:
+						document.getElementById("add-event").style.display = "block";
+						document.getElementById("checkInFormAnonymous").style.display = "none";
+						document.getElementById("checkInForm").style.display = "none";
+						break;
+					case 2:
+						document.getElementById("add-event").style.display = "none";
+						document.getElementById("checkInFormAnonymous").style.display = "block";
+						document.getElementById("checkInForm").style.display = "none";
+						break;
+					case 3:
+						document.getElementById("add-event").style.display = "none";
+						document.getElementById("checkInFormAnonymous").style.display = "none";
+						document.getElementById("checkInForm").style.display = "block";
+						break;
+				}
+			}
+		</script>
+	
+		<form>
+			<input type="radio" name="checkin" value="add_event" onClick="changeMapEventType(1);"> Make Event (Allow Others to Add to Event)
 			<br/>
-			<input type="radio" name="checkin" value="anonymous"> Check in Anonymously
+			<input type="radio" name="checkin" value="anonymous" onClick="changeMapEventType(2);"> Check in Anonymously (Drop a Pin)
 			<br/>
-			<input type="radio" name="checkin" value="names"> Check In With Names
+			<input type="radio" name="checkin" value="names" onClick="changeMapEventType(3);"> Check In with Others (names, description, location)
 			<br/>
 		</form>
-	
+		
+		<br/>
+		
 		<div id="add-event">
 			<form action="/add-event" method="link" class="navbar-form">
 				<button id="btnSubmit" type="submit"> Make Event </button>
@@ -32,7 +56,7 @@
 		<div class="ui-widget">
 			<div id="checkInForm">
 				<form action='/add-geo' method="post" enctype="multipart/form-data">
-					<label> Check in...</label>
+					<label style="text-decoration: underline;"> Check in: </label>
 					<br>
 					<input type="hidden" name="latitude" id="latitude" value=""/>
 					<input type="hidden" name="longitude" id="longitude" value=""/>
@@ -44,6 +68,7 @@
 					<br>
 					<label for="location_name"> At: </label>
 					<input name="location_name" id="location_name" value="" />
+					<br>
 					<br>
 					<input type="submit" value="Check In With Name" />
 				</form>
