@@ -560,8 +560,8 @@ passport.use(new FacebookStrategy({
 				    } else {
 				    	//var user = docs;
 					console.log('updating user');
-					console.log(docs);
 					console.log(profile.email);
+					console.log('can we update user?');
 					if(!docs.local.email)
 					  docs.local.email = profile.email;
 					
